@@ -1,0 +1,437 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Afacad", serif;
+}
+
+.navbar {
+    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10vh;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: #000000; */
+    background-color: whitesmoke;
+    padding: 0 4vh;
+    color: white;
+    font-family: "Afacad", serif;
+    font-weight: bold;
+}
+
+.botoes_nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 1vh;
+}
+
+.navlogo{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    width: 9dvw;
+    height: 9dvh;
+}
+
+.navlogo img{   
+    height: 6rem;
+    width: auto;
+    cursor: pointer;
+}
+
+.btn_contato, .btn_log {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    border: none;
+    width: auto;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: large;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn_contato{
+    background: #003F6A;
+}
+
+.btn_contato:hover{
+    background: rgba(0,49,82, 0.4);
+}
+
+.btn_log{
+    background: #106B86;
+}
+
+.btn_log:hover{
+    background: rgba(16, 106, 134, 0.4);
+}
+
+.container{
+    background-color: whitesmoke;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.containerEsquerda{
+    background-color: #567EBB;
+    height: 85vh;
+    width: 40vw;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    margin: -0.2em;
+}
+
+.divInfos{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.botao{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1{
+    font-size: 3rem;
+    text-align: center;
+    color: #FEFFFF;
+    margin-bottom: 10px;
+}
+
+.formulario{
+    width: 35vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputs {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+input, textarea {
+    width: 25vw;
+    height: 6vh;
+    border-radius: 20px;
+    border: none;
+    margin: 2px;
+    padding-left: 30px;
+}
+
+.maior textarea {
+    height: 20vh;
+    text-align: left;
+    padding-top: 10px;
+}
+
+textarea {
+    resize: none;
+}
+
+/* icons */
+
+.inputs i {
+    position: absolute;
+    left: 10px;
+    color: #88888878;
+}
+
+/* todo icon dentro das inputs q nao sao da classe maior */
+.inputs:not(.maior) i {
+    top: 50%; /* posiciona o top do icon */
+    transform: translateY(-50%); /* move o proprio icon pra cima pela metade da sua altura*/
+}
+
+/* icon text area */
+.inputs.maior i {
+    top: 18px; /* magin top do icon */
+}
+
+.botaoEnviar{
+    display: inline-block;
+    font-weight: bold;
+    color: white;
+    background-color: #003F6A;
+    text-align: center;
+    border: none;
+    width: 8vw;
+    padding: 1vh;
+    border-radius: 25px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: 0.5s ease-in-out;
+    margin-top: 8px;
+}
+
+.botaoEnviar:hover{
+    background: rgba(128, 133, 136, 0.4);
+}
+
+.containerDireita{
+    background-color: #163561;
+    height: 85vh;
+    width: 40vw;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1;
+}
+
+.containerDireita .imagem{
+    background-image: url('../assets/imgs/mew.png');
+    height: 80%; 
+    width: 100%;   /* em vez de 40vw */
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* mobile */
+@media (max-width: 500px) {
+
+    .containerDireita{
+        display: none;
+    }
+
+    .botaoEnviar{
+        width: 35vw;
+        height: 6vh;
+        font-size: 1em;
+    }
+
+    .containerEsquerda{
+        height: 85vh;
+        width: 85vw;
+    }
+
+    input, textarea {
+        width: 65vw;
+        height: 6vh;
+    }
+
+    .btn_contato, .btn_log{
+        width: 20vw;
+        font-size: 0.9em;
+    }
+
+    .navlogo img{
+        height: 8vh;
+    }
+
+    input::placeholder{
+        font-size: 1.2em;
+    }
+
+    textarea::placeholder{
+        font-size: 1.2em;
+    }
+
+    h1{
+        font-size: 3em;
+    }
+
+}
+
+/* tablet */
+
+@media (min-width: 501px) and (max-width: 765px){
+    .containerDireita {
+        display: none;
+    }
+
+    .containerEsquerda {
+        width: 85vw;
+        height: 75vh;
+    }
+
+    .btn_contato, .btn_log {
+        width: 20vw;
+        font-size: 1.5em;
+    }
+
+    .navlogo img {
+        height: 12vh;
+    }
+
+    .botaoEnviar {
+        width: 25vw;
+        font-size: 1.5rem;
+    }
+
+    input, textarea {
+        width: 70vw;
+        height: 6vh;
+        margin-left: 12px;
+        padding-left: 40px;
+    }
+
+    h1 {
+        font-size: 4rem;
+    }
+
+    input::placeholder {
+        font-size: 1.5em;
+    }
+
+    textarea::placeholder {
+        font-size: 1.5em;
+    }
+
+    .inputs i {
+        font-size: 1.5em;
+    }
+
+    .inputs:not(.maior) i {
+        top: 30px; 
+        left: 20px;
+    }
+
+    .inputs.maior i {
+        top: 25px; 
+        left: 20px;
+    }
+}
+
+@media (min-width: 766px) and (max-width: 1025px) {
+
+    .btn_contato, .btn_log {
+        width: 20vw;
+        font-size: 1.5em;
+    }
+
+    .navlogo img {
+        height: 12vh;
+    }
+
+    .containerEsquerda {
+        width: 85vw;
+        height: 75vh;
+    }
+
+    .containerDireita {
+        display: none;
+    }
+
+    .botaoEnviar {
+        width: 20vw;
+        font-size: 1.5rem;
+    }
+
+    input, textarea {
+        width: 70vw;
+        height: 6vh;
+        margin-left: 12px;
+        padding-left: 40px;
+    }
+
+    h1 {
+        font-size: 4rem;
+    }
+
+    input::placeholder {
+        font-size: 2em;
+    }
+
+    textarea::placeholder {
+        font-size: 2em;
+    }
+
+    .inputs i {
+        font-size: 1.5em;
+    }
+
+    .inputs:not(.maior) i {
+        top: 30px; 
+        left: 20px;
+    }
+
+    .inputs.maior i {
+        top: 25px; 
+        left: 20px;
+    }
+}
+
+/* desktop */
+
+/* @media (min-width: 1026px) and (max-width: 1281px){
+ 
+    .btn_contato, .btn_log {
+        width: 10vw;
+        font-size: 1.5em;
+    }
+
+    .botaoEnviar {
+        width: 10vw;
+        font-size: 1.5em;
+    }
+
+    h1 {
+        font-size: 5rem;
+    }
+
+    input::placeholder {
+        font-size: 1.5em;
+    }
+
+    textarea::placeholder {
+        font-size: 1.5em;
+    }
+
+    .inputs i {
+        font-size: 1.5em;
+    }
+
+    .inputs:not(.maior) i {
+        top: 25px; 
+        left: 10px;
+    }
+
+    .inputs.maior i {
+        top: 25px; 
+        left: 10px;
+    }
+
+    .containerDireita{
+        height: 85vh;
+        width: 45vw;
+    }
+    
+    .containerDireita .imagem{
+        background-image: url('../assets/imgs/mew.png');
+        width: 35vw;
+    }
+
+    .containerEsquerda{
+        height: 85vh;
+        width: 45vw;
+    }
+    
+    input, textarea {
+        width: 35vw;
+        margin-left: 5px;
+        padding-left: 40px;
+    }
+
+} */

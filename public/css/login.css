@@ -1,0 +1,460 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Afacad", serif;
+}
+
+.navbar {
+    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10vh;
+    justify-content: space-between;
+    align-items: center;
+    /* background-color: #000000; */
+    background-color: whitesmoke;
+    padding: 0 4vh;
+    color: white;
+    font-family: "Afacad", serif;
+    font-weight: bold;
+}
+
+.botoes_nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 1vh;
+}
+
+.navlogo{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    width: 9dvw;
+    height: 9dvh;
+}
+
+.navlogo img{   
+    height: 6rem;
+    width: auto;
+    cursor: pointer;
+}
+
+.btn_contato, .btn_log {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    border: none;
+    width: auto;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: large;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn_contato{
+    background: #003F6A;
+}
+
+.btn_contato:hover{
+    background: rgba(0,49,82, 0.4);
+}
+
+.btn_log{
+    background: #106B86;
+}
+
+.btn_log:hover{
+    background: rgba(16, 106, 134, 0.4);
+}
+
+.container_login {
+    background-color: whitesmoke;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #567EBB;
+    height: 85vh;
+    width: 40vw;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    margin: -0.2em;
+}
+
+.form_login input {
+    padding: 10px 15px 10px 35px;
+    font-size: 1.3rem;
+    margin: 8px 0;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    height: 6vh;
+    border: none;
+    margin-left: 10%;
+}
+
+.form_login .input_icon {
+    position: absolute;
+    left: 15px;
+    width: 20px;
+    height: 20px;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    position: relative;
+}
+
+
+.form_login_titulo {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}
+
+.form_login_titulo h1,
+.form_login_subtitulo h1 {
+    font-size: 3rem;
+    color: #FEFFFF;
+}
+
+h1 {
+    font-size: 3rem;
+    text-align: center;
+    color: #FEFFFF;
+    margin-bottom: 10px;
+}
+
+input {
+    padding: 10px 10px 10px 35px;
+    font-size: 1.5rem;
+    margin: 10px 0;
+    border-radius: 25px;
+    border: none;
+    width: 100%;
+    height: 6vh;
+}
+
+.input_icon {
+    position: absolute;
+    top: 50%;
+    margin-left: 4%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    filter: brightness(0.8) contrast(1.5);
+}
+
+input::placeholder {
+    color: #C6C6C6;
+    font-size: 1.0rem;
+}
+
+.form button {
+    display: inline-block;
+    font-weight: bold;
+    color: white;
+    background-color: #003F6A;
+    text-align: center;
+    border: none;
+    width: 8vw;
+    padding: 1vh;
+    border-radius: 25px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: 0.5s ease-in-out;
+    margin-top: 8px;
+}
+
+/* BOTÃO DE LOGIN */
+.form_login button {
+    display: inline-block;
+    font-weight: bold;
+    color: white;
+    background-color: #003F6A;
+    text-align: center;
+    border: none;
+    width: 8vw;
+    padding: 1vh;
+    border-radius: 25px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: 0.5s ease-in-out;
+    margin-top: 8px;
+}
+
+.form button:hover {
+    background-color: #012b47;
+}
+
+.mensagemErro {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    color: white;
+    font-size: 1.5rem;
+    max-height: 2rem;
+}
+
+.img_login {
+    background-color: #163561;
+    height: 85vh;
+    width: 40vw;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.img_login img {
+    width: 80%;
+}
+
+.fade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 5;
+}
+
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    max-width: 90%;
+    height: auto;
+    padding: 1.2rem;
+    border-radius: 0.5rem;
+    background-color: white;
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: auto;
+    border-bottom: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    font-size: large;
+}
+
+.texto-modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    text-align: center;
+}
+
+.modal-header img {
+    height: 10rem;
+}
+
+.botao-modal,
+.botao-modal-erro {
+    margin-top: 2rem;
+}
+
+.botao-modal button,
+.botao-modal-erro button {
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    min-width: 150px;
+    font-size: 1.6rem;
+    color: #003F6A;
+    background: transparent;
+    border: solid 2px #003F6A;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.botao-modal-erro button {
+    font-size: 1.3rem;
+}
+
+
+@media (min-width: 766px) and (max-width: 1025px) {
+
+    .btn_contato,
+    .btn_log {
+        width: 20vw;
+        font-size: 1.2rem;
+    }
+
+    .form_login h1 {
+        font-size: 2.2rem;
+        text-align: center;
+        color: #FEFFFF;
+    }
+
+    .img_login {
+        display: none;
+    }
+
+    .navlogo img {
+        height: 12vh;
+    }
+
+
+    .form_login {
+        width: 85vw;
+        height: 75vh;
+    }
+
+    .img_login {
+        height: 100%;
+    }
+
+    .form button {
+        width: 15vw;
+    }
+
+}
+
+
+@media (max-width: 765px) {
+    .modal {
+        max-width: 95%;
+        padding: 1rem;
+        height: auto;
+    }
+
+    .modal-header img {
+        height: 8rem;
+    }
+
+    .modal-header {
+        font-size: 1.2rem;
+    }
+
+    .texto-modal {
+        font-size: 1rem;
+    }
+
+    .botao-modal button,
+    .botao-modal-erro button {
+        width: 60%;
+        font-size: 1.4rem;
+    }
+
+    .navlogo img {
+        height: 12vh;
+    }
+
+    .form_login {
+        width: 100%;
+        height: 100%;
+    }
+
+    .mensagemErro {
+        font-size: 1.2rem;
+    }
+
+    .form_login h2 {
+        font-size: 3rem;
+        text-align: center;
+    }
+
+    input {
+        font-size: 0.8rem;
+    }
+
+    .container_login {
+        flex-direction: column;
+    }
+
+    .img_login {
+        display: none;
+    }
+
+    /* O botão para entrar */
+    .form button {
+        width: 35vw;
+    }
+
+    .btn_contato, .btn_log {
+        width: 20vw;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .modal {
+        max-width: 100%;
+        padding: 0.8rem;
+    }
+
+    .modal-header img {
+        height: 6rem;
+    }
+
+    .texto-modal {
+        font-size: 0.8rem;
+    }
+
+    .botao-modal button,
+    .botao-modal-erro button {
+        width: 70%;
+        font-size: 1.2rem;
+    }
+
+    .navlogo img{
+        height: 8vh;
+    }
+
+    /* O botão estava quebrando na nav e para entrar */
+    .form button {
+        width: 35vw;
+    }
+
+  
+
+    .btn_contato, .btn_log {
+        width: 34vw;
+        font-size: 0.8rem;
+    }
+
+}

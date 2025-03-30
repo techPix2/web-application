@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/faleconosco.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" type="image/png" href="../assets/icon/logo.png" sizes="16x16" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <title>Fale Conosco</title>
+</head>
+
+<body>
+
+  <header>
+    <nav class="navbar">
+      <div class="navlogo">
+        <a href="../index.html"><img src="../assets/icon/logo.png" alt="" /></a>
+      </div>
+      <ul class="botoes_nav">
+        <li><a href="../index.html" class="btn_contato">Home</a></li>
+        <li><a href="./login.html" class="btn_log">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="containerEsquerda">
+      <div class="divInfos">
+        <h1>Fale conosco!</h1>
+
+        <div class="formulario">
+          <div class="inputs">
+            <input id="inputName" type="text" placeholder="Seu nome">
+            <i class="fa-solid fa-user fa-sm"></i>
+          </div>
+          
+          <div class="inputs">
+            <input id="inputEmail" type="text" placeholder="Seu e-mail">
+            <i class="fa-solid fa-envelope fa-sm"></i>
+          </div>
+          
+          <div class="inputs maior">
+            <textarea id="inputDuvidas" placeholder="Como podemos te ajudar?"></textarea>
+            <i class="fa-solid fa-comments fa-sm"></i>
+          </div>
+
+          <div class="botao">
+            <button class="botaoEnviar">Enviar</button>
+          </div>
+
+          <div class="mensagemErro" id="divmsg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="containerDireita">
+      <div class="imagem"></div>
+    </div>
+  </div>
+  
+</body>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<script src="../js/main.js"></script>
+
+</html>

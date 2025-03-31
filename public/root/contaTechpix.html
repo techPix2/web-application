@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../assets/icon/logo.png" sizes="16x16">
+    <title>Techpix - Gestão de empresas</title>
+    <link rel="stylesheet" href="../css/empresaTechpix.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
+</head>
+
+<body onload="mostrarCards()">
+    <!-- <main class="screen-dash-user">
+        <nav class="side-bar-user">
+            <div class="nav-logo-user">
+                <img src="../assets/imgs/user.png" alt="" class="imagem-perfil">
+            </div>
+            <div class="div_ola">
+                <span class="legenda_ola">Olá, <span id="razao">Banco Safra</span></span>
+            </div>
+            <div class="nav-list">
+                <div class="nav-list-options">
+                    <a href="./contaEmpresaRootServidores.html" class="opcao">
+                        <img src="../assets/icon/server.svg" alt="">
+                        <span class="nav-item">Servidores</span>
+                    </a>
+                    <a href="" class="opcao selecionado">
+                        <img src="../assets/icon/grupo.svg" alt="">
+                        <span class="nav-item">Funcionários</span>
+                    </a>
+                    <a href="./simulador.html" class="opcao">
+                        <img src="../assets/icon/suporte.svg" alt="">
+                        <span class="nav-item">Suporte</span>
+                    </a>
+                    </a>
+                </div>
+                <div class="logout">
+                    <a href="../index.html" class="opcao" onclick="sair()">
+                        <img src="../assets/icon/sair.svg" alt="">
+                        <span class="nav-item">Sair</span>
+                    </a>
+                </div>
+            </div>
+        </nav> -->
+        <div class="container">
+            <nav class="nav-lateral">
+                <br><br>
+                <div class="navlogo">
+                    <a href="../index.html"><img src="../assets/imgs/image.png" alt="" /></a>
+                </div>
+                <br>
+                <div class="nav-texto">
+                    <h1>Olá, <span id="razao">Nome Usuário</span></h1>
+                </div>
+                <div class="nav-botoes">
+                    <a class="btn_nav_ativado">🏭 Empresas</a>
+                </div>
+                <div class="nav-botoes">
+                    <a href="../index.html" class="btn_nav" id="sair">Sair</a>
+                </div>
+            </nav>
+        <main class="main-content-user">
+            <dialog id="modal" style="display: none; border: none"></dialog>
+            <div class="cabecalho">
+                <div style="width: 95%;display: flex; flex-direction: row; justify-content: space-between;">
+                    <div style="display: flex; flex-direction: row; align-items: center; gap: 5%;">
+                        <span class="titulo_pagina">EMPRESAS</span>
+                        <div class="circulo_imagem">
+                            <img src="../assets/icon/icone_add.svg" alt="" onclick="cadastrar()">
+                        </div>
+                    </div>
+                    <span class="horario" id="horario"></span>
+                </div>
+                <br>
+                <div style="display: flex; flex-direction: row; align-items: center; gap: 1%">
+                    <input class="input-search" type="text" oninput="mostrarCards(0)" id="ipt_search">
+                    <div class="filtro" id="div_preferencias">
+                        <img class="icon_filtro" src="../assets/icon/filtroDesativado.svg" alt="" onclick="ativarFiltro(0)">
+                    </div>
+                </div>
+            </div>
+            <div id="div_inferior"></div>
+            <dialog id="modal" style="display: none; border: none; width: 50%; height: 60%;"></dialog>
+        </main>
+    </div>
+</body>
+</html>
+
+<script src="../js/empresaTechpix.js"></script>

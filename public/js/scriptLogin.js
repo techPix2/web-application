@@ -136,15 +136,18 @@ function logar() {
                     btnProsseguir.addEventListener("click", () => {
 
                         setTimeout(function () {
-                            if (sessionStorage.CARGO_FUNCIONARIO == "Gestor") {
+                            if (sessionStorage.CARGO_FUNCIONARIO == "nivel 1") {
                                 window.location.href = "../root/contaEmpresaRootFuncionarios.html";
                                 modalLogin.style.display = 'none';
                             }
-                            else if (sessionStorage.CARGO_FUNCIONARIO == "Analista de Infraestrutura") {
+                            else if (sessionStorage.CARGO_FUNCIONARIO == "nivel 2") {
                                 window.location.href = "../user/dashboard.html";
                             }
-                            else if (sessionStorage.CARGO_FUNCIONARIO == "Ciêntista de Dados") {
+                            else if (sessionStorage.CARGO_FUNCIONARIO == "nivel 3") {
                                 window.location.href = "../user/dashboardCientista.html";
+                            }
+                            else if (sessionStorage.CARGO_FUNCIONARIO == "CEO") {
+                                window.location.href = "../root/contaTechpix.html"
                             }
                         }, 2000); // apenas para exibir o loading
 

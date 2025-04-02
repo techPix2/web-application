@@ -95,17 +95,15 @@ function validarSenha() {
 }
 
 function logar() {
-    const codigo = document.getElementById('iptcodigo').value;
     const email = document.getElementById('iptemail').value;
     const senha = document.getElementById('iptsenha').value;
     const modalLogin = document.querySelector('.modalLogin');
     const modalErroLogin = document.querySelector('.modalErroLogin');
     const btnProsseguir = document.querySelector('.continuar');
     const btnTentar = document.querySelector('.tentar-novamente');
-
+    console.log(senha)
     if (validarEmail() && validarSenha()) {
-
-        fetch("/usuarios/autenticar", {
+        fetch("/usuarios/autenticar", {  
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -113,7 +111,6 @@ function logar() {
             body: JSON.stringify({
                 emailServer: email,
                 senhaServer: senha,
-                codigoServer: codigo,
             })
         }).then(function (resposta) {
             console.log("ESTOU NO THEN DO entrar()!");
@@ -124,13 +121,13 @@ function logar() {
                 resposta.json().then(json => {
                     console.log(json);
 
-                    // Armazena os valores no sessionStorage
-                    sessionStorage.NOME_EMPRESA = json.nome_empresa;
-                    sessionStorage.CARGO_FUNCIONARIO = json.cargo_func;
-                    sessionStorage.ID_FUNCIONARIO = json.id_func;
-                    sessionStorage.ID_EMPRESA = json.id_empresa;
-                    sessionStorage.NOME_USUARIO = json.nome_func;
-                    sessionStorage.EMAIL_USUARIO = email;
+                    sessionStorage.NOME_EMPRESA = json.nome_empresa; 
+                    sessionStorage.CARGO_FUNCIONARIO = json.cargo_func;   
+                    sessionStorage.ID_FUNCIONARIO = json.id_func; 
+                    sessionStorage.ID_EMPRESA = json.id_empresa;   
+                    sessionStorage.NOME_USUARIO = json.nome_func;      
+                    sessionStorage.EMAIL_USUARIO = email;      
+                  
                     modalLogin.style.display = 'block';
 
                     btnProsseguir.addEventListener("click", () => {
@@ -149,12 +146,9 @@ function logar() {
                             else if (sessionStorage.CARGO_FUNCIONARIO == "CEO") {
                                 window.location.href = "../root/contaTechpix.html"
                             }
-                        }, 2000); // apenas para exibir o loading
-
-                    })
-
+                        }, 2000); 
+                    });
                 });
-
             } else {
                 console.log("Houve um erro ao tentar realizar o login!");
                 modalErroLogin.style.display = 'block';
@@ -170,7 +164,5 @@ function logar() {
         });
 
         return false;
-
-
     }
 }

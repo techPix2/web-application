@@ -1,33 +1,36 @@
 var usuarioModel = require("../models/usuarioModel");
 
 function autenticar(req, res) {
-    var codigo_empresa = req.body.codigoServer;
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
     
-        usuarioModel.autenticar(codigo_empresa, email, senha)
-            .then(
-                function (resultadoAutenticar) {
-                    console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
-                    console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`); // transforma JSON em String
-                    // É assim que vai chegar o json no Script Login
+    usuarioModel.autenticar(email, senha)
+        .then(
+            function (resultadoAutenticar) {
+                console.log(`\nResultados encontrados: ${resultadoAutenticar.length}`);
+                console.log(`Resultados: ${JSON.stringify(resultadoAutenticar)}`);
+                
+                if (resultadoAutenticar.length > 0) {
                     res.json({
-                        id_func: resultadoAutenticar[0].idFuncionario,
-                        nome_func: resultadoAutenticar[0].nome,
-                        id_empresa: resultadoAutenticar[0].idEmpresa,
-                        nome_empresa: resultadoAutenticar[0].razaoSocial,
-                        cargo_func: resultadoAutenticar[0].cargo,
-                        email: resultadoAutenticar[0].email,
-                        nome: resultadoAutenticar[0].nome
+                        id_func: resultadoAutenticar[0].idEmployer,
+                        nome_func: resultadoAutenticar[0].name,
+                        id_empresa: resultadoAutenticar[0].idCompany,
+                        nome_empresa: resultadoAutenticar[0].socialReason,
+                        cargo_func: resultadoAutenticar[0].role,
+                        email: email, 
+                        nome: resultadoAutenticar[0].name
                     });
+                } else {
+                    res.status(401).json({ erro: "Credenciais inválidas" });
                 }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log("\nHouve um erro ao realizar o login! Erro: ", erro.sqlMessage);
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao realizar o login! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
 }
 
 function cadastrar(req, res) {

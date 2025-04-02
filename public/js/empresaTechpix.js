@@ -3,9 +3,8 @@ razao.innerHTML = sessionStorage.NOME_USUARIO;
 const modal = document.getElementById("modal");
 
 function sair() {
-    sessionStorage.removeItem(EMAIL_USUARIO);
-    sessionStorage.removeItem(ID_FUNCIONARIO);
-    sessionStorage.removeItem(NOME_USUARIO);
+   sessionStorage.clear();
+   window.location.href = "../login.html"
 }
 
 function cadastrar() {
@@ -36,11 +35,11 @@ function cadastrar() {
         <div class="inferior-modal">
             <div class="esquerda-inferior-modal">
                 <div class="formulario">
-                    <span class="descricao-modal">Nome da empresa:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_nome">
+                    <span class="descricao-modal">Razão Social:<span class="obrigatorio">*</span></span>
+                    <input class="input-modal" type="text" id="ipt_razao">
                 </div>
                 <div class="formulario">
-                    <span class="descricao-modal">Email da empresa:<span class="obrigatorio">*</span></span>
+                    <span class="descricao-modal">Email:<span class="obrigatorio">*</span></span>
                     <input class="input-modal" type="text" id="ipt_email">
                 </div>
                 <div class="formulario">
@@ -49,20 +48,21 @@ function cadastrar() {
                 </div>
                 <div class="formulario">
                     <span class="descricao-modal">CNPJ:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_cnpj">
+                    <input class="input-modal" type="text" id="ipt_cnpj" maxlength="18">
                 </div>
                 <div class="formulario">
                     <span class="descricao-modal">Senha:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_senha">
+                    <input class="input-modal" type="password" id="ipt_senha">
                 </div>
             </div>
             <div class="direita-inferior-modal">
                 <div class="borda-imagem">
-                    <span class="descricao-modal">Foto de Perfil: <span class="obrigatorio">*</span></span>
+                    <span class="descricao-modal">Logo da Empresa: <span class="obrigatorio">*</span></span>
                     <div class="regiao-foto">
-                        <div class="fundo-imagem">
-                            <img class="upload-imagem" src="../assets/icon/upload.svg" alt="" style="width: 50%; height:50%">
-                        </div>
+                        <label for="upload-foto" class="fundo-imagem">
+                            <img id="preview-foto" class="upload-imagem" src="../assets/icon/upload.svg" alt="" style="width: 50%; height:50%">
+                            <input type="file" id="upload-foto" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                        </label>
                     </div>
                 </div>
                 <div class="regiao-botao">

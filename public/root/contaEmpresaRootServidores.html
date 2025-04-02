@@ -76,8 +76,33 @@
                     <a href="../index.html" class="btn_nav" id="sair">Sair</a>
                 </div>
             </nav>
+
+            <main class="main-content-user">
+                <dialog id="modal" style="display: none; border: none"></dialog>
+                <div class="cabecalho">
+                    <div style="width: 95%;display: flex; flex-direction: row; justify-content: space-between;">
+                        <div style="display: flex; flex-direction: row; align-items: center; gap: 2%;">
+                            <span class="titulo_pagina">SERVIDORES</span>
+                            <div class="circulo_imagem">
+                                <img src="../assets/icon/icone_add.svg" alt="" onclick="cadastrar()">
+                            </div>
+                        </div>
+                        <span class="horario" id="horario"></span>
+                    </div>
+                    <div style="display: flex; flex-direction: row; align-items: center; gap: 1%">
+                        <input class="input-search" type="text" oninput="mostrarCards(0)" id="ipt_search">
+                        <div class="filtro" id="div_preferencias">
+                            <img class="icon_filtro" src="../assets/icon/filtroDesativado.svg" alt="" onclick="ativarFiltro(0)">
+                        </div>
+                    </div>
+                </div>
+                <div id="div_inferior"></div>
+                <dialog id="modal" style="display: none; border: none; width: 50%; height: 60%;"></dialog>
+            </main>
     </div>
 </body>
 </html>
 
-<script src="../js/empresaRoot.js"></script>
+<script src="../js/empresaRootServidores.js"></script>
+
+

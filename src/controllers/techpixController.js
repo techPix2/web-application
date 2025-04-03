@@ -1,101 +1,97 @@
-var techpixModel = require("../models/techpixModel");
+const techpixModel = require("../models/techpixModel");
 
-function search(req, res) {
-  const id = req.params.id;
-  const mensagem = req.params.mensagem;
-
-  techpixModel.search(id, mensagem)
-  .then((resultado) => {
-    res.json({
-      lista: resultado
-    })
-  });
-}
-
-function filtrar(req, res) {
-  const id = req.params.id;
-  const selecionado = req.params.selecionado;
-
-  techpixModel.filtrar(id, selecionado)
-  .then((resultado) => {
-    res.json({
-      lista: resultado
-    })
-  });
-}
-
-function pesquisarFiltro(req, res) {
-  const id = req.params.id;
-  const tipo = req.params.tipo;
-  const filtro = req.params.filtro;
-
-  techpixModel.procurarFiltro(id, tipo, filtro)
-  .then((resultado) => {
-    res.json({
-      lista: resultado
-    })
-  });
-}
-
-function procurarCards(req, res) {
-  const id = req.params.id;
-
-  techpixModel.procurarCards(id)
-  .then((resultado) => {
-    res.json({
-      lista: resultado
-    })
-  });
-}
-
-function atualizarFuncionario(req, res) {
-  const id = req.body.idFuncionarioServer;
-  const nome = req.body.nomeServer;
-  const email = req.body.emailServer;
-  const cargo = req.body.cargoServer;
-  const equipe = req.body.equipeServer;
-
-  techpixModel.atualizarFuncionario(id, nome, email, cargo, equipe)
-  .then(function (resposta) {
-    res.json({
-      lista: resposta
-    });
-  })
-}
-
+// CADASTRAR EMPRESA (versão simplificada)
 function cadastrarEmpresa(req, res) {
-  const razaoSocial = req.body.razaoServer;
-  const email = req.body.emailServer;
-  const codigo = req.body.codigoServer;
-  const senha = req.body.senhaServer;
-  const cnpj = req.body.cnpjServer;
+  // Garanta que os dados estão chegando
+  console.log("Dados recebidos:", req.body);
 
-  techpixModel.cadastrarEmpresa(razaoSocial, email, codigo, senha, cnpj)
-  .then(function (resposta) {
-    res.json({
-      lista: resposta
-    })
+  const { 
+      razaoServer, 
+      emailServer, 
+      cnpjServer, 
+      telefoneServer 
+  } = req.body;
+
+  if (!razaoServer || !cnpjServer) {
+      return res.status(400).json({
+          success: false,
+          message: "Razão social e CNPJ são obrigatórios"
+      });
+  }
+
+  techpixModel.cadastrarEmpresa({
+      razaoServer: String(razaoServer),
+      emailServer: String(emailServer),
+      cnpjServer: String(cnpjServer),
+      telefoneServer: String(telefoneServer)
   })
-} 
-
-function removerFuncionario(req, res) {
-  const idFuncionario = req.body.idFuncionarioServer;
-  console.log(idFuncionario + " Controller");
-
-  techpixModel.removerFuncionario(idFuncionario)
-  .then(function (resultado) {
-    res.send({
-      lista: resultado
-    })
+  .then(() => {
+      res.json({ 
+          success: true,
+          message: "Cadastro realizado"
+      });
   })
+  .catch(error => {
+      console.error("Erro:", error);
+      res.status(500).json({
+          success: false,
+          message: "Erro no servidor"
+      });
+  });
+}
+
+// LISTAR TODAS AS EMPRESAS (para os cards)
+function mostrarCards(req, res) {
+    techpixModel.listarEmpresas()
+        .then(empresas => {
+            res.json(empresas);
+        })
+        .catch(error => {
+            console.error("Erro ao listar empresas:", error);
+            res.status(500).json([]);
+        });
+}
+
+async function excluirEmpresa(req, res) {
+    const idEmpresa = req.params.id;
+    
+    if (!idEmpresa || isNaN(idEmpresa)) {
+        return res.status(400).json({
+            success: false,
+            message: "ID inválido"
+        });
+    }
+
+    try {
+        const resultado = await techpixModel.excluirEmpresa(idEmpresa);
+        
+        res.json({
+            success: true,
+            message: "Empresa e todos os registros vinculados foram excluídos com sucesso"
+        });
+    } catch (error) {
+        console.error("Erro no controller:", error);
+        
+        let status = 500;
+        let message = "Erro ao excluir empresa";
+
+        if (error.message.includes('não encontrada')) {
+            status = 404;
+            message = error.message;
+        } else if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+            status = 400;
+            message = "Ainda existem registros vinculados que impedem a exclusão";
+        }
+
+        res.status(status).json({
+            success: false,
+            message: message
+        });
+    }
 }
 
 module.exports = {
-  search,
-  filtrar,
-  pesquisarFiltro,
-  procurarCards,
-  atualizarFuncionario,
-  cadastrarEmpresa,
-  removerFuncionario
+    cadastrarEmpresa,
+    mostrarCards,
+    excluirEmpresa
 };

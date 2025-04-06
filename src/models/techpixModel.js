@@ -1,66 +1,100 @@
-var database = require("../database/config");
+const database = require("../database/config");
 
-function search(id, mensagem) {
-  let instrucaoSql = "";
-
-  if(mensagem == 1) {
-    instrucaoSql = `SELECT * FROM Funcionario WHERE fkEmpresa = ${id} AND cargo <> "Gestor"`;
-  } else {
-    instrucaoSql = `SELECT * FROM Funcionario WHERE nome LIKE '%${mensagem}%' AND fkEmpresa = ${id} AND cargo <> "Gestor";`;
-  }
-
-  return database.executar(instrucaoSql);
+function cadastrarEmpresa(dados) {
+  const query = `
+      INSERT INTO Contact (email, phone) VALUES (
+          '${dados.emailServer}',
+          '${dados.telefoneServer}'
+      );
+      
+      INSERT INTO Photo (path) VALUES (
+          '/images/default-company.jpg'
+      );
+      
+      INSERT INTO Company (socialReason, cnpj, fkContact, fkPhoto) VALUES (
+          '${dados.razaoServer}',
+          '${dados.cnpjServer}',
+          LAST_INSERT_ID(),
+          LAST_INSERT_ID()
+      );
+  `;
+  return database.executar(query);
 }
 
-function filtrar(id, selecionado) {
-  let instrucaoSql = `SELECT ${selecionado} AS 'Cargo' FROM Funcionario WHERE fkEmpresa = ${id};`;
-
-  return database.executar(instrucaoSql);
+// LISTAR (APENAS DADOS ESSENCIAIS)
+function listarEmpresas() {
+    const query = `
+        SELECT 
+            c.idCompany,
+            c.socialReason AS nome,
+            c.cnpj,
+            ct.email,
+            ct.phone AS telefone
+        FROM Company c
+        JOIN Contact ct ON c.fkContact = ct.idContact
+    `;
+    return database.executar(query);
 }
 
-function procurarFiltro(id, tipo, filtro) {
-  let instrucaoSql;
-    if(filtro == "ASC" || filtro == "DESC") {
-      instrucaoSql = `SELECT * FROM Funcionario WHERE fkEmpresa = ${id} ORDER BY ${tipo} ${filtro} AND cargo <> "Gestor"`;
-    } else if(filtro.includes("@")) {
-      instrucaoSql = `SELECT * FROM Funcionario WHERE ${tipo} LIKE "%${filtro}" AND fkEmpresa = ${id} AND cargo <> "Gestor"`;
-    } else {
-      instrucaoSql = `SELECT * FROM Funcionario WHERE ${tipo} = "${filtro}" AND fkEmpresa = ${id} AND cargo <> "Gestor"`;
+async function excluirEmpresa(idCompany) {
+    try {
+        await database.executar(`
+            DELETE l FROM login l
+            JOIN employer e ON l.fkEmployer = e.idEmployer
+            WHERE e.fkCompany = ${idCompany}
+        `);
+
+        await database.executar(`
+            DELETE a FROM acesslog a
+            JOIN employer e ON a.fkEmployer = e.idEmployer
+            WHERE e.fkCompany = ${idCompany}
+        `);
+
+        await database.executar(`
+            DELETE FROM server
+            WHERE fkCompany = ${idCompany}
+        `);
+
+        await database.executar(`
+            DELETE FROM employer
+            WHERE fkCompany = ${idCompany}
+        `);
+
+        const empresa = await database.executar(`
+            SELECT fkContact, fkPhoto 
+            FROM Company 
+            WHERE idCompany = ${idCompany}
+        `);
+
+        if (empresa.length === 0) {
+            throw new Error('Empresa não encontrada');
+        }
+
+        await database.executar(`
+            DELETE FROM Company 
+            WHERE idCompany = ${idCompany}
+        `);
+
+        await database.executar(`
+            DELETE FROM Contact 
+            WHERE idContact = ${empresa[0].fkContact}
+        `);
+        
+        await database.executar(`
+            DELETE FROM Photo 
+            WHERE idPhoto = ${empresa[0].fkPhoto}
+        `);
+
+        return { affectedRows: 1 };
+    } catch (error) {
+        console.error("Erro no model:", error);
+        throw error;
     }
-
-    return database.executar(instrucaoSql);
 }
 
-function procurarCards(id) {
-  let instrucaoSql = `SELECT * FROM Funcionario WHERE fkEmpresa = ${id} AND cargo <> "Gestor"`;
-
-  return database.executar(instrucaoSql);
-}
-
-function atualizarFuncionario(id, nome, email, cargo, equipe) {
-  let instrucaoSql = `UPDATE Funcionario SET nome = "${nome}", email = "${email}", cargo = "${cargo}", equipe = "${equipe}" WHERE idFuncionario = ${id};`;
-  
-  return database.executar(instrucaoSql);
-}
-
-function cadastrarEmpresa(razaoSocial, codigo, email, senha, cnpj) {
-  let instrucaoSql = `INSERT INTO Empresa (razaoSocial, codigoEmpresa, email, senha, cnpj) VALUES ("${razaoSocial}", "${codigo}", "${email}", "${senha}", ${cnpj});`;
-
-  return database.executar(instrucaoSql);
-}
-
-function removerFuncionario(idFunc) {
-  let instrucaoSql = `DELETE FROM Funcionario WHERE idFuncionario = ${idFunc};`
-
-  return database.executar(instrucaoSql);
-}
 
 module.exports = {
-  search,
-  filtrar,
-  procurarFiltro,
-  procurarCards,
-  atualizarFuncionario,
-  cadastrarEmpresa,
-  removerFuncionario
+    cadastrarEmpresa,
+    listarEmpresas,
+    excluirEmpresa
 };

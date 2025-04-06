@@ -1,49 +1,48 @@
 const techpixModel = require("../models/techpixModel");
+const path = require("path");
 
-// CADASTRAR EMPRESA (versão simplificada)
 function cadastrarEmpresa(req, res) {
-  // Garanta que os dados estão chegando
-  console.log("Dados recebidos:", req.body);
+    const { razao, email, cnpj, telefone } = req.body;
+    const arquivo = req.file;
 
-  const { 
-      razaoServer, 
-      emailServer, 
-      cnpjServer, 
-      telefoneServer 
-  } = req.body;
+    if (!razao || !cnpj) {
+        return res.status(400).json({
+            success: false,
+            message: "Razão social e CNPJ são obrigatórios"
+        });
+    }
 
-  if (!razaoServer || !cnpjServer) {
-      return res.status(400).json({
-          success: false,
-          message: "Razão social e CNPJ são obrigatórios"
-      });
-  }
+    let photoPath = null;
+    if (arquivo) {
+        photoPath = "/uploads/" + arquivo.filename;
+    }
 
-  techpixModel.cadastrarEmpresa({
-      razaoServer: String(razaoServer),
-      emailServer: String(emailServer),
-      cnpjServer: String(cnpjServer),
-      telefoneServer: String(telefoneServer)
-  })
-  .then(() => {
-      res.json({ 
-          success: true,
-          message: "Cadastro realizado"
-      });
-  })
-  .catch(error => {
-      console.error("Erro:", error);
-      res.status(500).json({
-          success: false,
-          message: "Erro no servidor"
-      });
-  });
+    techpixModel.cadastrarEmpresa({
+        razaoServer: String(razao),
+        emailServer: String(email),
+        cnpjServer: String(cnpj),
+        telefoneServer: String(telefone),
+        photoServer: photoPath
+    })
+    .then(() => {
+        res.json({
+            success: true,
+            message: "Cadastro realizado"
+        });
+    })
+    .catch(error => {
+        console.error("Erro ao cadastrar empresa:", error);
+        res.status(500).json({
+            success: false,
+            message: "Erro no servidor"
+        });
+    });
 }
 
-// LISTAR TODAS AS EMPRESAS (para os cards)
 function mostrarCards(req, res) {
     techpixModel.listarEmpresas()
         .then(empresas => {
+            console.log(empresas.json);
             res.json(empresas);
         })
         .catch(error => {

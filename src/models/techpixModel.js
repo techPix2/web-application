@@ -8,7 +8,7 @@ function cadastrarEmpresa(dados) {
       );
       
       INSERT INTO Photo (path) VALUES (
-          '/images/default-company.jpg'
+          '${dados.photoServer}'
       );
       
       INSERT INTO Company (socialReason, cnpj, fkContact, fkPhoto) VALUES (
@@ -29,9 +29,11 @@ function listarEmpresas() {
             c.socialReason AS nome,
             c.cnpj,
             ct.email,
-            ct.phone AS telefone
+            ct.phone AS telefone,
+            p.path
         FROM Company c
         JOIN Contact ct ON c.fkContact = ct.idContact
+        JOIN Photo p on c.fkPhoto = p.idPhoto
     `;
     return database.executar(query);
 }

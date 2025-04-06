@@ -69,7 +69,6 @@ function cadastrarEmpresa(req, res) {
   const codigo = req.body.codigoServer;
   const senha = req.body.senhaServer;
   const cnpj = req.body.cnpjServer;
-
   techpixModel.cadastrarEmpresa(razaoSocial, email, codigo, senha, cnpj)
   .then(function (resposta) {
     res.json({

@@ -133,14 +133,14 @@ function logar() {
                     btnProsseguir.addEventListener("click", () => {
 
                         setTimeout(function () {
-                            if (sessionStorage.CARGO_FUNCIONARIO == "nivel 1") {
+                            if (sessionStorage.CARGO_FUNCIONARIO == "Administrador") {
                                 window.location.href = "../root/contaEmpresaRootFuncionarios.html";
                                 modalLogin.style.display = 'none';
                             }
-                            else if (sessionStorage.CARGO_FUNCIONARIO == "nivel 2") {
+                            else if (sessionStorage.CARGO_FUNCIONARIO == "Analista") {
                                 window.location.href = "../user/dashboard.html";
                             }
-                            else if (sessionStorage.CARGO_FUNCIONARIO == "nivel 3") {
+                            else if (sessionStorage.CARGO_FUNCIONARIO == "Cientista") {
                                 window.location.href = "../user/dashboardCientista.html";
                             }
                             else if (sessionStorage.CARGO_FUNCIONARIO == "CEO") {
@@ -150,6 +150,7 @@ function logar() {
                     });
                 });
             } else {
+                console.log(resposta)
                 console.log("Houve um erro ao tentar realizar o login!");
                 modalErroLogin.style.display = 'block';
                 btnTentar.addEventListener("click", () => modalErroLogin.style.display = 'none');

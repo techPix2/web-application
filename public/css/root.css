@@ -1,0 +1,19 @@
+:root {
+    --azulClaro:#77AFD4;
+    --azulnav: #567EBB;
+    --azulCinza:#455a8f;
+    --azulEscuro:#003F69;
+    --normal:#98FB98;
+    --atencao:#F0FB8F;
+    --critico:#D93E3E;
+}
+
+body {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    /* align-items: center; */
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+}

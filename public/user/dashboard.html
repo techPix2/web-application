@@ -18,7 +18,6 @@
 </head>
 
 <body onload="carregarDados()">
-
     <header>
         <nav class="navbar">
             <div class="navlogo">
@@ -29,7 +28,6 @@
             </ul>
         </nav>
     </header>
-
     <!-- container geral -->
     <div class="container">
 
@@ -220,44 +218,25 @@
             <div class="modal" style="display: none;">
                 <div class="content">
                     <div class="componente">
-
                         <h1 class="tituloComp">CPU:</h1>
-
                         <div class="card-container">
-
                             <div class="card">
-                                <h3 class="subtituloComp">Porcentagem usada e disponivel:</h3>
-                                <canvas id="pizza1" width="300" height="300"></canvas>
+                                <h3 class="subtituloComp">Uso da CPU:</h3>
+                                <canvas id="usoCpu"></canvas>
                             </div>
-
                             <div class="card">
                                 <h3 class="subtituloComp">Frequência da CPU:</h3>
-                                <canvas id="linha1"></canvas>
-                            </div>
-
-                            <div class="card">
-                                <h3 class="subtituloComp">Interrupções do sistema:</h3>
-                                <canvas id="linha2"></canvas>
-                            </div>
-
-                            <div class="card">
-                                <h3 class="subtituloComp">Interrupções de softwares:</h3>
-                                <canvas id="linha3"></canvas>
+                                <canvas id="freqCpu"></canvas>
                             </div>
                         </div>
-
                     </div>    
                     <div class="componente">
-
                         <h1 class="tituloComp">Disco:</h1>
-
                         <div class="card-container">
-
                             <div class="card">
                                 <h3 class="subtituloComp">Armazenamento usado e disponivel:</h3>
                                 <canvas id="pizza2" width="300" height="300"></canvas>
                             </div>
-
                             <div class="card">
                                 <h3 class="subtituloComp">Memória Swap usada e disponivel:</h3>
                                 <canvas id="pizza3" width="300" height="300"></canvas>
@@ -265,49 +244,35 @@
 
                         </div>
                     </div>
-
                     <div class="componente">
-
                         <h1 class="tituloComp">RAM:</h1>
-
                         <div class="card-container">
-
                             <div class="card">
                                 <h3 class="subtituloComp">Memória usada e disponivel:</h3>
-                                <canvas id="pizza4" width="300" height="300"></canvas>
+                                <canvas id="usoRam"></canvas>
                             </div>
-                            
-                            <!-- <div class="card">
+                            <div class="card">
                                 <h3 class="subtituloComp">Porcentagem da RAM:</h3>
-                                <canvas id="donut6" width="300" height="300"></canvas>
-                            </div> -->
+                                <canvas id="percentRam"></canvas>
+                            </div>
                         </div>
                     </div>
-
                     <div class="componente">
-
                         <h1 class="tituloComp">Rede:</h1>
-
                         <div class="card-container">
-
                             <div class="card">
                                 <h3 class="subtituloComp">Pacotes enviados:</h3>
-                                <canvas id="linha4"></canvas>
+                                <canvas id="linha6"></canvas>
                             </div>
-
                             <div class="card">
                                 <h3 class="subtituloComp">Pacotes recebidos:</h3>
                                 <canvas id="linha5"></canvas>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
 </body>
 
 </html>

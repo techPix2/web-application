@@ -38,11 +38,10 @@ function carregarGraficos() {
     ];
 
     const graficosLinhas = [
-        { id: 'linha1', data: [80, 100, 20, 50, 10, 60, 120], label: 'Frequencia da CPU', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']},
-        { id: 'linha2', data: [0, 1, 0, 2, 0, 0, 0], label: 'Interrupções', labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']},
-        { id: 'linha3', data: [50, 55, 65, 54, 52, 58, 49], label: 'Interrupções', labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']},
-        { id: 'linha4', data: [100, 100, 110, 110, 120, 120, 130], label: 'Pacotes enviados', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']},
-        { id: 'linha5', data: [85, 94, 84, 97, 78, 40, 140], label: 'Pacotes recebidos', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']}
+        { id: 'usoCpu', data: [80, 100, 20, 50, 10, 60, 120], label: 'Porcentagem de uso', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']},
+        { id: 'freqCpu', data: [0, 1, 0, 2, 0, 0, 0], label: 'Frequencia da CPU', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']},
+        { id: 'usoRam', data: [50, 55, 65, 54, 52, 58, 49], label: 'Interrupções', labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']},
+        { id: 'percentRam', data: [100, 100, 110, 110, 120, 120, 130], label: 'Porcentagem de uso', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']}
     ];
 
     graficosPizza.forEach(grafico => {

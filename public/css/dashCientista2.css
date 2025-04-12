@@ -1,0 +1,47 @@
+@import url(components.css);
+
+
+.container-filtro{
+    /* border: red 1px solid; */
+    min-height: 5%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filtroMaquina{
+    text-align: center;
+    border-radius: 20px;
+    font-size: 20px;
+    background-color: var(--azulClaro);
+    border: 2px solid var(--azulEscuro);
+    height: 90%;
+    width: 50%;
+
+}
+
+.filtroGrafico{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    height: 2%;
+}
+
+.buttonFiltro{
+    width: 20%;
+    border: none;
+    border-radius: 10px;
+}
+
+.buttonFiltro:hover{
+    background-color: var(--azulEscuro);
+    color: white;
+}
+
+canvas{
+    max-width: 100%;
+    max-height: 70%;
+}

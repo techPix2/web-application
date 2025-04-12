@@ -4,111 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechPix | Dashboard</title>
-    <link rel="stylesheet" href="../css/dashCientista.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/dashCientista2.css">
     <link rel="icon" type="image/png" href="../assets/icon/logo.png" sizes="16x16">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../js/dashboardCientista.js"></script>
+    <script src="../js/dashboard2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
-
-<body onload="carregarDados()">
-
-    <header>
-        <nav class="navbar">
-          <div class="navlogo">
-            <a href="../index.html"><img src="../assets/icon/logo.png" alt="" /></a>
-          </div>
-          <ul class="botoes_nav">
-            <li><a href="../index.html" class="btn_log">Home</a></li>
-          </ul>
-        </nav>
-      </header>
-
-    <div class="container">
-        <!-- Sessão Lateral -->
-        <nav class="nav-lateral">
-            <div class="nav-logo-user">
-                <img src="" alt="">
+    <body onload="carregarGraficos()">
+        <div class="sideBar">
+            <img src="" alt="" class="profilePicture">
+            <div class="buttonsNavbar">
+                <button class="buttonNavbar">Suporte</button>
+                <button class="buttonNavbar">Dashboard</button>
+                <button class="buttonNavbar">Alertas</button>
             </div>
-            <div class="nav-texto">
-                <h1>Olá, <span id="nome_usuario"></span></h1>
+            <div class="buttonsBaixo">
+                <button class="buttonSair">Sair</button>
             </div>
-            <div class="nav-botoes">
-                <a href="./dashboardCientista.html" id="atual" class="btn_nav">Servidores</a>
-            </div>
-            <div class="nav-botoes">
-                <a href="../index.html" class="btn_nav">Suporte</a>
-            </div>
-            <div class="nav-botoes">
-                <a href="../index.html" class="btn_nav" id="sair">Sair</a>
-            </div>
-        </nav>
-
-        <!-- KPIs -->
-        <div class="container-dash">
-
-            <div class="container-kpis">
-                <div class="kpis">
-                    <div class="kpi">
-                        <div class="kpi-texto">
-                            <h1>Servidor com mais alertas</h1>
-                        </div>
-                        <div class="kpi-media">
-                            <h1>Servidor 01</h1>
-                        </div>
-                    </div>
-                    <div class="kpi">
-                        <div class="kpi-texto">
-                            <h1>Percentual de Servidores com Alertas Críticos</h1>
-                        </div>
-                        <div class="kpi-percentual">
-                            <h1>10%</h1>
-                        </div>
-                    </div>
-                    <div class="kpi">
-                        <div class="kpi-texto">
-                            <h1>Componente com Maior Número de Alertas</h1>
-                        </div>
-                        <div class="kpi-componente">
-                            <h1>CPU</h1>
-                        </div>
-                    </div>
+        </div>
+        <div class="mainContainer">
+            <div class="container-kpi">
+                <div class="kpi">
+                    <h3 class="tituloKPI">Quadrante com mais alertas</h3>
+                    <h3 class="valorKPI">4</h3>
+                </div>
+                <div class="kpi">
+                    <h3 class="tituloKPI">Dia com mais alertas</h3>
+                    <h3 class="valorKPI">Segunda</h3>
+                </div>
+                <div class="kpi">
+                    <h3 class="tituloKPI">Componente com mais alertas</h3>
+                    <h3 class="valorKPI">CPU</h3>
                 </div>
             </div>
-
-            <!-- Sessão Gráficos -->
-            <div class="container-grafico">
-                <div class="graficos">
-                    <div class="grafico">
-                        <div class="select-servidor">
-                            <select>
-                                <option selected disabled>Servidor</option>
-                                <option>Servidor 1</option>
-                                <option>Servidor 2</option>
-                            </select>
-                        </div>
-                        <div class="grafico-pizza">
-                            <canvas id="pizza" width="280"></canvas>
-                        </div>
+            <div class="container-graficos">
+                <div class="grafico">
+                    <h3 class="titulo-grafico">Alertas por quadrante</h3>
+                    <canvas id="alertaQuadrante"></canvas>
+                </div>
+                <div class="grafico">
+                    <h3 class="titulo-grafico">Componentes do Quadrante</h3>
+                    <canvas id="alertaComponente"></canvas>
+                </div>
+            </div>
+            <div class="container-filtro">
+                <select name="" id="filtroMaquina" class="filtroMaquina">
+                    <option value="#" selected disabled>Selecione uma máquina para monitorar</option>
+                </select>
+            </div>
+            <div class="container-graficos">
+                <div class="grafico">
+                    <div class="filtroGrafico">
+                        <button class="buttonFiltro">Dia</button>
+                        <button class="buttonFiltro">Mês</button>
+                        <button class="buttonFiltro">Ano</button>
                     </div>
-                    <div class="grafico">
-                        <div class="grafico-barra">
-                            <div class="botoes-grafico">
-                                <button class="botao-grafico">Semana</button>
-                                <button class="botao-grafico">Mês</button>
-                              </div>
-                            <canvas id="barra" height="00"></canvas>
-                        </div>
-                    </div>
+                    <h3 class="titulo-grafico">Componentes da máquina</h3>
+                    <canvas id="componenteMaquina"></canvas>
+                </div>
+                <div class="grafico">
+                    <h3 class="titulo-grafico">Alertas da máquina</h3>
+                    <canvas id="alertaMaquina"></canvas>
                 </div>
             </div>
         </div>
-    </div>
-</body>
-
+    </body>
 </html>

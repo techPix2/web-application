@@ -4,20 +4,19 @@ const modal = document.getElementById("modal");
 
 function sair() {
    sessionStorage.clear();
-   window.location.href = "../login.html"
+   window.location.href = "../login.html";
 }
 
 function cadastrar() {
     modal.style.display = 'flex';
     modal.showModal();
-    console.log(window.innerWidth);
 
     if(window.innerWidth <= 1000) {
-        modal.style.width = 70 + "%";
-        modal.style.height = 75 + "%";
+        modal.style.width = "70%";
+        modal.style.height = "75%";
     } else {
-        modal.style.width = 45 + "%";
-        modal.style.height = 75 + "%";
+        modal.style.width = "45%";
+        modal.style.height = "75%";
     }
 
     modal.innerHTML = `
@@ -33,496 +32,149 @@ function cadastrar() {
             </div>
         </div>
         <div class="inferior-modal">
-            <div class="esquerda-inferior-modal">
-                <div class="formulario">
-                    <span class="descricao-modal">Razão Social:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_razao">
-                </div>
-                <div class="formulario">
-                    <span class="descricao-modal">Email:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_email">
-                </div>
-                <div class="formulario">
-                    <span class="descricao-modal">Código da empresa:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_codigo">
-                </div>
-                <div class="formulario">
-                    <span class="descricao-modal">CNPJ:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_cnpj" maxlength="18">
-                </div>
-                <div class="formulario">
-                    <span class="descricao-modal">Senha:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="password" id="ipt_senha">
-                </div>
+            <div class="formulario">
+                <span class="descricao-modal">Logo da Empresa:</span>
+                <input type="file" id="uploadLogo" accept="image/*" onchange="previewLogo()">
+                <img id="logoPreview" style="max-width: 100px; display: none;">
             </div>
-            <div class="direita-inferior-modal">
-                <div class="borda-imagem">
-                    <span class="descricao-modal">Logo da Empresa: <span class="obrigatorio">*</span></span>
-                    <div class="regiao-foto">
-                        <label for="upload-foto" class="fundo-imagem">
-                            <img id="preview-foto" class="upload-imagem" src="../assets/icon/upload.svg" alt="" style="width: 50%; height:50%">
-                            <input type="file" id="upload-foto" accept="image/*" style="display: none;" onchange="previewImage(this)">
-                        </label>
-                    </div>
-                </div>
-                <div class="regiao-botao">
-                    <button class="botao-modal" onclick="enviarCadastro()">Cadastrar</button>
-                </div>
+            <div class="formulario">
+                <span class="descricao-modal">Razão Social:<span class="obrigatorio">*</span></span>
+                <input class="input-modal" type="text" id="ipt_razao">
             </div>
+            <div class="formulario">
+                <span class="descricao-modal">Email:<span class="obrigatorio">*</span></span>
+                <input class="input-modal" type="text" id="ipt_email">
+            </div>
+            <div class="formulario">
+                <span class="descricao-modal">CNPJ:<span class="obrigatorio">*</span></span>
+                <input class="input-modal" type="text" id="ipt_cnpj">
+            </div>
+            <div class="formulario">
+                <span class="descricao-modal">Telefone:<span class="obrigatorio">*</span></span>
+                <input class="input-modal" type="text" id="ipt_telefone">
+            </div>
+            <button class="botao-modal" onclick="enviarCadastro()">Cadastrar</button>
         </div>
     `;
 }
 
 function enviarCadastro() {
-    const razaoSocial = ipt_nome.value;
-    const email = ipt_email.value;
-    const senha = ipt_senha.value
-    const cnpj = ipt_cnpj.value;
-    const codigoEmpresa = ipt_codigo.value;
+    const razao = document.getElementById('ipt_razao').value;
+    const email = document.getElementById('ipt_email').value;
+    const cnpj = document.getElementById('ipt_cnpj').value;
+    const telefone = document.getElementById('ipt_telefone').value;
+    const logo = document.getElementById('uploadLogo').files[0];
 
-    const senhaMaiusculo = senha.toUpperCase();
-    const senhaMinusculo = senha.toLowerCase();
+    if (!razao || !cnpj) {
+        alert("Preencha todos os campos obrigatórios!");
+        return;
+    }
 
-    // validacao
-    if(!razaoSocial.includes(" ")) {
-        alert("É necessário que coloque o nome completo da empresa");
-    } else if(!email.includes("@") || !email.includes(".com")) {
-        alert("Por favor insira um email válido");
-    } else if(!senha.includes(1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9) || senha == senhaMaiusculo || senha == senhaMinusculo || senha.length <= 8) {
-        alert("Por favor insira uma senha válida");
-    } else if(cnpj.length < 14) {
-        alert("Por favor inserir um CNPJ válido.")
-    } else if(codigoEmpresa.length > 20) {
-        alert("Por favor inserir um código menor.")
-    } else {
+    const formData = new FormData();
+    formData.append('razao', razao);
+    formData.append('email', email);
+    formData.append('cnpj', cnpj);
+    formData.append('telefone', telefone);
+    if (logo) {
+        formData.append('logo', logo); // mesmo nome usado no back-end
+    }
 
     fetch("/techpix/cadastrarEmpresa", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            razaoServer: razaoSocial,
-            emailServer: email,
-            cnpjServer: cnpj,
-            senhaServer: senha,
-            codigoServer: codigoEmpresa
-        })
-    }).then(function (resultado) {
-        console.log(resultado);
-        closeModal();
-        mostrarCards();
+        body: formData
     })
-    }
-}
-
-function ativarFiltro(atividade) {
-    let ativacao = atividade;
-
-    if(ativacao == 0) {
-        div_preferencias.innerHTML = `
-            <img class="icon_filtro" src="../assets/icon/filtroAtivo.svg" alt="" onclick="ativarFiltro(1)">
-            <select class="select-filtro" id="slt_tipo" onchange="trocarSegundoFiltro()">
-                <option value="#" selected disabled>Categoria</option>
-                <option value="nome" >Nome</option>
-                <option value="email">Email</option>
-                <option value="cargo">Cargo</option>
-            </select>
-            <select class="select-filtro" id="slt_categoria" oninput="mostrarCards(1, 1)">
-                <option value="#" selected disabled>Tipo</option>
-                <option value="ASC">A-Z</option>
-                <option value="DESC">Z-A</option>
-            </select>
-        `;
-    } else {
-        div_preferencias.innerHTML = `
-            <img class="icon_filtro" src="../assets/icon/filtroDesativado.svg" alt="" onclick="ativarFiltro(0)">
-        `;
-    }
-}
-
-function trocarSegundoFiltro() {
-    let selecionado = slt_tipo.value;
-
-    if(selecionado == "nome") {
-        slt_categoria.innerHTML = `
-            <option value="#" selected disabled>Tipo</option>
-            <option value="ASC">A-Z</option>
-            <option value="DESC">Z-A</option>
-        `;
-    } else {
-        fetch(`/empresas/${selecionado}/${id}/filtro`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (resposta){
-            slt_categoria.innerHTML = '<option value="#" selected disabled>Tipo</option>';
-
-            resposta.json()
-            .then(json => {
-                let vetorEmail = [];
-                let vetor = [];
-                for(let i = 0; i < (json.lista).length; i++) {
-                    let opcaoAtual = (json.lista[i]).Cargo ;
-                    let confirmacao = 0;
-                    let mensagem = "";
-                    let palavra = ""
-
-                        if(opcaoAtual.includes("@")) {
-                            for(let ind = 0; ind < opcaoAtual.length; ind++) {
-                                if(opcaoAtual[ind] == "@") {
-                                    confirmacao = 1;
-                                    palavra = "@";
-                                } else if(confirmacao == 1) {
-                                    palavra += opcaoAtual[ind];
-                                }
-    
-                                if(!vetorEmail.includes(palavra)) {
-                                    vetorEmail.push(palavra);
-                                    mensagem = palavra;
-                                }
-                            }
-                        } else if(!vetor.includes(opcaoAtual)) {
-                            vetor.push(opcaoAtual);
-                            mensagem = opcaoAtual;
-                        }
-                    if(mensagem != "") {
-                        slt_categoria.innerHTML += `<option value="${mensagem}">${mensagem}</option>`;
-                    }
-                }
-            })
-        })
-    }
-}
-
-function carregarHorario() {
-    let horario = document.getElementById('horario');
-    let dataAtual = new Date();
-    let minuto = dataAtual.getMinutes();
-    let dia = dataAtual.getDate();
-    let mes = dataAtual.getMonth();
-
-    if(dia < 10) {
-        dia = dia.toString();
-        dia = '0' + dia;
-    }
-
-    if(mes < 10) {
-        mes += 1;
-        mes = mes.toString();
-        mes = '0' + mes;
-    }
-
-    if(minuto < 10) {
-        minuto = minuto.toString();
-        minuto = '0' + minuto;
-    }
-
-    let mensagem = dataAtual.getHours() + ":" + minuto + " " + dia + "/" + mes + "/" + dataAtual.getFullYear();
-    horario.innerHTML = mensagem;
-}
-
-function mostrarCards(search, filtro) {
-    carregarHorario()
-
-    div_inferior.innerHTML = "";   
-
-    if(search == undefined && filtro == undefined) {
-        fetch(`/empresas/${id}/procurarCards`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (resposta) {
-            resposta.json()
-            .then(json => {
-
-                for(let i = 0; i < (json.lista).length; i++) {
-                    let pessoaAtual = (json.lista[i])
-                
-                div_inferior.innerHTML += `
-                    <div class="cardMaior">
-                        <div class="cabecalho-card">
-                            <div class="esquerda-cabecalho-card">
-                                <img class="imagem-perfil-card" src="../assets/imgs/user.png" alt="">
-                                <span class="titulo-card" id="spn_nome">${pessoaAtual.nome}</span>
-                            </div>
-                            <div class="circulo_icone">
-                                <img class="icone-edit" onclick="editar('${pessoaAtual.nome}', '${pessoaAtual.email}', '${pessoaAtual.senha}', '${pessoaAtual.cargo}', ${pessoaAtual.idFuncionario})" src="../assets/icon/edit.svg" alt="">
-                            </div>
-                        </div>
-                        <div class="cardMenor">
-                            <span class="textoCard">Email:</span>
-                            <span class="textoCard" id="spn_email">${pessoaAtual.email}</span>
-                            <span class="textoCard">Senha:</span>
-                            <span class="textoCard" id="spn_senha">${pessoaAtual.senha}</span>
-                            <span class="textoCard">Cargo:</span>
-                            <span class="textoCard" id="spn_cargo">${pessoaAtual.cargo}</span>
-                        </div>
-                    </div>
-                `;
-
-                }
-            })
-        })
-    } else if(filtro == undefined) {
-        let mensagem = ipt_search.value;
-        if(mensagem == "") {
-            mensagem = 1;
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Empresa cadastrada com sucesso!");
+            closeModal();
+            mostrarCards();
+        } else {
+            alert("Erro: " + data.message);
         }
-    
-        fetch(`/empresas/${mensagem}/${id}/search`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        }).then(function (resposta) {
-            
-            resposta.json()
-                .then(json => {
-                    for(let i = 0; i < (json.lista).length; i++) {
-                        let pessoaAtual = (json.lista[i])
-                    
-                    div_inferior.innerHTML += `
-                        <div class="cardMaior">
-                            <div class="cabecalho-card">
-                                <div class="esquerda-cabecalho-card">
-                                    <img class="imagem-perfil-card" src="../assets/imgs/user.png" alt="">
-                                    <span class="titulo-card" id="spn_nome">${pessoaAtual.nome}</span>
-                                </div>
-                                <div class="circulo_icone">
-                                    <img class="icone-edit" onclick="editar('${pessoaAtual.nome}', '${pessoaAtual.email}', '${pessoaAtual.senha}', '${pessoaAtual.cargo}', ${pessoaAtual.idFuncionario})" src="../assets/icon/edit.svg" alt="">
-                                </div>
-                            </div>
-                            <div class="cardMenor">
-                                <span class="textoCard">Email:</span>
-                                <span class="textoCard" id="spn_email">${pessoaAtual.email}</span>
-                                <span class="textoCard">Senha:</span>
-                                <span class="textoCard" id="spn_senha">${pessoaAtual.senha}</span>
-                                <span class="textoCard">Cargo:</span>
-                                <span class="textoCard" id="spn_cargo">${pessoaAtual.cargo}</span>
-                            </div>
-                        </div>
-                    `;
-                    }
-            })
-        })
-    } else {
-        let filtro = slt_categoria.value;
-        let tipo = slt_tipo.value;
-    
-        fetch(`/empresas/${id}/${tipo}/${filtro}/pesquisarFiltro`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then(function (resposta) {
-    
-            resposta.json()
-            .then(json => {
-
-                for(let i = 0; i < (json.lista).length; i++) {
-                    let pessoaAtual = (json.lista[i])
-                
-                div_inferior.innerHTML += `
-                    <div class="cardMaior">
-                        <div class="cabecalho-card">
-                            <div class="esquerda-cabecalho-card">
-                                <img class="imagem-perfil-card" src="../assets/imgs/user.png" alt="">
-                                <span class="titulo-card" id="spn_nome">${pessoaAtual.nome}</span>
-                            </div>
-                            <div class="circulo_icone">
-                                <img class="icone-edit" onclick="editar('${pessoaAtual.nome}', '${pessoaAtual.email}', '${pessoaAtual.senha}', '${pessoaAtual.cargo}', ${pessoaAtual.idFuncionario})" src="../assets/icon/edit.svg" alt="">
-                            </div>
-                        </div>
-                        <div class="cardMenor">
-                            <span class="textoCard">Email:</span>
-                            <span class="textoCard" id="spn_email">${pessoaAtual.email}</span>
-                            <span class="textoCard">Senha:</span>
-                            <span class="textoCard" id="spn_senha">${pessoaAtual.senha}</span>
-                            <span class="textoCard">Cargo:</span>
-                            <span class="textoCard" id="spn_cargo">${pessoaAtual.cargo}</span>
-                        </div>
-                    </div>
-                `;
-                }
-            })
-        })
-    }
-}
-
-function editar(nome, email, senha, cargo, id) {
-    modal.style.display = 'flex';
-    modal.showModal();
-    console.log(id);
-
-    if(window.innerWidth <= 1000) {
-        modal.style.width = 70 + "%";
-        modal.style.height = 75 + "%";
-    } else {
-        modal.style.width = 45 + "%";
-        modal.style.height = 70 + "%";
-    }
-    
-    modal.innerHTML = `
-        <div class="superior-modal">
-            <div class="esquerda-superior-modal">
-                <div class="circulo_imagem-modal">
-                    <img class="icon-modal" src="../assets/icon/edit.svg" alt="">
-                </div>
-                <span class="titulo_pagina">Editar</span>
-                <div class="circulo_imagem-modal-v">
-                    <img src="../assets/icon/remove.svg" alt="" class="icon-delete" onclick="deleteModal(${id}, '${nome}')">
-                </div>
-            </div>
-            <div class="direita-superior-modal">
-                <img class="close" src="../assets/icon/close.svg" alt="" onclick="closeModal()">
-            </div>
-        </div>
-        <div class="inferior-modal">
-            <div class="esquerda-inferior-modal">
-                <div class="formulario">
-                    <span class="descricao-modal">Nome Completo:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_nome" value="${nome}">
-                </div>
-                <div class="formulario">
-                    <span class="descricao-modal">Email:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_email" value="${email}">
-                </div>
-                <div class="formulario">
-                    <span class="descricao-modal">Senha:<span class="obrigatorio">*</span></span>
-                    <input class="input-modal" type="text" id="ipt_senha" value="${senha}">
-                </div>
-                <div class="formulario">
-                    <span class="descricao-modal">Cargo:<span class="obrigatorio">*</span></span>
-                    <select class="input-modal" id="ipt_cargo">
-                        <option value="Analista de Infraestrutura">Analista de Infraestrutura</option>
-                        <option value="Cientista de Dados">Cientista de Dados</option>
-                    </select>
-                </div>
-            </div>
-            <div class="direita-inferior-modal">
-                <div class="borda-imagem">
-                    <span class="descricao-modal">Foto de Perfil: <span class="obrigatorio">*</span></span>
-                    <div class="regiao-foto">
-                        <div class="fundo-imagem">
-                            <img class="upload-imagem" src="../assets/imgs/user.png" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="regiao-botao">
-                    <button class="botao-modal" onclick="enviarEdicao(${id})">Editar</button>
-                </div>
-            </div>
-        </div>
-    `;
-    ipt_cargo.value = cargo;
-}
-
-function enviarEdicao(id) {
-    const idFuncionario = id;
-    const nome = document.getElementById("ipt_nome");
-    const email = document.getElementById("ipt_email");
-    const cargo = document.getElementById("ipt_cargo");
-    const equipe = document.getElementById("ipt_equipe");
-
-    const nomeValue = nome.value;
-    const emailValue = email.value;
-    const cargoValue = cargo.value;
-    const equipeValue = equipe.value;
-
-    fetch("/empresas/atualizarFuncionario", {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            idFuncionarioServer: idFuncionario,
-            nomeServer: nomeValue,
-            emailServer: emailValue,
-            cargoServer: cargoValue,
-            equipeServer: equipeValue
-        })
-    }).then(function (resultado) {
-        console.log(resultado);
-        mostrarCards();
-        closeModal();
-            modal.style.width = 45 + "%";
-            modal.style.height = 55 + "%";
-            modal.innerHTML = `
-            <div class="superior-modal">
-                <div class="esquerda-superior-modal">
-                    <div class="circulo_imagem-modal">
-                        <img src="../assets/icon/edit.svg" alt="" style="width: 50%; height:50%">
-                    </div>
-                    <span class="titulo_pagina">Editar</span>
-                    <div class="circulo_imagem-modal-v">
-                        <img src="../assets/icon/remove.svg" alt="" class="icon">
-                    </div>
-                </div>
-                <div class="direita-superior-modal">
-                    <img class="close" src="../assets/icon/close.svg" alt="" onclick="closeModal()">
-                </div>
-            </div>
-            `;
-        })
-}
-
-function deleteModal(idFuncionario, nome) {
-    modal.style.display = 'flex';
-    modal.showModal();
-
-    if(window.innerWidth <= 1000) {
-        modal.style.width = 70 + "%";
-        modal.style.height = 18 + "%";
-        modal.style.paddingTop = 5 + "%"
-    } else {
-        modal.style.width = 35 + "%";
-        modal.style.height = 40 + "%";
-    }
-    console.log(idFuncionario);
-
-    modal.innerHTML = `
-        <div class="superior-modal">
-            <div class="esquerda-superior-modal">
-                <div class="circulo_imagem-modal-excluir">
-                    <img class="" src="../assets/icon/remover-vermelho.svg" alt="">
-                </div>
-                <span class="titulo_modal_excluir">Excluir</span>
-            </div>
-            <div class="direita-superior-modal">
-                <img class="close" src="../assets/icon/close-vermelho.svg" alt="" onclick="closeModal()">
-            </div>
-        </div>
-        <div class="inferior-modal-excluir">
-            <span class="mensagem-excluir">Deseja mesmo excluir o funcionário ${nome}?</span>
-            <div class="area-botao-excluir">
-                <button class="botao-modal-excluir" onclick="enviarDelete(${idFuncionario})">Confirmar</button>
-            </div>
-        </div>
-    `;
-}
-
-function enviarDelete(idFuncionario) {
-    console.log(idFuncionario + "ID");
-
-    fetch(`/empresas/removerFuncionario`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            idFuncionarioServer: idFuncionario
-        })
-    }).then(function (resultado){
-        console.log(resultado);
-        mostrarCards();
-        closeModal();
     })
+    .catch(error => {
+        console.error("Erro:", error);
+        alert("Erro ao cadastrar empresa.");
+    });
 }
 
 function closeModal() {
     modal.style.display = 'none';
     modal.close();
 }
+
+function carregarHorario() {
+    const data = new Date();
+    horario.innerHTML = data.toLocaleTimeString() + " " + data.toLocaleDateString();
+}
+
+carregarHorario();
+setInterval(carregarHorario, 60000);
+
+async function mostrarCards() {
+    try {
+        const response = await fetch("/techpix/mostrarCards");
+        
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
+        const empresas = await response.json();
+        const divInferior = document.getElementById("div_inferior");
+
+        divInferior.innerHTML = "";
+
+        empresas.forEach(empresa => {
+            const cardHTML = `
+                <div class="cardMaior" style="margin: 10px; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+                <button class="btn-excluir" onclick="excluirEmpresa(${empresa.idCompany})" 
+                style="background-color: red; border-radius: 10px; font-size: 16px; cursor: pointer; padding: 3%">
+                 Excluir empresa
+                </button>
+                <div class="cabecalho-card">
+                    <span class="titulo-card" style="font-weight: bold;">${empresa.nome}</span>
+                    </div>
+                    <div class="cardMenor" style="margin-top: 10px; text-align: center;">
+                        <img class="logo" src="../${empresa.path}" 
+                            alt="Logo de ${empresa.nome}" style="max-width: 100px; height: auto; display: block; margin: 0 auto;">
+                        <div><strong>CNPJ:</strong> ${empresa.cnpj}</div>
+                        <div><strong>Email:</strong> ${empresa.email}</div>
+                        <div><strong>Telefone:</strong> ${empresa.telefone}</div>
+                    </div>
+                </div>
+            `;
+            divInferior.innerHTML += cardHTML;
+        });
+
+    } catch (error) {
+        console.error("Falha ao carregar empresas:", error);
+        alert("Erro ao carregar dados das empresas");
+    }
+}
+
+window.onload = function() {
+    mostrarCards(); 
+    carregarHorario(); 
+};
+
+async function excluirEmpresa(id) {
+    console.log('ID recebido para exclusão:', id);
+    if (confirm('Tem certeza que deseja excluir esta empresa?')) {
+        try {
+            const response = await fetch(`/techpix/excluirEmpresa/${id}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                mostrarCards();
+            } else {
+                alert('Erro ao excluir empresa');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Falha na comunicação com o servidor');
+        }
+    }
+}
+

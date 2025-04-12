@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="../css/dashCientista2.css">
     <link rel="icon" type="image/png" href="../assets/icon/logo.png" sizes="16x16">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../js/dashboard2.js"></script>
+    <script src="../js/dasboardCientista.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
-    <body onload="carregarGraficos()">
+    <body onload="carregarGraficos(); verificarQuadranteComMaisAlertas(); verificarDiaDaSemana(); encontrarComponenteMaisFrequente()">
         <div class="sideBar">
             <img src="" alt="" class="profilePicture">
             <div class="buttonsNavbar">
@@ -26,15 +26,15 @@
             <div class="container-kpi">
                 <div class="kpi">
                     <h3 class="tituloKPI">Quadrante com mais alertas</h3>
-                    <h3 class="valorKPI">4</h3>
+                    <h3 class="valorKPI" id="maisAlertasQuadranteKPI">4</h3>
                 </div>
                 <div class="kpi">
                     <h3 class="tituloKPI">Dia com mais alertas</h3>
-                    <h3 class="valorKPI">Segunda</h3>
+                    <h3 class="valorKPI" id="maisAlertasDiaKPI">Segunda</h3>
                 </div>
                 <div class="kpi">
                     <h3 class="tituloKPI">Componente com mais alertas</h3>
-                    <h3 class="valorKPI">CPU</h3>
+                    <h3 class="valorKPI" id="maisAlertasComponente">CPU</h3>
                 </div>
             </div>
             <div class="container-graficos">

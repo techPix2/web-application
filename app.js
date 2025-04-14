@@ -22,6 +22,7 @@ var empresasRouter = require("./src/routes/empresas");
 var techpixRouter = require("./src/routes/techpix")
 var servidorRouter = require("./src/routes/servidores")
 var dashCientistaRouter = require("./src/routes/dashCientista")
+var dashAnalistaRouter = require("./src/routes/dashAnalista");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -32,8 +33,9 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/empresas", empresasRouter);
-app.use("/techpix", techpixRouter)
-app.use("/dashCientista", dashCientistaRouter)
+app.use("/techpix", techpixRouter);
+app.use("/dashAnalista", dashAnalistaRouter);
+app.use("/dashCientista", dashCientistaRouter);
 app.use("/servidores", servidorRouter)
 
 app.listen(PORTA_APP, function () {

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechPix | Cadastro de Empresa</title>
+    <link rel="stylesheet" href="../css/cadastroempresa.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/png" href="../assets/icon/logo.png" alt="Logo da TechPix" sizes="16x16">
+    <script src="../js/scriptLogin.js"></script>
+
+<!-- Script ViaCEP -->
+    <script>
+    function pesquisacep(valor) {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = valor.replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                document.getElementById('iptrua').value="...";
+                document.getElementById('iptbairro').value="...";
+                document.getElementById('iptcidade').value="...";
+                document.getElementById('iptestado').value="...";
+
+                //Cria um elemento javascript.
+                var script = document.createElement('script');
+
+                //Sincroniza com o callback.
+                script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                //Insere script no documento e carrega o conteúdo.
+                document.body.appendChild(script);
+
+            } else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    }
+
+        function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('iptrua').value=("");
+            document.getElementById('iptbairro').value=("");
+            document.getElementById('iptcidade').value=("");
+            document.getElementById('iptestado').value=("");
+    }
+
+    function meu_callback(conteudo) {
+        if (!("erro" in conteudo)) {
+            //Atualiza os campos com os valores.
+            document.getElementById('iptrua').value=(conteudo.logradouro);
+            document.getElementById('iptbairro').value=(conteudo.bairro);
+            document.getElementById('iptcidade').value=(conteudo.localidade);
+            document.getElementById('iptestado').value=(conteudo.uf);
+        } else {
+            //CEP não Encontrado.
+            limpa_formulário_cep();
+            alert("CEP não encontrado.");
+        }
+    }
+        
+    </script>
+
+</head>
+
+<body>
+    <!-- Sessão Navbar -->
+    <header>
+        <nav class="navbar">
+          <div class="navlogo">
+            <a href="../index.html"><img src="../assets/icon/logo.png" alt="" /></a>
+          </div>
+          <ul class="botoes_nav">
+            <li><a href="../index.html" class="btn_log">Home</a></li>
+            <li><a href="./faleconosco.html" class="btn_contato">Contate-nos</a></li>
+          </ul>
+        </nav>
+      </header>
+      
+    <!-- Sessão Login -->
+    <div class="container_login">
+        <div class="form_login">
+            <div class="form_login_titulo">
+                <h1>Bem-vindo(a)!</h1>
+            </div>
+            <div class="form_login_subtitulo">
+                <h1>Cadastre-se</h1>
+            </div>
+
+            <div class="form">
+                <input id="iptrazaosocial" oninput="validarRazaoSocial()" placeholder="Razao Social">
+            </div>
+            
+            <div class="form">
+                <input id="iptcnpj" oninput="validarCNPJ()" placeholder="CNPJ">
+            </div>
+
+            <div class="form">
+                <input id="iptcep" size="10" maxlength="9" onblur="pesquisacep(this.value)"  placeholder="CEP">
+            </div>
+            
+            <div class="form">
+                <input id="iptrua" size="60" placeholder="Rua">
+            </div>
+
+            <div class="form">
+                <input id="iptbairro" size="40" placeholder="Bairro">
+            </div>
+            
+            <div class="form">
+                <input id="iptcidade" size="40" placeholder="Cidade">
+            </div>
+            
+            <div class="form">
+                <input id="iptestado" size="2"  placeholder="Estado">
+            </div>
+
+            <div class="form">
+                <button onclick="logar()">Entrar</button>
+            </div>
+            <div class="mensagemErro" id="divmsg"></div>
+        </div>
+        <div class="img_login">
+            <img src="../assets/imgs/cadastroEmpresa.png">
+        </div>
+    </div>
+    
+    <!-- Modal de sucesso -->
+    <div class="modalLogin" style="display: none;">
+        <div class="fade"></div>
+        <div class="modal">
+            <div class="modal-header">
+                <img src="../assets/icon/verified.gif">
+                <div class="texto-modal">
+                    <h2>Cadastro realizado com Sucesso!</h2>
+                    <h3>Clique no botão abaixo para ser redirecionado</h3>
+                </div>
+                <div class="botao-modal">
+                    <button class="continuar">Continuar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modalErroLogin" style="display: none;">
+        <div class="fade"></div>
+        <div class="modal">
+            <div class="modal-header">
+                <img src="../assets/icon/stop.gif">
+                <div class="texto-modal">
+                    <h2>Houve um erro ao tentar realizar o Cadastro!</h2>
+                    <h3>Clique no botão abaixo para tentar novamente</h3>
+                </div>
+                <div class="botao-modal-erro">
+                    <button class="tentar-novamente">Tentar Novamente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,113 +1,134 @@
-const id = sessionStorage.ID_FUNCIONARIO;
+document.addEventListener("DOMContentLoaded", function() {
+    const nomeUsuario = document.getElementById('nome_usuario');
+    const listaServidores = document.getElementById('lista-servidores');
+    const loadingElement = document.getElementById('loading-servidores');
+    const modal = document.getElementById('modal-detalhes');
+    const btnFecharModal = document.querySelector('.fechar-modal');
+    // KPIs
+    const totalAlertasElement = document.getElementById('total-alertas');
+    const percentSemAlertasElement = document.getElementById('percent-sem-alertas');
+    const percentComAlertasElement = document.getElementById('percent-com-alertas');
 
-document.addEventListener("DOMContentLoaded", function () {
+  
+    carregarDadosIniciais();
 
-    
-    const modal = document.querySelector('.modal');
-    const botoesVisualizar = document.querySelectorAll('.btn-visualizar');
-
-    const switchModal = () => {
-        if (modal.style.display == 'block') {
-            modal.style.display = 'none';
-        } else {
-            modal.style.display = 'block';
+    async function carregarDadosIniciais() {
+        try {
+            exibirDadosUsuario();
+            await carregarServidores();
+            configurarEventos();
+            carregarGraficos();
+        } catch (erro) {
+            console.error("Erro ao carregar dados:", erro);
+            mostrarErro("Falha ao carregar dados do servidor");
         }
-        console.log("modal atualizado");
-    };
+    }
 
-    botoesVisualizar.forEach(button => {
-        button.addEventListener('click', function () {
-            switchModal();
-        });
-    });
+    function exibirDadosUsuario() {
+        const nome = sessionStorage.getItem('NOME_USUARIO') || 'Usuário';
+        nomeUsuario.textContent = nome;
+    }
 
-    window.onclick = function (event) {
-        if (event.target === modal) {
-            switchModal();
+    async function carregarServidores() {
+        mostrarLoading(true);
+        
+        try {
+            const idEmpresa = sessionStorage.getItem('ID_EMPRESA');
+            if (!idEmpresa) throw new Error("ID da empresa não encontrado");
+
+            const resposta = await fetch(`/dashAnalista/servidores/${idEmpresa}`);
+            if (!resposta.ok) throw new Error("Erro na resposta da API");
+
+            const servidores = await resposta.json();
+            atualizarListaServidores(servidores);
+            atualizarKPIs(servidores);
+        } finally {
+            mostrarLoading(false);
         }
-    };
+    }
 
-});
+    function atualizarListaServidores(servidores) {
+        listaServidores.innerHTML = servidores.map(servidor => {
 
-function carregarGraficos() {
-    const graficosPizza = [
-        { id: 'pizza1', data: [80, 100], label: 'Porcentagem da CPU' },
-        { id: 'pizza2', data: [60, 90], label: 'Armazenamento' },
-        { id: 'pizza3', data: [40, 20], label: 'Memoria Swap' },
-        { id: 'pizza4', data: [20, 90], label: 'RAM' }
-    ];
+            let cor, texto;
+            const totalAlertas = servidor.totalAlertas || 0;
+            
+            if (totalAlertas === 0) {
+                cor = 'grey';
+                texto = 'Normal';
+            } else if (totalAlertas === 1) {
+                cor = 'yellow'; 
+                texto = 'Atenção';
+            } else {
+                cor = 'red';
+                texto = 'Crítico';
+            }
 
-    const graficosLinhas = [
-        { id: 'usoCpu', data: [80, 100, 20, 50, 10, 60, 120], label: 'Porcentagem de uso', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']},
-        { id: 'freqCpu', data: [0, 1, 0, 2, 0, 0, 0], label: 'Frequencia da CPU', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']},
-        { id: 'usoRam', data: [50, 55, 65, 54, 52, 58, 49], label: 'Interrupções', labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']},
-        { id: 'percentRam', data: [100, 100, 110, 110, 120, 120, 130], label: 'Porcentagem de uso', labels: ['14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00']}
-    ];
+            return `
+                <div class="servidor" data-id="${servidor.idServer}">
+                    <div class="nome"><p>${servidor.hostName}</p></div>
+                    <div class="ip"><p>${servidor.macAddress}</p></div>
+                    <div class="localizacao"><p>Posição ${servidor.position}</p></div>
+                    <div class="status"><p>${totalAlertas}</p></div>
+                    <div class="situacao">
+                        <p style="color: ${cor}; font-weight: bold;">${texto}</p>
+                    </div>
+                    <div class="hardware">
+                        <button class="btn-visualizar">Visualizar</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
 
-    graficosPizza.forEach(grafico => {
-        const ctx = document.getElementById(grafico.id);
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                datasets: [{
-                    label: grafico.label,
-                    data: grafico.data,
-                    backgroundColor: ['#4868A5', '#899EC9'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#ffffff',
-                            font: {
-                                size: 18
-                            }
-                        }
-                    }
-                }
-            }            
-        });
-    });
+    function atualizarKPIs(servidores) {
+        const totalServidores = servidores.length;
+        const servidoresComAlertas = servidores.filter(s => (s.totalAlertas || 0) > 0).length;
+        const totalAlertas = servidores.reduce((sum, s) => sum + (s.totalAlertas || 0), 0);
+        
+        totalAlertasElement.textContent = totalAlertas;
+        percentComAlertasElement.textContent = totalServidores > 0 
+            ? `${Math.round((servidoresComAlertas / totalServidores) * 100)}%` 
+            : '0%';
+        percentSemAlertasElement.textContent = totalServidores > 0 
+            ? `${Math.round(((totalServidores - servidoresComAlertas) / totalServidores) * 100)}%` 
+            : '100%';
+    }
 
-
-    graficosLinhas.forEach(grafico => {
-        const ctx = document.getElementById(grafico.id);
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: grafico.labels,
-                datasets: [{
-                    label: grafico.label,
-                    data: grafico.data,
-                    backgroundColor: ['#4868A5'],
-                    borderColor: '#4868A5',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#ffffff',
-                            font: {
-                                size: 18
-                            }
-                        }
-                    }
-                }
+    function configurarEventos() {
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-visualizar')) {
+                const idServidor = e.target.closest('.servidor').dataset.id;
+                abrirModalDetalhes(idServidor);
             }
         });
-    });
 
-}
+        btnFecharModal.addEventListener('click', fecharModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) fecharModal();
+        });
+    }
 
-function carregarDados() {
-    carregarGraficos();
-    nome_usuario.innerHTML = sessionStorage.NOME_USUARIO;
-}
+    function abrirModalDetalhes(idServidor) {
+        console.log("Abrindo modal para servidor:", idServidor);
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function fecharModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    function mostrarLoading(mostrar) {
+        loadingElement.style.display = mostrar ? 'block' : 'none';
+        listaServidores.style.opacity = mostrar ? 0.5 : 1;
+    }
+
+    function mostrarErro(mensagem) {
+        listaServidores.innerHTML = `<div class="erro">${mensagem}</div>`;
+    }
+
+    function carregarGraficos() {
+    }
+});

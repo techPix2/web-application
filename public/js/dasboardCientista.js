@@ -1,17 +1,18 @@
 
-function carregarGraficos(){
+async function carregarGraficos(){
     const alertaQuadrante = document.getElementById("alertaQuadrante")
     const alertaComponente = document.getElementById("alertaComponente")
     const componenteMaquina = document.getElementById("componenteMaquina")
     const alertasMaquina = document.getElementById("alertaMaquina")
-    
+    let quadrantes = await carregarAlertasTodosQuadrantes();
+
     new Chart(alertaQuadrante, {
         type: 'bar',
         data: {
             labels: ["Quadrante 1", "Quadrante 2", "Quadrante 3", "Quadrante 4"],
             datasets: [{
                 label: "Quantidade Alertas",
-                data: [15, 20, 5, 10],
+                data: [quadrantes[0].length, quadrantes[1].length, quadrantes[2].length, quadrantes[3].length],
                 backgroundColor: ['#4868A5'],
                 borderColor: '#4868A5',
                 borderWidth: 2

@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const totalAlertas = servidor.totalAlertas || 0;
             
             if (totalAlertas === 0) {
-                cor = 'grey';
+                cor = 'white';
                 texto = 'Normal';
             } else if (totalAlertas === 1) {
                 cor = 'yellow'; 
@@ -130,5 +130,171 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function carregarGraficos() {
+    
+            // Uso da CPU - Linha
+            new Chart(document.getElementById('usoCpu'), {
+                type: 'line',
+                data: {
+                    labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
+                    datasets: [{
+                        label: 'Uso da CPU (%)',
+                        data: [20, 45, 35, 60, 40],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        
+            // Frequência da CPU - Linha
+            new Chart(document.getElementById('freqCpu'), {
+                type: 'line',
+                data: {
+                    labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
+                    datasets: [{
+                        label: 'Frequência (GHz)',
+                        data: [2.2, 2.4, 2.6, 2.3, 2.5],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 3.5
+                        }
+                    }
+                }
+            });
+        
+            // Armazenamento - Pizza
+            new Chart(document.getElementById('pizza2'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Usado (GB)', 'Disponível (GB)'],
+                    datasets: [{
+                        label: 'Armazenamento',
+                        data: [180, 320],
+                        backgroundColor: ['#FF6384', '#36A2EB'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        
+            // Memória Swap - Pizza
+            new Chart(document.getElementById('pizza3'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Usado (GB)', 'Disponível (GB)'],
+                    datasets: [{
+                        label: 'Swap',
+                        data: [2, 6],
+                        backgroundColor: ['#FFCE56', '#4BC0C0'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+            // RAM - Usada e Disponível
+new Chart(document.getElementById('ramUso'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Usada (GB)', 'Disponível (GB)'],
+        datasets: [{
+            data: [6, 10], // Exemplo: 6GB usada de 16GB
+            backgroundColor: ['#FF6384', '#36A2EB']
+        }]
+    },
+    options: {
+        responsive: true
     }
 });
+
+// RAM - Porcentagem
+new Chart(document.getElementById('ramPorcentagem'), {
+    type: 'bar',
+    data: {
+        labels: ['Porcentagem de Uso'],
+        datasets: [{
+            label: '% RAM usada',
+            data: [37.5], // Exemplo: 6GB / 16GB
+            backgroundColor: ['#4BC0C0']
+        }]
+    },
+    options: {
+        responsive: true,
+        indexAxis: 'y',
+        scales: {
+            x: {
+                max: 100
+            }
+        }
+    }
+});
+
+// Rede - Pacotes enviados
+new Chart(document.getElementById('redeEnviados'), {
+    type: 'bar',
+    data: {
+        labels: ['Enviados'],
+        datasets: [{
+            label: 'Pacotes (mil)',
+            data: [120],
+            backgroundColor: ['#9966FF']
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Rede - Pacotes recebidos
+new Chart(document.getElementById('redeRecebidos'), {
+    type: 'bar',
+    data: {
+        labels: ['Recebidos'],
+        datasets: [{
+            label: 'Pacotes (mil)',
+            data: [145],
+            backgroundColor: ['#FF9F40']
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+        }
+        
+    }
+);

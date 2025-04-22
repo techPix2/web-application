@@ -392,16 +392,25 @@ select:hover {
 
 #modal {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 2%;
+    width: 100%;
+    height: 100%;
+    
 }
 
 .superior-modal {
-    width: 100%;
-    height: 100%;
     display: flex;
+    width: 100rem;
+    height: 6rem;
+    align-items: center;
     justify-content: space-around;
+}
+.superior-modal button{
+    width: 30%;
+    border-radius: 15px;
+    border: none;
+    background-color: #003F69;
+    color: white;
+height: 30%;
 }
 
 .esquerda-superior-modal {
@@ -682,10 +691,6 @@ height: 800px;
         padding-top: 2%;
     }
 
-    .superior-modal {
-        width: 100%;
-        height: 10%;
-    }
 
     .circulo_imagem-modal {
         width: 60%;
@@ -898,11 +903,6 @@ height: 800px;
     #modal {
         width: 400px;
         padding-bottom: 9%;
-    }
-
-    .superior-modal {
-        width: 30%;
-        height: 10%;
     }
 
     .esquerda-superior-modal {

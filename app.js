@@ -23,6 +23,7 @@ var techpixRouter = require("./src/routes/techpix")
 var servidorRouter = require("./src/routes/servidores")
 var dashCientistaRouter = require("./src/routes/dashCientista")
 var dashAnalistaRouter = require("./src/routes/dashAnalista");
+var gestorRouter = require("./src/routes/gestor")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -37,6 +38,7 @@ app.use("/techpix", techpixRouter);
 app.use("/dashAnalista", dashAnalistaRouter);
 app.use("/dashCientista", dashCientistaRouter);
 app.use("/servidores", servidorRouter)
+app.use("/gestor", gestorRouter)
 
 app.listen(PORTA_APP, function () {
     console.log(`

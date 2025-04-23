@@ -21,6 +21,21 @@ function listarServidores(req,res){
             });
         });
 }
+
+function inativarServidor(req,res){
+    var id_server = req.params.id_server;
+    gestorModel.inativarServidor(id_server)
+        .then((resultado) => { 
+            res.status(200).json(resultado);
+        })
+        .catch((erro) => {
+            res.status(500).json({ 
+                erro: "Erro interno no servidor",
+                detalhes: erro.message
+            });
+        });
+}
 module.exports = {
-    listarServidores
+    listarServidores,
+    inativarServidor
 };

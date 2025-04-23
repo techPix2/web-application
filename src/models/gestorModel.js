@@ -16,6 +16,14 @@ AND s.active = 1;`;
     return database.executar(instrucaoSql);
 }
 
+function inativarServidor(id_server){
+    var instrucaoSql = `UPDATE Server SET active = 0 where idServer = ${id_server};`
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+
+}
 module.exports = {
-    listarServidores
+    listarServidores,
+    inativarServidor
 };

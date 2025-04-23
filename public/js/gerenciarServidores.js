@@ -121,7 +121,23 @@ async function carregarServidores() {
         console.log(err);
     });
 }
-
+async function inativarServidor(id_server) {
+    console.log(id_server)
+    try {
+        const resposta = await fetch(`/gestor/inativarServidor/${id_server}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (resposta.ok) {
+            listarServidores();
+        }
+    } catch (erro) {
+        console.error('Erro na requisição:', erro);
+    }
+    
+}
 async function listarServidores(){
     let servidores = await carregarServidores();
     const tabela = document.getElementById("table_servidores");
@@ -134,7 +150,7 @@ async function listarServidores(){
         tabela.innerHTML += `<tr>
                         <td>${servidores[index].hostName}</td>
                         <td>${servidores[index].macAddress}</td>
-                        <td><button>Excluir</button></td>
+                        <td><button onclick="inativarServidor(${servidores[index].idServer})">Excluir</button></td>
                     </tr>`
     }
 }

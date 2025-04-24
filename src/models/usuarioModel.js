@@ -10,7 +10,7 @@ function autenticar(email, senha) {
             c.socialReason
         FROM Employer AS e
         JOIN Company AS c ON e.fkCompany = c.idCompany
-        WHERE e.email = '${email}' AND e.password = '${senha}';
+        WHERE e.email = '${email}' AND e.password = '${senha}' AND e.active = '1';
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);

@@ -48,46 +48,84 @@ function procurarCards(req, res) {
   });
 }
 
-function atualizarFuncionario(req, res) {
-  const id = req.body.idFuncionarioServer;
-  const nome = req.body.nomeServer;
-  const email = req.body.emailServer;
-  const cargo = req.body.cargoServer;
-  const equipe = req.body.equipeServer;
+function atualizarEmployer(req, res) {
+  const { idEmployerServer, nomeServer, emailServer, cargoServer, senhaServer } = req.body;
 
-  empresaModel.atualizarFuncionario(id, nome, email, cargo, equipe)
+  if (!idEmployerServer || !nomeServer || !emailServer || !cargoServer) {
+      return res.status(400).json({
+          success: false,
+          message: "Todos os campos obrigatórios devem ser preenchidos"
+      });
+  }
+
+  empresaModel.atualizarEmployer(idEmployerServer, nomeServer, emailServer, cargoServer, senhaServer)
   .then(function (resposta) {
-    res.json({
-      lista: resposta
-    });
+      res.status(200).json({
+          success: true,
+          message: "Funcionário atualizado com sucesso",
+          data: resposta
+      });
   })
+  .catch(function (erro) {
+      console.error(erro);
+      res.status(500).json({
+          success: false,
+          message: "Erro ao atualizar funcionário",
+          error: erro.message
+      });
+  });
 }
 
-function cadastrarFuncionario(req, res) {
-  const nome = req.body.nomeServer;
-  const email = req.body.emailServer;
-  const cargo = req.body.cargoServer;
-  const senha = req.body.senhaServer;
-  const fkEmpresa = req.body.fkEmpresaServer;
+function cadastrarEmployer(req, res) {
+  if (!req.body.nomeServer || !req.body.emailServer || !req.body.cargoServer || !req.body.senhaServer || !req.body.fkEmpresaServer) {
+    return res.status(400).json({ error: "Todos os campos são obrigatórios" });
+  }
 
-  empresaModel.cadastrarFuncionario(nome, email, cargo, senha, fkEmpresa)
+  empresaModel.cadastrarEmployer(
+    req.body.nomeServer,
+    req.body.emailServer,
+    req.body.cargoServer,
+    req.body.senhaServer,
+    req.body.fkEmpresaServer
+  )
   .then(function (resposta) {
-    res.json({
-      lista: resposta
-    })
+    res.status(201).json({
+      success: true,
+      message: "Funcionário cadastrado com sucesso",
+      data: resposta
+    });
   })
-} 
+  .catch(function (erro) {
+    console.error(erro);
+    res.status(500).json({
+      success: false,
+      message: "Erro ao cadastrar funcionário",
+      error: erro.message
+    });
+  });
+}
 
-function removerFuncionario(req, res) {
-  const idFuncionario = req.body.idFuncionarioServer;
-  console.log(idFuncionario + " Controller");
+function removerEmployer(req, res) {
+  if (!req.body.idEmployerServer) {
+    return res.status(400).json({ error: "ID do funcionário é obrigatório" });
+  }
 
-  empresaModel.removerFuncionario(idFuncionario)
+  empresaModel.removerEmployer(req.body.idEmployerServer)
   .then(function (resultado) {
-    res.send({
-      lista: resultado
-    })
+    res.status(200).json({
+      success: true,
+      message: "Funcionário removido com sucesso",
+      data: resultado
+    });
   })
+  .catch(function (erro) {
+    console.error(erro);
+    res.status(500).json({
+      success: false,
+      message: "Erro ao remover funcionário",
+      error: erro.message
+    });
+  });
 }
 
 module.exports = {
@@ -95,7 +133,7 @@ module.exports = {
   filtrar,
   pesquisarFiltro,
   procurarCards,
-  atualizarFuncionario,
-  cadastrarFuncionario,
-  removerFuncionario
+  atualizarEmployer,
+  cadastrarEmployer,
+  removerEmployer
 };

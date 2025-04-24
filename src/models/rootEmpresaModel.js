@@ -4,53 +4,66 @@ function search(id, mensagem) {
   let instrucaoSql = "";
 
   if(mensagem == 1) {
-    instrucaoSql = `SELECT * FROM Funcionario WHERE fkEmpresa = ${id} AND cargo <> "Gestor"`;
+    instrucaoSql = `SELECT * FROM Employer WHERE fkCompany = ${id} AND role <> "Administrador"`;
   } else {
-    instrucaoSql = `SELECT * FROM Funcionario WHERE nome LIKE '%${mensagem}%' AND fkEmpresa = ${id} AND cargo <> "Gestor";`;
+    instrucaoSql = `SELECT * FROM Employer WHERE name LIKE '%${mensagem}%' AND fkCompany = ${id} AND role <> "Administrador";`;
   }
 
   return database.executar(instrucaoSql);
 }
 
 function filtrar(id, selecionado) {
-  let instrucaoSql = `SELECT ${selecionado} AS 'Cargo' FROM Funcionario WHERE fkEmpresa = ${id};`;
+  let instrucaoSql = `SELECT ${selecionado} AS 'role' FROM Employer WHERE fkCompany = ${id};`;
 
   return database.executar(instrucaoSql);
 }
 
 function procurarFiltro(id, tipo, filtro) {
   let instrucaoSql;
-    if(filtro == "ASC" || filtro == "DESC") {
-      instrucaoSql = `SELECT * FROM Funcionario WHERE fkEmpresa = ${id} ORDER BY ${tipo} ${filtro} AND cargo <> "Gestor"`;
-    } else if(filtro.includes("@")) {
-      instrucaoSql = `SELECT * FROM Funcionario WHERE ${tipo} LIKE "%${filtro}" AND fkEmpresa = ${id} AND cargo <> "Gestor"`;
-    } else {
-      instrucaoSql = `SELECT * FROM Funcionario WHERE ${tipo} = "${filtro}" AND fkEmpresa = ${id} AND cargo <> "Gestor"`;
-    }
+  
+  if(filtro == "ASC" || filtro == "DESC") {
+    instrucaoSql = `SELECT * FROM Employer WHERE fkCompany = ${id} AND role <> "Administrador" ORDER BY ${tipo} ${filtro}`;
+  } else if(filtro.includes("@")) {
+    instrucaoSql = `SELECT * FROM Employer WHERE ${tipo} LIKE "%${filtro}" AND fkCompany = ${id} AND role <> "Administrador"`;
+  } else {
+    instrucaoSql = `SELECT * FROM Employer WHERE ${tipo} = "${filtro}" AND fkCompany = ${id} AND role <> "Administrador"`;
+  }
 
-    return database.executar(instrucaoSql);
+  console.log('SQL Executado:', instrucaoSql); 
+  return database.executar(instrucaoSql);
 }
 
 function procurarCards(id) {
-  let instrucaoSql = `SELECT * FROM Funcionario WHERE fkEmpresa = ${id} AND cargo <> "Gestor"`;
+  let instrucaoSql = `SELECT * FROM Employer WHERE fkCompany = ${id} AND role <> "Administrador" AND active = '1'`;
 
   return database.executar(instrucaoSql);
 }
 
-function atualizarFuncionario(id, nome, email, cargo, equipe) {
-  let instrucaoSql = `UPDATE Funcionario SET nome = "${nome}", email = "${email}", cargo = "${cargo}", equipe = "${equipe}" WHERE idFuncionario = ${id};`;
+function atualizarEmployer(id, nome, email, cargo, senha) {
+  let instrucaoSql = `
+      UPDATE Employer 
+      SET name = "${nome}", 
+          email = "${email}", 
+          role = "${cargo}"
+  `;
+  
+  if (senha) {
+      instrucaoSql += `, password = "${senha}"`;
+  }
+  
+  instrucaoSql += ` WHERE idEmployer = ${id};`;
   
   return database.executar(instrucaoSql);
 }
 
-function cadastrarFuncionario(nome, email, cargo, senha, fkEmpresa) {
-  let instrucaoSql = `INSERT INTO Funcionario (nome, email, senha, cargo, fkEmpresa) VALUES ("${nome}", "${email}", "${senha}", "${cargo}", ${fkEmpresa});`;
+function cadastrarEmployer(nome, email, cargo, senha, fkEmpresa) {
+  let instrucaoSql = `INSERT INTO Employer (name, email, password, role, fkCompany, active) VALUES ("${nome}", "${email}", "${senha}", "${cargo}", ${fkEmpresa}, "1");`;
 
   return database.executar(instrucaoSql);
 }
 
-function removerFuncionario(idFunc) {
-  let instrucaoSql = `DELETE FROM Funcionario WHERE idFuncionario = ${idFunc};`
+function removerEmployer(idFunc) {
+  let instrucaoSql = `UPDATE Employer SET active = '0' WHERE idEmployer = ${idFunc};`
 
   return database.executar(instrucaoSql);
 }
@@ -60,7 +73,7 @@ module.exports = {
   filtrar,
   procurarFiltro,
   procurarCards,
-  atualizarFuncionario,
-  cadastrarFuncionario,
-  removerFuncionario
+  atualizarEmployer,
+  cadastrarEmployer,
+  removerEmployer
 };

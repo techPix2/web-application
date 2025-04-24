@@ -25,15 +25,10 @@ function cadastrarEmpresa(dados) {
 function listarEmpresas() {
     const query = `
         SELECT 
-            c.idCompany,
-            c.socialReason AS nome,
-            c.cnpj,
-            ct.email,
-            ct.phone AS telefone,
-            p.path
-        FROM Company c
-        JOIN Contact ct ON c.fkContact = ct.idContact
-        JOIN Photo p on c.fkPhoto = p.idPhoto
+            idCompany,
+            socialReason AS nome,
+            cnpj
+        FROM Company
     `;
     return database.executar(query);
 }

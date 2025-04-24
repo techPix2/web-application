@@ -13,38 +13,7 @@
 </head>
 
 <body onload="mostrarCards()">
-    <!-- <main class="screen-dash-user">
-        <nav class="side-bar-user">
-            <div class="nav-logo-user">
-                <img src="../assets/imgs/user.png" alt="" class="imagem-perfil">
-            </div>
-            <div class="div_ola">
-                <span class="legenda_ola">Olá, <span id="razao">Banco Safra</span></span>
-            </div>
-            <div class="nav-list">
-                <div class="nav-list-options">
-                    <a href="./contaEmpresaRootServidores.html" class="opcao">
-                        <img src="../assets/icon/server.svg" alt="">
-                        <span class="nav-item">Servidores</span>
-                    </a>
-                    <a href="" class="opcao selecionado">
-                        <img src="../assets/icon/grupo.svg" alt="">
-                        <span class="nav-item">Funcionários</span>
-                    </a>
-                    <a href="./simulador.html" class="opcao">
-                        <img src="../assets/icon/suporte.svg" alt="">
-                        <span class="nav-item">Suporte</span>
-                    </a>
-                    </a>
-                </div>
-                <div class="logout">
-                    <a href="../index.html" class="opcao" onclick="sair()">
-                        <img src="../assets/icon/sair.svg" alt="">
-                        <span class="nav-item">Sair</span>
-                    </a>
-                </div>
-            </div>
-        </nav> -->
+    
         <header>
             <nav class="navbar">
               <div class="navlogo">
@@ -59,9 +28,7 @@
         <div class="container">
             <!-- Sessão Lateral -->
             <nav class="nav-lateral">
-                <div class="nav-logo-user">
-                    <img src="../uploads/perfil-padrão.png" alt="">
-                </div>
+                <div class="nav-logo-user"></div>
                 <div class="nav-texto">
                     <h1>Olá, <span id="razao">Nome Usuário</span></h1>
                 </div>
@@ -88,20 +55,20 @@
                         <div class="circulo_imagem">
                             <img src="../assets/icon/icone_add.svg" alt="" onclick="cadastrar()">
                         </div>
+                        <span class="horario" id="horario"></span>
                     </div>
                     <span class="horario" id="horario"></span>
                 </div>
                 <div style="display: flex; flex-direction: row; align-items: center; gap: 1%">
                     <input class="input-search" type="text" oninput="mostrarCards(0)" id="ipt_search">
-                    <!-- <div class="filtro" id="div_preferencias">
+                    <div class="filtro" id="div_preferencias">
                         <img class="icon_filtro" src="../assets/icon/filtroDesativado.svg" alt="" onclick="ativarFiltro(0)">
-                    </div> -->
+                    </div>
                 </div>
-            </div>
-            <div id="div_inferior"></div>
-            <dialog id="modal" style="display: none; border: none; width: 50%; height: 60%;"></dialog>
-        </main>
-    </div>
+                <div id="div_inferior"></div>
+                <dialog id="modal" style="display: none; border: none; width: 50%; height: 60%;"></dialog>
+            </main>
+        </div>
 </body>
 </html>
 

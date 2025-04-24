@@ -1,16 +1,14 @@
-var dashAnalistaModel = require("../models/dashAnalistaModel");
+var gestorModel = require("../models/gestorModel");
 
-function listarServidores(req, res) {
+function listarServidores(req,res){
     var fk_company = req.params.fk_company;
-    
     if (!fk_company) {
         return res.status(400).json({ 
             erro: "ID da empresa não fornecido",
             detalhes: "O parâmetro fk_company é obrigatório na URL"
         });
     }
-
-    dashAnalistaModel.listarServidores(fk_company)
+    gestorModel.listarServidores(fk_company)
         .then((resultado) => { 
             console.log(`\nServidores encontrados: ${resultado.length}`);
             res.status(200).json(resultado);
@@ -24,21 +22,13 @@ function listarServidores(req, res) {
         });
 }
 
-function listarServidoresGestor(req,res){
-    var fk_company = req.params.fk_company;
-    if (!fk_company) {
-        return res.status(400).json({ 
-            erro: "ID da empresa não fornecido",
-            detalhes: "O parâmetro fk_company é obrigatório na URL"
-        });
-    }
-    dashAnalistaModel.listarServidoresGestor(fk_company)
+function inativarServidor(req,res){
+    var id_server = req.params.id_server;
+    gestorModel.inativarServidor(id_server)
         .then((resultado) => { 
-            console.log(`\nServidores encontrados: ${resultado.length}`);
             res.status(200).json(resultado);
         })
         .catch((erro) => {
-            console.error("Erro no controller ao listar servidores:", erro);
             res.status(500).json({ 
                 erro: "Erro interno no servidor",
                 detalhes: erro.message
@@ -47,5 +37,5 @@ function listarServidoresGestor(req,res){
 }
 module.exports = {
     listarServidores,
-    listarServidoresGestor
+    inativarServidor
 };

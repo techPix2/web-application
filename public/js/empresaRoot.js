@@ -64,7 +64,7 @@ async function enviarCadastro() {
     const email = document.getElementById('ipt_email').value.trim();
     const senha = document.getElementById('ipt_senha').value;
     const cargo = document.getElementById('ipt_cargo').value;
-    const idEmpresa = sessionStorage.getItem('ID_EMPRESA') || id; // Melhor prática para pegar o ID
+    const idEmpresa = sessionStorage.getItem('ID_EMPRESA') || id; 
 
     if (!nome.includes(" ")) {
         return alert("Por favor, insira o nome completo do funcionário");
@@ -212,7 +212,7 @@ function mostrarCards(search, filtro) {
 
     div_inferior.innerHTML = "";   
 
-    if(search == undefined && filtro == undefined) {
+    if(search == undefined) {
         fetch(`/empresas/${id}/procurarCards`, {
             method: "GET",
             headers: {

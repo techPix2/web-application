@@ -1,6 +1,5 @@
 const id = sessionStorage.ID_EMPRESA;
 razao.innerHTML = sessionStorage.NOME_USUARIO;
-const modal = document.getElementById("modal");
 
 function sair() {
     sessionStorage.removeItem(EMAIL_USUARIO);
@@ -9,6 +8,7 @@ function sair() {
 }
 
 function cadastrar() {
+    const modal = document.getElementById("modal");
     modal.style.display = 'flex';
     modal.showModal();
     console.log(window.innerWidth);
@@ -23,9 +23,14 @@ function cadastrar() {
     modal.style.margin = "auto";
     modal.style.overflowY="hidden";
     modal.innerHTML = `
+        <div class="super-modal">
         <div class="superior-modal">
             <button onclick="logar()">Baixar</button>
             <button onclick="logar()">Instuções</button>
+        </div>
+        <div class="sair-modal">
+            <button onclick="closeModal()">Sair</button>
+        </div>  
         </div>
     `;
 }
@@ -136,7 +141,7 @@ async function inativarServidor(id_server) {
     } catch (erro) {
         console.error('Erro na requisição:', erro);
     }
-    
+
 }
 async function listarServidores(){
     let servidores = await carregarServidores();

@@ -1,8 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-var empresaController = require("../controllers/rootEmpresaController");
-var empresasController = require("../controllers/empresaController");
+var empresaController = require("../controllers/empresaController");
 
 router.get("/:mensagem/:id/search", function (req, res) {
   empresaController.search(req, res);
@@ -29,11 +28,21 @@ router.post("/cadastrarFuncionario", function (req, res) {
 })
 
 router.post("/autenticar", function (req, res) {
-  empresasController.autenticar(req, res);
+  empresaController.autenticar(req, res);
 });
 
 router.delete(`/removerFuncionario`, function (req, res) {
   empresaController.removerEmployer(req, res);
 })
 
+router.post("/cadastrarEmpresa/:razaosocial/:cnpj/:fk_endereco", function (req, res) {
+  empresaController.cadastrarEmpresa(req,res);
+})
+
+router.post("/cadastrarEndereco/:rua/:numero/:cep/:bairro/:fk_cidade", function (req, res) {
+  empresaController.cadastrarEndereco(req,res)
+})
+router.post("/cadastrarCidade/:cidade", function (req, res) {
+  empresaController.cadastrarCidade(req,res)
+})
 module.exports = router;

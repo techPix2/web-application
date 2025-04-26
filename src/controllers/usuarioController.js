@@ -38,10 +38,11 @@ function cadastrar(req, res) {
     var nome = req.body.nomeServer;
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
-    var fkEmpresa = req.body.idEmpresaVincularServer;
+    var cpf = req.body.cpf
+    var fk_empresa = req.body.fk_empresa;
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(nome, email, senha, fkEmpresa)
+        usuarioModel.cadastrarEmployer(nome, email, senha, cpf, senha, fk_empresa)
             .then(
                 function (resultado) {
                     res.json(resultado);

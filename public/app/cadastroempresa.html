@@ -13,7 +13,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" type="image/png" href="../assets/icon/logo.png" alt="Logo da TechPix" sizes="16x16">
-    <script src="../js/scriptLogin.js"></script>
+    <script src="../js/cadastroempresa.js"></script>
 
 <!-- Script ViaCEP -->
     <script>
@@ -99,7 +99,7 @@
       
     <!-- Sessão Login -->
     <div class="container_login">
-        <div class="form_login">
+        <div class="form_login" id="form_login">
             <div class="form_login_titulo">
                 <h1>Bem-vindo(a)!</h1>
             </div>
@@ -122,10 +122,12 @@
             <div class="form">
                 <input id="iptrua" size="60" placeholder="Rua">
             </div>
-
+            <div class="form">
+                <input id="iptnumero" size="5"  placeholder="Número">
+            </div>
             <div class="form">
                 <input id="iptbairro" size="40" placeholder="Bairro">
-            </div>
+            </div>onload="cadastrarEmpresa()"
             
             <div class="form">
                 <input id="iptcidade" size="40" placeholder="Cidade">
@@ -136,7 +138,7 @@
             </div>
 
             <div class="form">
-                <button onclick="logar()">Entrar</button>
+                <button onclick="prosseguir()">Prosseguir</button>
             </div>
             <div class="mensagemErro" id="divmsg"></div>
         </div>

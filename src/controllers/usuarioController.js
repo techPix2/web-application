@@ -43,10 +43,13 @@ function cadastrar(req, res) {
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
         usuarioModel.cadastrarEmployer(nome, email, senha, cpf, senha, fk_empresa)
-            .then(
-                function (resultado) {
-                    res.json(resultado);
-                }
+        .then(function (resposta) {
+            res.status(201).json({
+                success: true,
+                message: "Usuario cadastrado com sucesso",
+                data: resposta
+            });
+        }
             ).catch(
                 function (erro) {
                     console.log(erro);

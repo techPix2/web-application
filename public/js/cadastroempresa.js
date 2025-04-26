@@ -56,14 +56,13 @@ function prosseguir(){
             </div>
             
             <div class="form">
-                <button onclick="cadastrarUsuario()">Cadastrar</button>
+                <button onclick="colecaoCadastros()">Cadastrar</button>
             </div>
             `
 
 }
 async function cadastrarEmpresa(){
-    //const fk_endereco = sessionStorage.FK_ENDERECO;
-    fk_endereco = 1;
+    const fk_endereco = sessionStorage.FK_ENDERECO;
     try {
         const response = await fetch(`/empresas/cadastrarEmpresa/${razaoSocial}/${cnpj}/${fk_endereco}`, {
             method: "POST",
@@ -81,18 +80,14 @@ async function cadastrarEmpresa(){
         if (!response.ok) {
             throw new Error(data.message || "Erro ao cadastrar funcionário");
         }
-        alert("Funcionário cadastrado com sucesso!");
-        closeModal();
-        mostrarCards();
     } catch (error) {
         console.error("Erro:", error);
-        alert(`Erro ao cadastrar: ${error.message}`);
     }
 }
 async function cadastrarEndereco(){
-    fk_cidade = 1;
+    const fk_cidade = sessionStorage.FK_CIDADE;
     try {
-        const response = await fetch(`/empresas/cadastrarEndereco/${rua}/${numero}/${cep}/${bairro}/${fk_empresa}`, {
+        const response = await fetch(`/empresas/cadastrarEndereco/${rua}/${numero}/${cep}/${bairro}/${fk_cidade}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -107,21 +102,15 @@ async function cadastrarEndereco(){
 
         })
         const respostaJson = await response.json();
-        sessionStorage.FK_CIDADE = await respostaJson["data"]["insertId"];
+        sessionStorage.FK_ENDERECO = await respostaJson["data"]["insertId"];
         if (!response.ok) {
             throw new Error(data.message || "Erro ao cadastrar funcionário");
         }
-        alert("Funcionário cadastrado com sucesso!");
-        closeModal();
-        mostrarCards();
     } catch (error) {
         console.error("Erro:", error);
-        alert(`Erro ao cadastrar: ${error.message}`);
     }
 }
 async function cadastrarCidade(){
-    if(document.getElementById('iptcidade').value != null){
-        let cidade =  document.getElementById('iptcidade').value;
         try {
             const response = await fetch(`/empresas/cadastrarCidade/${cidade}`, {
                 method: "POST",
@@ -138,14 +127,10 @@ async function cadastrarCidade(){
             if (!response.ok) {
                 throw new Error(data.message || "Erro ao cadastrar funcionário");
             }
-            alert("Funcionário cadastrado com sucesso!");
-            closeModal();
-            mostrarCards();
         } catch (error) {
             console.error("Erro:", error);
-            alert(`Erro ao cadastrar: ${error.message}`);
         }
-    }
+    
 }
 
 
@@ -154,7 +139,7 @@ async function cadastrarUsuario(){
         const nome = document.getElementById("iptnome").value
         const cpf = document.getElementById("iptcpf").value
         const senha = document.getElementById("iptsenha").value
-        const fk_empresa = 1;
+        const fk_empresa = sessionStorage.FK_EMPRESA;
         try {
             await fetch(`/usuarios/cadastrar/${nome}/${cpf}/${email}/${senha}/${fk_empresa}`, {
                 method: "POST",
@@ -168,10 +153,15 @@ async function cadastrarUsuario(){
                     nome: nome,
                     fk_empresa:fk_empresa
                 })
-
             })
         } catch (error) {
             console.error("Erro:", error);
-            alert(`Erro ao cadastrar: ${error.message}`);
         }
+}
+
+async function colecaoCadastros(){
+    await cadastrarCidade();
+    await cadastrarEndereco();
+    await cadastrarEmpresa();
+    await cadastrarUsuario();
 }

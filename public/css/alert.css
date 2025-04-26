@@ -1,4 +1,4 @@
-/* Alert Component Styles */
+
 .alert-container {
     display: none;
     position: fixed;
@@ -113,7 +113,6 @@
     color: white;
 }
 
-/* Success, Error, Warning, Info alert types */
 .alert-box.success .alert-title {
     color: #28a745;
 }

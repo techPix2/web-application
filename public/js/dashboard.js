@@ -4,12 +4,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const loadingElement = document.getElementById('loading-servidores');
     const modal = document.getElementById('modal-detalhes');
     const btnFecharModal = document.querySelector('.fechar-modal');
-    // KPIs
     const totalAlertasElement = document.getElementById('total-alertas');
     const percentSemAlertasElement = document.getElementById('percent-sem-alertas');
     const percentComAlertasElement = document.getElementById('percent-com-alertas');
 
-  
+
     carregarDadosIniciais();
 
     async function carregarDadosIniciais() {
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     async function carregarServidores() {
         mostrarLoading(true);
-        
+
         try {
             const idEmpresa = sessionStorage.getItem('ID_EMPRESA');
             if (!idEmpresa) throw new Error("ID da empresa não encontrado");
@@ -52,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             let cor, texto;
             const totalAlertas = servidor.totalAlertas || 0;
-            
+
             if (totalAlertas === 0) {
                 cor = 'white';
                 texto = 'Normal';
@@ -85,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const totalServidores = servidores.length;
         const servidoresComAlertas = servidores.filter(s => (s.totalAlertas || 0) > 0).length;
         const totalAlertas = servidores.reduce((sum, s) => sum + (s.totalAlertas || 0), 0);
-        
+
         totalAlertasElement.textContent = totalAlertas;
         percentComAlertasElement.textContent = totalServidores > 0 
             ? `${Math.round((servidoresComAlertas / totalServidores) * 100)}%` 
@@ -130,171 +129,217 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function carregarGraficos() {
-    
-            // Uso da CPU - Linha
-            new Chart(document.getElementById('usoCpu'), {
-                type: 'line',
-                data: {
-                    labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
-                    datasets: [{
-                        label: 'Uso da CPU (%)',
-                        data: [20, 45, 35, 60, 40],
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100
-                        }
+    let chartUsoCpu, chartFreqCpu, chartPizza2, chartPizza3, chartRamUso, chartRamPorcentagem, chartRedeEnviados, chartRedeRecebidos;
+
+    inicializarGraficos();
+
+    setInterval(atualizarGraficos, 5000);
+
+    function inicializarGraficos() {
+        chartUsoCpu = new Chart(document.getElementById('usoCpu'), {
+            type: 'line',
+            data: {
+                labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
+                datasets: [{
+                    label: 'Uso da CPU (%)',
+                    data: [20, 45, 35, 60, 40],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
                     }
                 }
-            });
-        
-            // Frequência da CPU - Linha
-            new Chart(document.getElementById('freqCpu'), {
-                type: 'line',
-                data: {
-                    labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
-                    datasets: [{
-                        label: 'Frequência (GHz)',
-                        data: [2.2, 2.4, 2.6, 2.3, 2.5],
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            suggestedMax: 3.5
-                        }
+            }
+        });
+
+        chartFreqCpu = new Chart(document.getElementById('freqCpu'), {
+            type: 'line',
+            data: {
+                labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
+                datasets: [{
+                    label: 'Frequência (GHz)',
+                    data: [2.2, 2.4, 2.6, 2.3, 2.5],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 3.5
                     }
                 }
-            });
-        
-            // Armazenamento - Pizza
-            new Chart(document.getElementById('pizza2'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Usado (GB)', 'Disponível (GB)'],
-                    datasets: [{
-                        label: 'Armazenamento',
-                        data: [180, 320],
-                        backgroundColor: ['#FF6384', '#36A2EB'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true
+            }
+        });
+
+        chartPizza2 = new Chart(document.getElementById('pizza2'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Usado (GB)', 'Disponível (GB)'],
+                datasets: [{
+                    label: 'Armazenamento',
+                    data: [180, 320],
+                    backgroundColor: ['#FF6384', '#36A2EB'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        chartPizza3 = new Chart(document.getElementById('pizza3'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Usado (GB)', 'Disponível (GB)'],
+                datasets: [{
+                    label: 'Swap',
+                    data: [2, 6],
+                    backgroundColor: ['#FFCE56', '#4BC0C0'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        chartRamUso = new Chart(document.getElementById('ramUso'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Usada (GB)', 'Disponível (GB)'],
+                datasets: [{
+                    data: [6, 10],
+                    backgroundColor: ['#FF6384', '#36A2EB']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        chartRamPorcentagem = new Chart(document.getElementById('ramPorcentagem'), {
+            type: 'bar',
+            data: {
+                labels: ['Porcentagem de Uso'],
+                datasets: [{
+                    label: '% RAM usada',
+                    data: [37.5],
+                    backgroundColor: ['#4BC0C0']
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        max: 100
+                    }
                 }
-            });
-        
-            // Memória Swap - Pizza
-            new Chart(document.getElementById('pizza3'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Usado (GB)', 'Disponível (GB)'],
-                    datasets: [{
-                        label: 'Swap',
-                        data: [2, 6],
-                        backgroundColor: ['#FFCE56', '#4BC0C0'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true
+            }
+        });
+
+        chartRedeEnviados = new Chart(document.getElementById('redeEnviados'), {
+            type: 'bar',
+            data: {
+                labels: ['Enviados'],
+                datasets: [{
+                    label: 'Pacotes (mil)',
+                    data: [120],
+                    backgroundColor: ['#9966FF']
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
-            });
-            // RAM - Usada e Disponível
-new Chart(document.getElementById('ramUso'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Usada (GB)', 'Disponível (GB)'],
-        datasets: [{
-            data: [6, 10], // Exemplo: 6GB usada de 16GB
-            backgroundColor: ['#FF6384', '#36A2EB']
-        }]
-    },
-    options: {
-        responsive: true
-    }
-});
-
-// RAM - Porcentagem
-new Chart(document.getElementById('ramPorcentagem'), {
-    type: 'bar',
-    data: {
-        labels: ['Porcentagem de Uso'],
-        datasets: [{
-            label: '% RAM usada',
-            data: [37.5], // Exemplo: 6GB / 16GB
-            backgroundColor: ['#4BC0C0']
-        }]
-    },
-    options: {
-        responsive: true,
-        indexAxis: 'y',
-        scales: {
-            x: {
-                max: 100
             }
-        }
-    }
-});
+        });
 
-// Rede - Pacotes enviados
-new Chart(document.getElementById('redeEnviados'), {
-    type: 'bar',
-    data: {
-        labels: ['Enviados'],
-        datasets: [{
-            label: 'Pacotes (mil)',
-            data: [120],
-            backgroundColor: ['#9966FF']
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
+        chartRedeRecebidos = new Chart(document.getElementById('redeRecebidos'), {
+            type: 'bar',
+            data: {
+                labels: ['Recebidos'],
+                datasets: [{
+                    label: 'Pacotes (mil)',
+                    data: [145],
+                    backgroundColor: ['#FF9F40']
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
-        }
+        });
     }
-});
 
-// Rede - Pacotes recebidos
-new Chart(document.getElementById('redeRecebidos'), {
-    type: 'bar',
-    data: {
-        labels: ['Recebidos'],
-        datasets: [{
-            label: 'Pacotes (mil)',
-            data: [145],
-            backgroundColor: ['#FF9F40']
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
+    function atualizarGraficos() {
+        const agora = new Date();
+        const horaAtual = `${agora.getHours()}:${agora.getMinutes().toString().padStart(2, '0')}`;
+
+        chartUsoCpu.data.labels.push(horaAtual);
+        chartUsoCpu.data.labels.shift();
+        chartUsoCpu.data.datasets[0].data.push(Math.floor(Math.random() * 100));
+        chartUsoCpu.data.datasets[0].data.shift();
+        chartUsoCpu.update();
+
+        chartFreqCpu.data.labels.push(horaAtual);
+        chartFreqCpu.data.labels.shift();
+        chartFreqCpu.data.datasets[0].data.push((Math.random() * 1.5 + 2).toFixed(1));
+        chartFreqCpu.data.datasets[0].data.shift();
+        chartFreqCpu.update();
+
+        const totalStorage = 500;
+        const usedStorage = Math.floor(Math.random() * 300 + 100);
+        chartPizza2.data.datasets[0].data = [usedStorage, totalStorage - usedStorage];
+        chartPizza2.update();
+
+        const totalSwap = 8;
+        const usedSwap = Math.floor(Math.random() * 6 + 1);
+        chartPizza3.data.datasets[0].data = [usedSwap, totalSwap - usedSwap];
+        chartPizza3.update();
+
+        // Atualizar gráfico de RAM usada
+        const totalRam = 16;
+        const usedRam = Math.floor(Math.random() * 12 + 2);
+        chartRamUso.data.datasets[0].data = [usedRam, totalRam - usedRam];
+        chartRamUso.update();
+
+        // Atualizar gráfico de porcentagem de RAM
+        const ramPercentage = (usedRam / totalRam) * 100;
+        chartRamPorcentagem.data.datasets[0].data = [ramPercentage.toFixed(1)];
+        chartRamPorcentagem.update();
+
+        // Atualizar gráfico de pacotes enviados
+        chartRedeEnviados.data.datasets[0].data = [Math.floor(Math.random() * 200 + 50)];
+        chartRedeEnviados.update();
+
+        // Atualizar gráfico de pacotes recebidos
+        chartRedeRecebidos.data.datasets[0].data = [Math.floor(Math.random() * 200 + 50)];
+        chartRedeRecebidos.update();
     }
-});
         }
-        
+
     }
 );

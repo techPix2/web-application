@@ -1,5 +1,13 @@
 var database = require("../database/config");
 
+function cadastrarEmployer(nome, email, cargo, senha, fkEmpresa) {
+  let instrucaoSql = `INSERT INTO Employer (name, email, password, role, fkCompany, active) 
+                      VALUES ("${nome}", "${email}", "${senha}", "${cargo}", ${fkEmpresa}, 1);`;
+
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
 function search(id, mensagem) {
   let instrucaoSql = "";
 
@@ -20,7 +28,7 @@ function filtrar(id, selecionado) {
 
 function procurarFiltro(id, tipo, filtro) {
   let instrucaoSql;
-  
+
   if(filtro == "ASC" || filtro == "DESC") {
     instrucaoSql = `SELECT * FROM Employer WHERE fkCompany = ${id} AND role <> "Administrador" ORDER BY ${tipo} ${filtro}`;
   } else if(filtro.includes("@")) {
@@ -46,13 +54,13 @@ function atualizarEmployer(id, nome, email, cargo, senha) {
           email = "${email}", 
           role = "${cargo}"
   `;
-  
+
   if (senha) {
       instrucaoSql += `, password = "${senha}"`;
   }
-  
+
   instrucaoSql += ` WHERE idEmployer = ${id};`;
-  
+
   return database.executar(instrucaoSql);
 }
 

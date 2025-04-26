@@ -35,14 +35,14 @@ function autenticar(req, res) {
 
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
-    var nome = req.body.nomeServer;
-    var email = req.body.emailServer;
-    var senha = req.body.senhaServer;
+    var nome = req.body.nome;
+    var email = req.body.email;
+    var senha = req.body.senha;
     var cpf = req.body.cpf
     var fk_empresa = req.body.fk_empresa;
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrarEmployer(nome, email, senha, cpf, senha, fk_empresa)
+        usuarioModel.cadastrarEmployer(nome,cpf, email, senha, fk_empresa)
         .then(function (resposta) {
             res.status(201).json({
                 success: true,

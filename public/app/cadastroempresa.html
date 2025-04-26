@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechPix | Cadastro de Empresa</title>
     <link rel="stylesheet" href="../css/cadastroempresa.css">
+    <link rel="stylesheet" href="../css/alert.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link 
@@ -49,7 +50,7 @@
             } else {
                 //cep é inválido.
                 limpa_formulário_cep();
-                alert("Formato de CEP inválido.");
+                Alert.warning("Formato inválido", "O formato do CEP informado é inválido.");
             }
         } else {
             //cep sem valor, limpa formulário.
@@ -75,10 +76,10 @@
         } else {
             //CEP não Encontrado.
             limpa_formulário_cep();
-            alert("CEP não encontrado.");
+            Alert.error("CEP não encontrado", "O CEP informado não foi encontrado na base de dados.");
         }
     }
-        
+
     </script>
 
 </head>
@@ -96,7 +97,7 @@
           </ul>
         </nav>
       </header>
-      
+
     <!-- Sessão Login -->
     <div class="container_login">
         <div class="form_login" id="form_login">
@@ -110,7 +111,7 @@
             <div class="form">
                 <input id="iptrazaosocial" oninput="validarRazaoSocial()" placeholder="Razao Social">
             </div>
-            
+
             <div class="form">
                 <input id="iptcnpj" oninput="validarCNPJ()" placeholder="CNPJ">
             </div>
@@ -118,7 +119,7 @@
             <div class="form">
                 <input id="iptcep" size="10" maxlength="9" onblur="pesquisacep(this.value)"  placeholder="CEP">
             </div>
-            
+
             <div class="form">
                 <input id="iptrua" size="60" placeholder="Rua">
             </div>
@@ -128,11 +129,11 @@
             <div class="form">
                 <input id="iptbairro" size="40" placeholder="Bairro">
             </div>
-            
+
             <div class="form">
                 <input id="iptcidade" size="40" placeholder="Cidade">
             </div>
-            
+
             <div class="form">
                 <input id="iptestado" size="2"  placeholder="Estado">
             </div>
@@ -146,39 +147,11 @@
             <img src="../assets/imgs/cadastroEmpresa.png">
         </div>
     </div>
-    
-    <!-- Modal de sucesso -->
-    <div class="modalLogin" style="display: none;">
-        <div class="fade"></div>
-        <div class="modal">
-            <div class="modal-header">
-                <img src="../assets/icon/verified.gif">
-                <div class="texto-modal">
-                    <h2>Cadastro realizado com Sucesso!</h2>
-                    <h3>Clique no botão abaixo para ser redirecionado</h3>
-                </div>
-                <div class="botao-modal">
-                    <button class="continuar">Continuar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modalErroLogin" style="display: none;">
-        <div class="fade"></div>
-        <div class="modal">
-            <div class="modal-header">
-                <img src="../assets/icon/stop.gif">
-                <div class="texto-modal">
-                    <h2>Houve um erro ao tentar realizar o Cadastro!</h2>
-                    <h3>Clique no botão abaixo para tentar novamente</h3>
-                </div>
-                <div class="botao-modal-erro">
-                    <button class="tentar-novamente">Tentar Novamente</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
+    <!-- Os modais foram substituídos pelo componente de alerta -->
+
+    <!-- Incluir o script do componente de alertas -->
+    <script src="../js/alert.js"></script>
 </body>
 
 </html>

@@ -1,4 +1,5 @@
 const empresaModel = require("../models/empresaModel")
+const rootEmpresaModel = require("../models/rootEmpresaModel")
 
 function autenticar(req, res) {
     var codigo_empresa = req.body.codigoServer;
@@ -26,7 +27,7 @@ function search(req, res) {
   const id = req.params.id;
   const mensagem = req.params.mensagem;
 
-  empresaModel.search(id, mensagem)
+  rootEmpresaModel.search(id, mensagem)
   .then((resultado) => {
     res.json({
       lista: resultado
@@ -38,7 +39,7 @@ function filtrar(req, res) {
   const id = req.params.id;
   const selecionado = req.params.selecionado;
 
-  empresaModel.filtrar(id, selecionado)
+  rootEmpresaModel.filtrar(id, selecionado)
   .then((resultado) => {
     res.json({
       lista: resultado
@@ -51,7 +52,7 @@ function pesquisarFiltro(req, res) {
   const tipo = req.params.tipo;
   const filtro = req.params.filtro;
 
-  empresaModel.procurarFiltro(id, tipo, filtro)
+  rootEmpresaModel.procurarFiltro(id, tipo, filtro)
   .then((resultado) => {
     res.json({
       lista: resultado
@@ -62,7 +63,7 @@ function pesquisarFiltro(req, res) {
 function procurarCards(req, res) {
   const id = req.params.id;
 
-  empresaModel.procurarCards(id)
+  rootEmpresaModel.procurarCards(id)
   .then((resultado) => {
     res.json({
       lista: resultado
@@ -80,7 +81,7 @@ function atualizarEmployer(req, res) {
       });
   }
 
-  empresaModel.atualizarEmployer(idEmployerServer, nomeServer, emailServer, cargoServer, senhaServer)
+  rootEmpresaModel.atualizarEmployer(idEmployerServer, nomeServer, emailServer, cargoServer, senhaServer)
   .then(function (resposta) {
       res.status(200).json({
           success: true,
@@ -103,7 +104,7 @@ function cadastrarEmployer(req, res) {
     return res.status(400).json({ error: "Todos os campos são obrigatórios" });
   }
 
-  empresaModel.cadastrarEmployer(
+  rootEmpresaModel.cadastrarEmployer(
     req.body.nomeServer,
     req.body.emailServer,
     req.body.cargoServer,
@@ -198,7 +199,7 @@ function removerEmployer(req, res) {
   if (!req.body.idEmployerServer) {
     return res.status(400).json({ error: "ID do funcionário é obrigatório" });
   }
-  empresaModel.removerEmployer(req.body.idEmployerServer)
+  rootEmpresaModel.removerEmployer(req.body.idEmployerServer)
   .then(function (resultado) {
     res.status(200).json({
       success: true,

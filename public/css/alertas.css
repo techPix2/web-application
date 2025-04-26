@@ -1,0 +1,98 @@
+@import url(components.css);
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.header h1 {
+    color: var(--azulEscuro);
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.filtros {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filtroBtn {
+    padding: 10px 20px;
+    background-color: var(--azulClaro);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filtroBtn:hover {
+    background-color: var(--azulEscuro);
+}
+
+.filtroBtn.active {
+    background-color: var(--azulEscuro);
+}
+
+.alertasContainer {
+    width: 95%;
+    margin: 0 auto;
+    background-color: var(--azulClaro);
+    border-radius: 15px;
+    padding: 20px;
+    overflow: auto;
+    max-height: 70vh;
+}
+
+.alertasTable {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+}
+
+.alertasTable th {
+    background-color: var(--azulEscuro);
+    padding: 12px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+}
+
+.alertasTable td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.alertasTable tr:hover {
+    background-color: rgba(0, 63, 105, 0.2);
+}
+
+.alertasTable tr:nth-child(even) {
+    background-color: rgba(0, 63, 105, 0.1);
+}
+
+.buttonNavbar.active {
+    background-color: var(--azulEscuro);
+    color: white;
+}
+
+.status-normal {
+    color: var(--normal);
+    font-weight: bold;
+}
+
+.status-atencao {
+    color: var(--atencao);
+    font-weight: bold;
+}
+
+.status-critico {
+    color: var(--critico);
+    font-weight: bold;
+}

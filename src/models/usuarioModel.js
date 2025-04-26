@@ -16,8 +16,8 @@ function autenticar(email, senha) {
     return database.executar(instrucaoSql);
 }
 
-function cadastrarEmployer(nome,cpf, email, cargo, senha, fk_empresa) {
-    let instrucaoSql = `INSERT INTO Employer (name,cpf,  email, password, role, fkCompany, active) VALUES ("${nome}","${cpf}" ,"${email}", "${senha}", "Administrador", ${fk_empresa}, 1);`;
+function cadastrarEmployer(nome, cpf, email, senha, fk_empresa) {
+    let instrucaoSql = `INSERT INTO Employer (name, cpf,  email, password, role, fkCompany, active) VALUES ("${nome}","${cpf}" ,"${email}", "${senha}", "Administrador", ${fk_empresa}, 1);`;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }

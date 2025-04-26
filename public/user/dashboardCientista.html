@@ -13,13 +13,14 @@
     <body onload="carregarGraficos(); verificarQuadranteComMaisAlertas(); verificarDiaDaSemana(); encontrarComponenteMaisFrequente(); carregarDados()">
         <div class="sideBar">
             <img src="" alt="" class="profilePicture">
+            <h1>Olá, <span id="nome_usuario"></span></h1>
             <div class="buttonsNavbar">
-                <button class="buttonNavbar">Suporte</button>
-                <button class="buttonNavbar">Dashboard</button>
-                <button class="buttonNavbar">Alertas</button>
+                <button class="buttonNavbar"><a href="">Suporte</a> </button>
+                <button class="buttonNavbar"><a href="dashboardCientista.html">Dasboard</a> </button>
+                <button class="buttonNavbar"><a href="../user/alertas.html">Alertas</a></button>
             </div>
             <div class="buttonsBaixo">
-                <button class="buttonSair">Sair</button>
+                <button class="buttonSair" onclick="sair()">Sair</button>
             </div>
         </div>
         <div class="mainContainer">
@@ -43,26 +44,18 @@
                     <canvas id="alertaQuadrante"></canvas>
                 </div>
                 <div class="grafico">
-                    <h3 class="titulo-grafico">Componentes do Quadrante</h3>
+                    <h3 class="titulo-grafico">Componentes por Quadrante</h3>
                     <canvas id="alertaComponente"></canvas>
                 </div>
             </div>
-            <div class="container-filtro">
-                <select name="" id="filtroMaquina" class="filtroMaquina">
-                    <option value="#" selected disabled>Selecione uma máquina para monitorar</option>
-                </select>
-            </div>
             <div class="container-graficos">
-                <div class="grafico">
-                    <div class="filtroGrafico">
-                        <button class="buttonFiltro">Dia</button>
-                        <button class="buttonFiltro">Mês</button>
-                        <button class="buttonFiltro">Ano</button>
-                    </div>
+                <div class="grafico grafico-full">
                     <h3 class="titulo-grafico">Componentes da máquina</h3>
                     <canvas id="componenteMaquina"></canvas>
                 </div>
-                <div class="grafico">
+            </div>
+            <div class="container-graficos">
+                <div class="grafico grafico-full">
                     <h3 class="titulo-grafico">Alertas da máquina</h3>
                     <canvas id="alertaMaquina"></canvas>
                 </div>

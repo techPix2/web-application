@@ -69,7 +69,11 @@ async function enviarCadastro() {
     if (!nome.includes(" ")) {
         return alert("Por favor, insira o nome completo do funcionário");
     }
-    
+
+    if (!email || !senha || !cargo) {
+        return alert("Por favor, preencha todos os campos obrigatórios");
+    }
+
     try {
         const response = await fetch("/empresas/cadastrarFuncionario", {
             method: "POST",
@@ -161,7 +165,7 @@ function trocarSegundoFiltro() {
                                 } else if(confirmacao == 1) {
                                     palavra += opcaoAtual[ind];
                                 }
-    
+
                                 if(!vetorEmail.includes(palavra)) {
                                     vetorEmail.push(palavra);
                                     mensagem = palavra;
@@ -224,7 +228,7 @@ function mostrarCards(search, filtro) {
 
                 for(let i = 0; i < (json.lista).length; i++) {
                     let pessoaAtual = (json.lista[i])
-                
+
                 div_inferior.innerHTML += `
                     <div class="cardMaior">
                         <div class="cabecalho-card">
@@ -240,7 +244,7 @@ function mostrarCards(search, filtro) {
                             <span class="textoCard">Email:</span>
                             <span class="textoCard" id="spn_email">${pessoaAtual.email}</span>
                             <span class="textoCard">Senha:</span>
-                            <span class="textoCard" id="spn_senha">${pessoaAtual.password}</span>
+                            <span class="textoCard" id="spn_senha">••••••••</span>
                             <span class="textoCard">Cargo:</span>
                             <span class="textoCard" id="spn_cargo">${pessoaAtual.role}</span>
                         </div>
@@ -255,19 +259,19 @@ function mostrarCards(search, filtro) {
         if(mensagem == "") {
             mensagem = 1;
         }
-    
+
         fetch(`/empresas/${mensagem}/${id}/search`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             }
         }).then(function (resposta) {
-            
+
             resposta.json()
                 .then(json => {
                     for(let i = 0; i < (json.lista).length; i++) {
                         let pessoaAtual = (json.lista[i])
-                    
+
                     div_inferior.innerHTML += `
                         <div class="cardMaior">
                             <div class="cabecalho-card">
@@ -283,7 +287,7 @@ function mostrarCards(search, filtro) {
                                 <span class="textoCard">Email:</span>
                                 <span class="textoCard" id="spn_email">${pessoaAtual.email}</span>
                                 <span class="textoCard">Senha:</span>
-                                <span class="textoCard" id="spn_senha">${pessoaAtual.password}</span>
+                                <span class="textoCard" id="spn_senha">••••••••</span>
                                 <span class="textoCard">Cargo:</span>
                                 <span class="textoCard" id="spn_cargo">${pessoaAtual.role}</span>
                             </div>
@@ -295,20 +299,20 @@ function mostrarCards(search, filtro) {
     } else {
         let filtro = slt_categoria.value;
         let tipo = slt_tipo.value;
-    
+
         fetch(`/empresas/${id}/${tipo}/${filtro}/pesquisarFiltro`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
         }).then(function (resposta) {
-    
+
             resposta.json()
             .then(json => {
 
                 for(let i = 0; i < (json.lista).length; i++) {
                     let pessoaAtual = (json.lista[i])
-                
+
                 div_inferior.innerHTML += `
                     <div class="cardMaior">
                         <div class="cabecalho-card">
@@ -324,7 +328,7 @@ function mostrarCards(search, filtro) {
                             <span class="textoCard">Email:</span>
                             <span class="textoCard" id="spn_email">${pessoaAtual.email}</span>
                             <span class="textoCard">Senha:</span>
-                            <span class="textoCard" id="spn_senha">${pessoaAtual.password}</span>
+                            <span class="textoCard" id="spn_senha">••••••••</span>
                             <span class="textoCard">Cargo:</span>
                             <span class="textoCard" id="spn_cargo">${pessoaAtual.role}</span>
                         </div>
@@ -342,7 +346,7 @@ function editar(nome, email, senha, cargo, id) {
     const isMobile = window.innerWidth <= 1000;
     modal.style.width = isMobile ? '70%' : '45%';
     modal.style.height = isMobile ? '75%' : '70%';
-    
+
     modal.innerHTML = `
         <div class="superior-modal">
             <div class="esquerda-superior-modal">
@@ -387,7 +391,7 @@ function editar(nome, email, senha, cargo, id) {
             </div>
         </div>
     `;
-    
+
     document.getElementById('ipt_cargo_editar').value = cargo;
 }
 
@@ -400,7 +404,7 @@ async function enviarEdicao(id) {
     if (!nome.includes(" ")) {
         return alert("Por favor, insira o nome completo");
     }
-   
+
     try {
         const response = await fetch("/empresas/atualizarFuncionario", {
             method: "PUT",
@@ -498,7 +502,7 @@ async function enviarDelete(idFuncionario) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                idEmployerServer: idFuncionario // Corrigido para match com o backend
+                idEmployerServer: idFuncionario
             })
         });
 
@@ -514,11 +518,6 @@ async function enviarDelete(idFuncionario) {
         console.error("Erro:", error);
         alert(`Erro ao remover: ${error.message}`);
     }
-}
-
-function closeModal() {
-    modal.style.display = 'none';
-    modal.close();
 }
 
 function closeModal() {

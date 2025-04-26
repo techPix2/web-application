@@ -11,26 +11,34 @@ function cadastrar() {
     const modal = document.getElementById("modal");
     modal.style.display = 'flex';
     modal.showModal();
-    console.log(window.innerWidth);
 
-    if(window.innerWidth <= 1000) {
-        modal.style.width = 100 + "%";
-        modal.style.height = 100 + "%";
+    // Responsive sizing
+    if(window.innerWidth <= 768) {
+        modal.style.width = "90%";
+        modal.style.height = "auto";
+    } else if(window.innerWidth <= 1024) {
+        modal.style.width = "70%";
+        modal.style.height = "auto";
     } else {
-        modal.style.width = 20 + "%";
-        modal.style.height = 10 + "%";
+        modal.style.width = "50%";
+        modal.style.height = "auto";
     }
+
     modal.style.margin = "auto";
-    modal.style.overflowY="hidden";
+    modal.style.overflowY = "hidden";
+    modal.style.padding = "20px";
+    modal.style.borderRadius = "10px";
+    modal.style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.2)";
+
     modal.innerHTML = `
         <div class="super-modal">
-        <div class="superior-modal">
-            <button onclick="logar()">Baixar</button>
-            <button onclick="logar()">Instuções</button>
-        </div>
-        <div class="sair-modal">
-            <button onclick="closeModal()">Sair</button>
-        </div>  
+            <div class="superior-modal">
+                <button class="modal-button">Baixar</button>
+                <button class="modal-button">Instruções</button>
+            </div>
+            <div class="sair-modal">
+                <button class="exit-button" onclick="closeModal()">Sair</button>
+            </div>  
         </div>
     `;
 }

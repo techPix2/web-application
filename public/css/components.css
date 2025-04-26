@@ -51,7 +51,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
 
+.grafico-full {
+    width: 95%;
 }
 
 .kpi{

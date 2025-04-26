@@ -1,0 +1,53 @@
+    <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechPix | Alertas</title>
+    <link rel="stylesheet" href="../css/alertas.css">
+    <link rel="icon" type="image/png" href="../assets/icon/logo.png" sizes="16x16">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/alertas.js"></script>
+    <script src="../js/alert.js"></script>
+</head>
+<body onload="carregarAlertas()">
+    <div class="sideBar">
+        <img src="" alt="" class="profilePicture">
+        <div class="buttonsNavbar">
+            <button class="buttonNavbar">Suporte</button>
+            <button class="buttonNavbar" onclick="window.location.href='dashboardCientista.html'">Dashboard</button>
+            <button class="buttonNavbar active">Alertas</button>
+        </div>
+        <div class="buttonsBaixo">
+            <button class="buttonSair">Sair</button>
+        </div>
+    </div>
+    <div class="mainContainer">
+        <div class="header">
+            <h1>Alertas da Empresa</h1>
+            <div class="filtros">
+                <button class="filtroBtn active" onclick="filtrarPorPeriodo('HOUR', 1)">Última Hora</button>
+                <button class="filtroBtn" onclick="filtrarPorPeriodo('DAY', 1)">Último Dia</button>
+                <button class="filtroBtn" onclick="filtrarPorPeriodo('WEEK', 1)">Última Semana</button>
+            </div>
+        </div>
+        <div class="alertasContainer">
+            <table class="alertasTable">
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Máquina</th>
+                        <th>Componente</th>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Quadrante</th>
+                    </tr>
+                </thead>
+                <tbody id="alertasTableBody">
+                    <!-- Alertas serão inseridos aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

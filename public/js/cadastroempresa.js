@@ -38,7 +38,7 @@ function prosseguir(){
             <div class="form">
                 <input id="iptnome" placeholder="Nome">
             </div>
-            
+
             <div class="form">
                 <input id="iptemail" placeholder="Email">
             </div>
@@ -46,7 +46,7 @@ function prosseguir(){
             <div class="form">
                 <input id="iptcpf" placeholder="CPF">
             </div>
-            
+
             <div class="form">
                 <input id="iptsenha" placeholder="Senha">
             </div>
@@ -54,7 +54,7 @@ function prosseguir(){
             <div class="form">
                 <input id="iptconfsenha" placeholder="Confirmar senha">
             </div>
-            
+
             <div class="form">
                 <button onclick="colecaoCadastros()">Cadastrar</button>
             </div>
@@ -63,105 +63,134 @@ function prosseguir(){
 }
 async function cadastrarEmpresa(){
     const fk_endereco = sessionStorage.FK_ENDERECO;
-    try {
-        const response = await fetch(`/empresas/cadastrarEmpresa/${razaoSocial}/${cnpj}/${fk_endereco}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                razaoSocial: razaoSocial,
-                cnpj: cnpj,
-                fk_endereco: fk_endereco
-            })
+    const response = await fetch(`/empresas/cadastrarEmpresa/${razaosocial}/${cnpj}/${fk_endereco}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            razaosocial: razaosocial,
+            cnpj: cnpj,
+            fk_endereco: fk_endereco
         })
-        const respostaJson = await response.json();
-        sessionStorage.FK_EMPRESA = await respostaJson["data"]["insertId"];
-        if (!response.ok) {
-            throw new Error(data.message || "Erro ao cadastrar funcionário");
-        }
-    } catch (error) {
-        console.error("Erro:", error);
+    });
+
+    if (!response.ok) {
+        throw new Error("Erro ao cadastrar empresa");
     }
+
+    const respostaJson = await response.json();
+    sessionStorage.FK_EMPRESA = respostaJson["data"]["insertId"];
 }
 async function cadastrarEndereco(){
     const fk_cidade = sessionStorage.FK_CIDADE;
-    try {
-        const response = await fetch(`/empresas/cadastrarEndereco/${rua}/${numero}/${cep}/${bairro}/${fk_cidade}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                rua:rua,
-                numero:numero,
-                cep:cep,
-                bairro:bairro,
-                fk_cidade:fk_cidade
-            })
-
+    const response = await fetch(`/empresas/cadastrarEndereco/${rua}/${numero}/${cep}/${bairro}/${fk_cidade}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            rua:rua,
+            numero:numero,
+            cep:cep,
+            bairro:bairro,
+            fk_cidade:fk_cidade
         })
-        const respostaJson = await response.json();
-        sessionStorage.FK_ENDERECO = await respostaJson["data"]["insertId"];
-        if (!response.ok) {
-            throw new Error(data.message || "Erro ao cadastrar funcionário");
-        }
-    } catch (error) {
-        console.error("Erro:", error);
+    });
+
+    if (!response.ok) {
+        throw new Error("Erro ao cadastrar endereço");
     }
+
+    const respostaJson = await response.json();
+    sessionStorage.FK_ENDERECO = respostaJson["data"]["insertId"];
 }
 async function cadastrarCidade(){
-        try {
-            const response = await fetch(`/empresas/cadastrarCidade/${cidade}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    cidade: cidade,
-                })
+    const response = await fetch(`/empresas/cadastrarCidade/${cidade}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            cidade: cidade,
+        })
+    });
 
-            })
-            const respostaJson = await response.json();
-            sessionStorage.FK_CIDADE = await respostaJson["data"]["insertId"];
-            if (!response.ok) {
-                throw new Error(data.message || "Erro ao cadastrar funcionário");
-            }
-        } catch (error) {
-            console.error("Erro:", error);
-        }
-    
+    if (!response.ok) {
+        throw new Error("Erro ao cadastrar cidade");
+    }
+
+    const respostaJson = await response.json();
+    sessionStorage.FK_CIDADE = respostaJson["data"]["insertId"];
 }
 
 
 async function cadastrarUsuario(){
-        const email = document.getElementById("iptemail").value
-        const nome = document.getElementById("iptnome").value
-        const cpf = document.getElementById("iptcpf").value
-        const senha = document.getElementById("iptsenha").value
-        const fk_empresa = sessionStorage.FK_EMPRESA;
-        try {
-            await fetch(`/usuarios/cadastrar/${nome}/${cpf}/${email}/${senha}/${fk_empresa}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    senha: senha,
-                    cpf: cpf,
-                    nome: nome,
-                    fk_empresa:fk_empresa
-                })
-            })
-        } catch (error) {
-            console.error("Erro:", error);
-        }
+    const email = document.getElementById("iptemail").value;
+    const nome = document.getElementById("iptnome").value;
+    const cpf = document.getElementById("iptcpf").value;
+    const senha = document.getElementById("iptsenha").value;
+    const fk_empresa = sessionStorage.FK_EMPRESA;
+
+    const response = await fetch(`/usuarios/cadastrar/${nome}/${cpf}/${email}/${senha}/${fk_empresa}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: email,
+            senha: senha,
+            cpf: cpf,
+            nome: nome,
+            fk_empresa: fk_empresa
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error("Erro ao cadastrar usuário");
+    }
 }
 
 async function colecaoCadastros(){
-    await cadastrarCidade();
-    await cadastrarEndereco();
-    await cadastrarEmpresa();
-    await cadastrarUsuario();
+    try {
+        await cadastrarCidade();
+        await cadastrarEndereco();
+        await cadastrarEmpresa();
+        await cadastrarUsuario();
+
+        Alert.success(
+            "Cadastro realizado com Sucesso!", 
+            "Clique no botão abaixo para ser redirecionado",
+            {
+                buttons: [
+                    { 
+                        text: "Continuar", 
+                        class: "primary", 
+                        onClick: () => {
+                            window.location.href = "../app/login.html";
+                        } 
+                    }
+                ],
+                icon: "../assets/icon/verified.gif"
+            }
+        );
+    } catch (error) {
+        console.error("Erro:", error);
+        Alert.error(
+            "Houve um erro ao tentar realizar o Cadastro!", 
+            "Clique no botão abaixo para tentar novamente",
+            {
+                buttons: [
+                    { 
+                        text: "Tentar Novamente", 
+                        class: "primary", 
+                        onClick: () => {
+                            location.reload();
+                        } 
+                    }
+                ],
+                icon: "../assets/icon/stop.gif"
+            }
+        );
+    }
 }

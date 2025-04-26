@@ -1,6 +1,9 @@
 @import url(components.css);
 
-
+* a{
+    text-decoration: none;
+    color: inherit;
+}
 .container-filtro{
     /* border: red 1px solid; */
     min-height: 5%;

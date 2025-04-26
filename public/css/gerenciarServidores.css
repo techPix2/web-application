@@ -387,26 +387,65 @@ select:hover {
 }
 
 .modal_todo{
-    
+    border: none;
+    background-color: white;
+    max-width: 90%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 .superior-modal {
     display: flex;
-    width: 23rem;
-    height: 6rem;
+    width: 100%;
+    padding: 15px 0;
     align-items: center;
     justify-content: space-around;
+    margin-bottom: 20px;
 }
-.superior-modal button{
-    width: 30%;
-    border-radius: 15px;
+
+.modal-button {
+    width: 45%;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    background-color: #e0e0e0;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.exit-button {
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 8px;
     border: none;
     background-color: #003F69;
     color: white;
-    height: 30%;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
-.super-modal{
+.exit-button:hover {
+    background-color: #00294d;
+}
+
+.super-modal {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sair-modal {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
 }
 .esquerda-superior-modal {
     width: 50%;
@@ -698,4 +737,154 @@ select:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Responsive Design */
+/* Small devices (mobile phones, 600px and up) */
+@media (min-width: 600px) {
+    .nav-lateral {
+        width: 25%;
+    }
+
+    .main-content-user {
+        width: 75%;
+        margin-left: 25%;
+    }
+
+    #div_inferior {
+        grid-template-columns: 1fr;
+    }
+
+    .input-search {
+        width: 80%;
+    }
+
+    .titulo_pagina {
+        font-size: 30px;
+    }
+
+    .horario {
+        font-size: 20px;
+    }
+
+    #table_servidores {
+        font-size: 12px;
+    }
+
+    #table_servidores th,
+    #table_servidores td {
+        padding: 8px 10px;
+    }
+
+    .modal_todo {
+        width: 90%;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .nav-lateral {
+        width: 22%;
+    }
+
+    .main-content-user {
+        width: 78%;
+        margin-left: 22%;
+    }
+
+    #div_inferior {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .input-search {
+        width: 60%;
+    }
+
+    .titulo_pagina {
+        font-size: 35px;
+    }
+
+    .horario {
+        font-size: 22px;
+    }
+
+    #table_servidores {
+        font-size: 13px;
+    }
+
+    .modal_todo {
+        width: 80%;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .nav-lateral {
+        width: 20%;
+    }
+
+    .main-content-user {
+        width: 80%;
+        margin-left: 20%;
+    }
+
+    #div_inferior {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .input-search {
+        width: 40%;
+    }
+
+    .titulo_pagina {
+        font-size: 38px;
+    }
+
+    .horario {
+        font-size: 25px;
+    }
+
+    #table_servidores {
+        font-size: 14px;
+    }
+
+    .modal_todo {
+        width: 70%;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .nav-lateral {
+        width: 18%;
+    }
+
+    .main-content-user {
+        width: 82%;
+        margin-left: 18%;
+    }
+
+    #div_inferior {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .input-search {
+        width: 30%;
+    }
+
+    .titulo_pagina {
+        font-size: 40px;
+    }
+
+    .horario {
+        font-size: 30px;
+    }
+
+    #table_servidores {
+        font-size: 14px;
+    }
+
+    .modal_todo {
+        width: 60%;
+    }
 }

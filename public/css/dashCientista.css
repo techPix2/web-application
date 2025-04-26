@@ -5,6 +5,7 @@
     font-family: "Inter", sans-serif;
 }
 
+
 .navbar {
     display: flex;
     top: 0;
@@ -294,4 +295,213 @@
     font-weight: 100;
     transition: 0.2s;
     background: #003F6A;
+}
+
+/* Responsive Design */
+/* Small devices (mobile phones, 600px and up) */
+@media (min-width: 600px) {
+    .navbar {
+        padding: 0 2vh;
+    }
+
+    .navlogo {
+        width: 15dvw;
+    }
+
+    .navlogo img {
+        height: 4rem;
+    }
+
+    .btn_contato, .btn_log {
+        padding: 0.5rem 1rem;
+        font-size: medium;
+    }
+
+    .nav-lateral {
+        width: 25%;
+        padding-top: 1rem;
+    }
+
+    .nav-logo-user {
+        width: 80%;
+        height: 25%;
+    }
+
+    .btn_nav, .btn_nav_sair {
+        font-size: 1.2rem;
+        height: 6vh;
+    }
+
+    .nav-texto h1 {
+        font-size: 1.2rem;
+    }
+
+    .container-kpis {
+        height: 25vh;
+    }
+
+    .kpi {
+        height: 20vh;
+        width: 40dvh;
+    }
+
+    .grafico {
+        width: 90%;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .navbar {
+        padding: 0 3vh;
+    }
+
+    .navlogo {
+        width: 12dvw;
+    }
+
+    .navlogo img {
+        height: 5rem;
+    }
+
+    .btn_contato, .btn_log {
+        padding: 0.6rem 1.2rem;
+        font-size: medium;
+    }
+
+    .nav-lateral {
+        width: 22%;
+        padding-top: 1.5rem;
+    }
+
+    .nav-logo-user {
+        width: 75%;
+        height: 28%;
+    }
+
+    .btn_nav, .btn_nav_sair {
+        font-size: 1.3rem;
+        height: 7vh;
+    }
+
+    .nav-texto h1 {
+        font-size: 1.3rem;
+    }
+
+    .container-kpis {
+        height: 28vh;
+    }
+
+    .kpi {
+        height: 22vh;
+        width: 45dvh;
+    }
+
+    .grafico {
+        width: 80%;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .navbar {
+        padding: 0 4vh;
+    }
+
+    .navlogo {
+        width: 10dvw;
+    }
+
+    .navlogo img {
+        height: 5.5rem;
+    }
+
+    .btn_contato, .btn_log {
+        padding: 0.7rem 1.3rem;
+        font-size: large;
+    }
+
+    .nav-lateral {
+        width: 20%;
+        padding-top: 2rem;
+    }
+
+    .nav-logo-user {
+        width: 70%;
+        height: 30%;
+    }
+
+    .btn_nav, .btn_nav_sair {
+        font-size: 1.4rem;
+        height: 8vh;
+    }
+
+    .nav-texto h1 {
+        font-size: 1.4rem;
+    }
+
+    .container-kpis {
+        height: 30vh;
+    }
+
+    .kpi {
+        height: 25vh;
+        width: 48dvh;
+    }
+
+    .grafico {
+        width: 48%;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .navbar {
+        padding: 0 4vh;
+    }
+
+    .navlogo {
+        width: 9dvw;
+    }
+
+    .navlogo img {
+        height: 6rem;
+    }
+
+    .btn_contato, .btn_log {
+        padding: 0.75rem 1.5rem;
+        font-size: large;
+    }
+
+    .nav-lateral {
+        width: 18%;
+        padding-top: 2rem;
+    }
+
+    .nav-logo-user {
+        width: 65%;
+        height: 30%;
+    }
+
+    .btn_nav, .btn_nav_sair {
+        font-size: 1.5rem;
+        height: 8vh;
+    }
+
+    .nav-texto h1 {
+        font-size: 1.5rem;
+    }
+
+    .container-kpis {
+        height: 30vh;
+    }
+
+    .kpi {
+        height: 25vh;
+        width: 50dvh;
+    }
+
+    .grafico {
+        width: 48%;
+    }
 }

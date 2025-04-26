@@ -32,7 +32,6 @@ function validarEmail() {
     }
 
 }
-
 function validarSenha() {
     var senha = document.getElementById('iptsenha').value;
     var mensagemErro = ""
@@ -117,10 +116,8 @@ function logar() {
 
             if (resposta.ok) {
                 console.log(resposta);
-
                 resposta.json().then(json => {
                     console.log(json);
-
                     sessionStorage.NOME_EMPRESA = json.nome_empresa; 
                     sessionStorage.CARGO_FUNCIONARIO = json.cargo_func;   
                     sessionStorage.ID_FUNCIONARIO = json.id_func; 

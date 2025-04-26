@@ -56,11 +56,7 @@ function atualizarEmployer(id, nome, email, cargo, senha) {
   return database.executar(instrucaoSql);
 }
 
-function cadastrarEmployer(nome, email, cargo, senha, fkEmpresa) {
-  let instrucaoSql = `INSERT INTO Employer (name, email, password, role, fkCompany, active) VALUES ("${nome}", "${email}", "${senha}", "${cargo}", ${fkEmpresa}, "1");`;
 
-  return database.executar(instrucaoSql);
-}
 
 function removerEmployer(idFunc) {
   let instrucaoSql = `UPDATE Employer SET active = '0' WHERE idEmployer = ${idFunc};`

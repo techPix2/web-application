@@ -31,7 +31,6 @@
 .imagem_check {
     width: 50%;
     height: 80%;
-    background-image: url(../assets/icon/sucesso.svg);
     background-size: cover;
 }
 
@@ -65,14 +64,12 @@
 .imagem_erro {
     width: 50%;
     height: 80%;
-    background-image: url(../assets/icon/erro.svg);
     background-size: cover;
 }
 
 .imagem_erro_acessado {
     width: 100px;
     height: 100px;
-    background-image: url(../assets/icon/erro.svg);
     background-size: cover;
 }
 
@@ -253,7 +250,6 @@ a {
 
 .input-search {
     width: 25%;
-    height: (fit-content + 1%);
     font-size: 24px;
     border: 2px solid black;
     border-radius: 30px;
@@ -390,16 +386,12 @@ select:hover {
     text-align: left;
 }
 
-#modal {
-    display: flex;
-    width: 100%;
-    height: 100%;
+.modal_todo{
     
 }
-
 .superior-modal {
     display: flex;
-    width: 100rem;
+    width: 23rem;
     height: 6rem;
     align-items: center;
     justify-content: space-around;
@@ -410,9 +402,12 @@ select:hover {
     border: none;
     background-color: #003F69;
     color: white;
-height: 30%;
+    height: 30%;
 }
 
+.super-modal{
+    width: 100%;
+}
 .esquerda-superior-modal {
     width: 50%;
     height: 100%;
@@ -703,351 +698,4 @@ height: 30%;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-/*
-RESPONSIVIDADE
-*/
-
-/*
-width: 1920px;
-height: 800px;
-*/
-
-@media (min-width: 2000px) {
-    #div_inferior {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
-}
-
-@media (max-width: 1500px) {
-    #div_inferior {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .nav-logo-user {
-        width: 80%;
-        padding-top: 8%;
-    }
-    
-    .nav-logo-user img{
-        width: 80%;
-        height: 80%;
-    }
-
-    .nav-item {
-        text-decoration: none;
-        font-size: 24px;
-        color: white;
-        font-weight: 400;
-    }
-    
-    #modal {
-        width: 400px;
-        padding-bottom: 9%;
-        padding-top: 2%;
-    }
-
-
-    .circulo_imagem-modal {
-        width: 60%;
-        height: 90%;
-        padding: 5px;
-    }
-
-    .icon-modal {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .inferior-modal {
-        padding-top: 5%;
-        flex-direction: column;
-        justify-content: none;
-        align-items: center;
-        gap: 12%;
-    }
-
-    .esquerda-inferior-modal {
-        width: 90%;
-    }
-
-    .input-modal {
-        width: 70%;
-    }
-
-    .descricao-modal {
-        font-size: 20px;
-    }
-
-    .borda-imagem {
-        width: 50%;
-        height: 100%;
-        padding-bottom: 9%;
-        margin-top: 2%;
-    }
-
-    .fundo-imagem {
-        width: 200px;
-        height: 200px;
-    }
-
-    .regiao-botao {
-        padding-bottom: 9%;
-    }
-
-    .direita-superior-modal {
-        height: 100%;
-        width: 30px;
-        height: 30px;
-    }
-
-    .circulo_imagem-modal-v {
-        width: 11%;
-        height: 45%;
-    }
-
-    .icon-delete {
-        width: 25px;
-        height: 25px;
-    }
-
-    .circulo_imagem-modal-excluir {
-        width: 30px;
-        height: 30px;
-    }
-
-    .icon-vermelho {
-        width: 30px;
-        height: 30px;
-    }
-
-    .titulo_modal_excluir {
-        font-size: 24px;
-    }
-
-    .inferior-modal-excluir {
-        width: 90%;
-        padding-top: 5%;
-    }
-
-    .mensagem-excluir {
-        font-size: 20px;
-    }
-
-    .area-botao-excluir {
-        width: 50%;
-        height: 100%;
-        padding: 10%;
-    }
-}
-
-@media (max-width: 1000px) {
-
-    .screen-dash-user {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    #div_inferior {
-        grid-template-columns: 1fr;
-    }
-
-    .side-bar-user {
-        width: 100%;
-        height: 23%;
-        top: 0;
-        flex-direction: column;
-    }
-
-    .nav-logo-user {
-        width: 20%;
-        padding-left: 5%;
-        padding-top: 2%;
-    }
-    
-    .nav-logo-user img{
-        width: 100px;
-        height: 100px;
-    }
-
-    .nav-list {
-        width: 85%;
-        height: 100%;
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-    }
-
-    .nav-list-options {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-    }
-
-    .opcao {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        gap: 5px;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .opcao img {
-        width: 36px;
-        height: 36px;
-    }
-
-    .nav-item {
-        font-size: 60%;
-        font-weight: 600;
-    }
-
-    .nav-item img {
-        width: 80%;
-    }
-
-    .selecionado {
-        padding: 10px;
-        gap: 5px;
-    }
-
-    .div_ola {
-        display: none;
-    }
-
-    .main-content-user {
-        margin-top: 55%;
-        margin-left: 2%;
-    }
-
-    .titulo_pagina {
-        font-size: 24px;
-    }
-
-    .circulo_imagem {
-        width: 32px;
-        height: 30px;
-    }
-
-    .horario {
-        font-size: 20px;
-    }
-
-    .input-search {
-        width: 150px;
-        height: (fit-content + 2%);
-        font-size: 24px;
-        margin-top: 3%;
-    }
-
-    .icon_filtro {
-        width: 36px;
-        height: 36px;
-    }
-
-    .select-filtro {
-        width: fit-content;
-        height: (fit-content + 1%);
-        font-size: 20px;
-    }
-
-    .preferencias {
-        gap: 1%;
-    }
-
-    #modal {
-        width: 400px;
-        padding-bottom: 9%;
-    }
-
-    .esquerda-superior-modal {
-        width: 30%;
-    }
-
-    .circulo_imagem-modal {
-        width: 30px;
-    }
-
-    .icon-modal {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .inferior-modal {
-        padding-top: 5%;
-        flex-direction: column;
-        justify-content: none;
-        align-items: center;
-        gap: 12%;
-    }
-
-    .esquerda-inferior-modal {
-        width: 90%;
-    }
-
-    .descricao-modal {
-        font-size: 20px;
-    }
-
-    .borda-imagem {
-        width: 80%;
-        height: 100%;
-        padding-bottom: 9%;
-    }
-
-    .fundo-imagem {
-        width: 200px;
-        height: 200px;
-    }
-
-    .regiao-botao {
-        padding-bottom: 9%;
-    }
-
-    .direita-superior-modal {
-        height: 100%;
-        width: 30px;
-        height: 30px;
-    }
-
-    .circulo_imagem-modal-v {
-        width: 11%;
-        height: 45%;
-    }
-
-    .icon-delete {
-        width: 25px;
-        height: 25px;
-    }
-
-    .circulo_imagem-modal-excluir {
-        width: 30px;
-        height: 30px;
-    }
-
-    .icon-vermelho {
-        width: 30px;
-        height: 30px;
-    }
-
-    .titulo_modal_excluir {
-        font-size: 24px;
-    }
-
-    .inferior-modal-excluir {
-        width: 90%;
-        padding-top: 5%;
-    }
-
-    .mensagem-excluir {
-        font-size: 20px;
-    }
-
-    .area-botao-excluir {
-        width: 50%;
-        height: 100%;
-        padding: 10%;
-    }
 }

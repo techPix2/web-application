@@ -16,15 +16,12 @@ function autenticar(email, senha) {
     return database.executar(instrucaoSql);
 }
 
-function cadastrar(nome, email, senha, fkEmpresa) {
-    var instrucaoSql = `
-        INSERT INTO usuario (nome, email, senha, fk_empresa) VALUES ('${nome}', '${email}', '${senha}', '${fkEmpresa}');
-    `;
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+function cadastrarEmployer(nome,cpf, email, cargo, senha, fk_empresa) {
+    let instrucaoSql = `INSERT INTO Employer (name,cpf,  email, password, role, fkCompany, active) VALUES ("${nome}","${cpf}" ,"${email}", "${senha}", "Administrador", ${fk_empresa}, 1);`;
     return database.executar(instrucaoSql);
 }
 
 module.exports = {
     autenticar,
-    cadastrar
+    cadastrarEmployer
 };

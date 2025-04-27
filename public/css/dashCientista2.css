@@ -4,6 +4,21 @@
     text-decoration: none;
     color: inherit;
 }
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.header h1 {
+    color: var(--azulEscuro);
+    font-size: 32px;
+    margin-bottom: 20px;
+}
 .container-filtro{
     /* border: red 1px solid; */
     min-height: 5%;

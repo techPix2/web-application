@@ -1,0 +1,220 @@
+/* Responsive Media Queries */
+/* Small devices (mobile, 600px and up) */
+
+/* Contact Form Responsive Styles */
+@media only screen and (max-width: 767px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .containerEsquerda {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .containerDireita {
+        display: none;
+    }
+
+    .inputs {
+        width: 90%;
+    }
+
+    .botaoEnviar {
+        width: 90%;
+    }
+}
+
+/* Login Form Responsive Styles */
+@media only screen and (max-width: 767px) {
+    .container_login {
+        flex-direction: column;
+    }
+
+    .form_login {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .img_login {
+        display: none;
+    }
+
+    .form input {
+        width: 90%;
+    }
+
+    .form button {
+        width: 90%;
+    }
+}
+
+/* Table Responsive Styles */
+@media only screen and (max-width: 767px) {
+    #table_servidores {
+        width: 100%;
+    }
+
+    #table_servidores, 
+    #table_servidores thead, 
+    #table_servidores tbody, 
+    #table_servidores th, 
+    #table_servidores td, 
+    #table_servidores tr {
+        display: block;
+    }
+
+    #table_servidores thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    #table_servidores tr {
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+    }
+
+    #table_servidores td {
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #table_servidores td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    #table_servidores td:nth-of-type(1):before { content: "Nome servidor"; }
+    #table_servidores td:nth-of-type(2):before { content: "MacAddres"; }
+    #table_servidores td:nth-of-type(3):before { content: "Excluir"; }
+}
+
+/* Small devices (mobile, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .nav-lateral {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 1rem;
+    }
+
+    .main-content-user {
+        margin-left: 0;
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    #div_inferior {
+        grid-template-columns: 1fr;
+    }
+
+    .cardMaior {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .cabecalho {
+        padding: 0 1rem;
+    }
+
+    .titulo_pagina {
+        font-size: 24px;
+    }
+
+    .input-search {
+        width: 70%;
+    }
+
+    #modal {
+        width: 90%;
+        margin: 0 auto;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .container {
+        flex-direction: row;
+    }
+
+    .nav-lateral {
+        width: 30%;
+        height: 100vh;
+        position: fixed;
+    }
+
+    .main-content-user {
+        margin-left: 35%;
+        width: 65%;
+    }
+
+    #div_inferior {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cardMaior {
+        width: 90%;
+    }
+
+    #modal {
+        width: 70%;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .nav-lateral {
+        width: 25%;
+    }
+
+    .main-content-user {
+        margin-left: 30%;
+        width: 70%;
+    }
+
+    #div_inferior {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .cardMaior {
+        width: 300px;
+    }
+
+    #modal {
+        width: 50%;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .nav-lateral {
+        width: 20%;
+    }
+
+    .main-content-user {
+        margin-left: 25%;
+        width: 75%;
+    }
+
+    #div_inferior {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .cardMaior {
+        width: 350px;
+    }
+}

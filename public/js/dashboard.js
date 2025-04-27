@@ -320,22 +320,18 @@ document.addEventListener("DOMContentLoaded", function() {
         chartPizza3.data.datasets[0].data = [usedSwap, totalSwap - usedSwap];
         chartPizza3.update();
 
-        // Atualizar gráfico de RAM usada
         const totalRam = 16;
         const usedRam = Math.floor(Math.random() * 12 + 2);
         chartRamUso.data.datasets[0].data = [usedRam, totalRam - usedRam];
         chartRamUso.update();
 
-        // Atualizar gráfico de porcentagem de RAM
         const ramPercentage = (usedRam / totalRam) * 100;
         chartRamPorcentagem.data.datasets[0].data = [ramPercentage.toFixed(1)];
         chartRamPorcentagem.update();
 
-        // Atualizar gráfico de pacotes enviados
         chartRedeEnviados.data.datasets[0].data = [Math.floor(Math.random() * 200 + 50)];
         chartRedeEnviados.update();
 
-        // Atualizar gráfico de pacotes recebidos
         chartRedeRecebidos.data.datasets[0].data = [Math.floor(Math.random() * 200 + 50)];
         chartRedeRecebidos.update();
     }

@@ -115,7 +115,7 @@ setInterval(carregarHorario, 60000);
 async function mostrarCards() {
     try {
         const response = await fetch("/techpix/mostrarCards");
-        
+
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
@@ -130,7 +130,7 @@ async function mostrarCards() {
                 <div class="cardMaior" style="margin: 10px; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
                 <button class="btn-excluir" onclick="excluirEmpresa(${empresa.idCompany})" 
                 style="background-color: red; border-radius: 10px; font-size: 16px; cursor: pointer; padding: 3%">
-                 Excluir empresa
+                 Desativar empresa
                 </button>
                 <div class="cabecalho-card">
                     <span class="titulo-card" style="font-weight: bold;">${empresa.nome}</span>
@@ -159,17 +159,17 @@ window.onload = function() {
 };
 
 async function excluirEmpresa(id) {
-    console.log('ID recebido para exclusão:', id);
-    if (confirm('Tem certeza que deseja excluir esta empresa?')) {
+    console.log('ID recebido para desativação:', id);
+    if (confirm('Tem certeza que deseja desativar esta empresa?')) {
         try {
             const response = await fetch(`/techpix/excluirEmpresa/${id}`, {
                 method: 'DELETE'
             });
-            
+
             if (response.ok) {
                 mostrarCards();
             } else {
-                alert('Erro ao excluir empresa');
+                alert('Erro ao desativar empresa');
             }
         } catch (error) {
             console.error('Erro:', error);
@@ -177,4 +177,3 @@ async function excluirEmpresa(id) {
         }
     }
 }
-

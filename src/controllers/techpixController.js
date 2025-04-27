@@ -67,7 +67,7 @@ function cadastrarEmpresa(req, res) {
 
 async function excluirEmpresa(req, res) {
     const idEmpresa = req.params.id;
-    
+
     if (!idEmpresa || isNaN(idEmpresa)) {
         return res.status(400).json({
             success: false,
@@ -77,14 +77,14 @@ async function excluirEmpresa(req, res) {
 
     try {
         const resultado = await techpixModel.excluirEmpresa(idEmpresa);
-        
+
         res.json({
             success: true,
-            message: "Empresa e todos os registros vinculados foram excluídos com sucesso"
+            message: "Empresa foi desativada com sucesso"
         });
     } catch (error) {
         console.error("Erro no controller:", error);
-        
+
         let status = 500;
         let message = "Erro ao excluir empresa";
 

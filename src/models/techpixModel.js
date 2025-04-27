@@ -6,11 +6,11 @@ function cadastrarEmpresa(dados) {
           '${dados.emailServer}',
           '${dados.telefoneServer}'
       );
-      
+
       INSERT INTO Photo (path) VALUES (
           '${dados.photoServer}'
       );
-      
+
       INSERT INTO Company (socialReason, cnpj, fkContact, fkPhoto) VALUES (
           '${dados.razaoServer}',
           '${dados.cnpjServer}',
@@ -29,36 +29,15 @@ function listarEmpresas() {
             socialReason AS nome,
             cnpj
         FROM Company
+        WHERE active = 1
     `;
     return database.executar(query);
 }
 
 async function excluirEmpresa(idCompany) {
     try {
-        await database.executar(`
-            DELETE l FROM login l
-            JOIN employer e ON l.fkEmployer = e.idEmployer
-            WHERE e.fkCompany = ${idCompany}
-        `);
-
-        await database.executar(`
-            DELETE a FROM acesslog a
-            JOIN employer e ON a.fkEmployer = e.idEmployer
-            WHERE e.fkCompany = ${idCompany}
-        `);
-
-        await database.executar(`
-            DELETE FROM server
-            WHERE fkCompany = ${idCompany}
-        `);
-
-        await database.executar(`
-            DELETE FROM employer
-            WHERE fkCompany = ${idCompany}
-        `);
-
         const empresa = await database.executar(`
-            SELECT fkContact, fkPhoto 
+            SELECT idCompany 
             FROM Company 
             WHERE idCompany = ${idCompany}
         `);
@@ -67,19 +46,11 @@ async function excluirEmpresa(idCompany) {
             throw new Error('Empresa não encontrada');
         }
 
+        // Atualizar o campo active para 0 ao invés de deletar a empresa
         await database.executar(`
-            DELETE FROM Company 
+            UPDATE Company 
+            SET active = 0 
             WHERE idCompany = ${idCompany}
-        `);
-
-        await database.executar(`
-            DELETE FROM Contact 
-            WHERE idContact = ${empresa[0].fkContact}
-        `);
-        
-        await database.executar(`
-            DELETE FROM Photo 
-            WHERE idPhoto = ${empresa[0].fkPhoto}
         `);
 
         return { affectedRows: 1 };

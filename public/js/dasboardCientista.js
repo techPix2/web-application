@@ -1,4 +1,3 @@
-
 let periodoAtual = "DAY";
 let tempoAtual = 30;
 const id = sessionStorage.ID_FUNCIONARIO;
@@ -11,20 +10,18 @@ function carregarDados() {
 
 async function buscarAlertas(quadrante) {
     const empresa = sessionStorage.ID_EMPRESA || 1;
-    try {
-        const resposta = await fetch(`/dashCientista/listarAlertasMaquinasPorQuadrante/${empresa}/${quadrante}/${periodoAtual}/${tempoAtual}`);
-        return await resposta.json();
-    } catch (erro) {
-        console.log(erro);
-    }
+    const resposta = await fetch(`/dashCientista/listarAlertasMaquinasPorQuadrante/${empresa}/${quadrante}/${periodoAtual}/${tempoAtual}`);
+    return resposta.ok ? await resposta.json() : [];
 }
 
 async function carregarAlertasTodosQuadrantes() {
-    const q1 = await buscarAlertas(1);
-    const q2 = await buscarAlertas(2);
-    const q3 = await buscarAlertas(3);
-    const q4 = await buscarAlertas(4);
-    return [q1, q2, q3, q4];
+    const [q1, q2, q3, q4] = await Promise.all([
+        buscarAlertas(1),
+        buscarAlertas(2),
+        buscarAlertas(3),
+        buscarAlertas(4)
+    ]);
+    return [q1 || [], q2 || [], q3 || [], q4 || []];
 }
 
 function processarComponentes(quadrantes) {
@@ -37,7 +34,7 @@ function processarComponentes(quadrantes) {
 
     for (let i = 0; i < quadrantes.length; i++) {
         quadrantes[i].forEach(alerta => {
-            const tipo = alerta.type;
+            const tipo = alerta.type || '';
             if (tipo.includes('RAM') || tipo.includes('Memory') || tipo.includes('Memória')) {
                 resultado[i].RAM++;
             } else if (tipo.includes('CPU') || tipo.includes('Processador')) {
@@ -53,6 +50,8 @@ function processarComponentes(quadrantes) {
 async function carregarGraficos() {
     const quadrantes = await carregarAlertasTodosQuadrantes();
     const componentes = processarComponentes(quadrantes);
+    
+    // Gráfico de alertas por quadrante
     new Chart(document.getElementById("alertaQuadrante"), {
         type: 'bar',
         data: {
@@ -74,6 +73,7 @@ async function carregarGraficos() {
         }
     });
 
+    // Gráfico de componentes por quadrante
     new Chart(document.getElementById("alertaComponente"), {
         type: 'bar',
         data: {
@@ -110,7 +110,8 @@ async function carregarGraficos() {
             }
         }
     });
-Fqua
+
+    // Inicializa gráfico vazio de alertas por máquina
     window.graficoAlertasMaquina = new Chart(document.getElementById("alertaMaquina"), {
         type: 'bar',
         data: {
@@ -154,18 +155,29 @@ Fqua
 
 async function verificarQuadranteComMaisAlertas() {
     const quadrantes = await carregarAlertasTodosQuadrantes();
-    let melhorQuadrante = quadrantes[0];
+    
+    let melhorQuadrante = [];
+    let maiorQuantidade = 0;
 
-    for (let i = 1; i < quadrantes.length; i++) {
-        if (quadrantes[i].length > melhorQuadrante.length) {
+    for (let i = 0; i < quadrantes.length; i++) {
+        if (quadrantes[i].length > maiorQuantidade) {
+            maiorQuantidade = quadrantes[i].length;
             melhorQuadrante = quadrantes[i];
         }
     }
-    maisAlertasQuadranteKPI.innerHTML = melhorQuadrante[0].position;
+
+    maisAlertasQuadranteKPI.innerHTML = melhorQuadrante.length > 0 && melhorQuadrante[0].position 
+        ? melhorQuadrante[0].position 
+        : "N/A";
+
     return melhorQuadrante;
 }
 
 function processarDadosMaquinasQuadrante(alertas) {
+    if (!alertas || alertas.length === 0) {
+        return { labels: [], ram: [], cpu: [], disco: [] };
+    }
+
     const maquinas = {};
 
     alertas.forEach(alerta => {
@@ -210,10 +222,11 @@ function processarDadosMaquinasQuadrante(alertas) {
 
 async function atualizarGraficoAlertaMaquina() {
     const quadrante = await verificarQuadranteComMaisAlertas();
-    const dados = processarDadosMaquinasQuadrante(quadrante);
+    
+    if (!quadrante.length) return;
 
-    // Atualiza o título com o número do quadrante
-    document.getElementById('quadranteAlerta').textContent = `Quadrante ${quadrante[0].position}`;
+    const dados = processarDadosMaquinasQuadrante(quadrante);
+    document.getElementById('quadranteAlerta').textContent = `Quadrante ${quadrante[0].position || 1}`;
 
     if (window.graficoAlertasMaquina) {
         window.graficoAlertasMaquina.destroy();
@@ -257,62 +270,61 @@ async function atualizarGraficoAlertaMaquina() {
     });
 }
 
-async function buscarAlertasPorMaquina(quadrante) {
-    const empresa = sessionStorage.ID_EMPRESA || 1;
-    try {
-        const resposta = await fetch(`/dashCientista/listarAlertasPorMaquinaUltimos30Dias/${empresa}/${quadrante}`);
-        const alertas = await resposta.json();
+async function buscarDados(url) {
+    const resposta = await fetch(url);
+    return resposta.ok ? await resposta.json() : [];
+}
 
-        const maquinas = {};
-        const datas = new Set();
+async function processarDadosGraficoLinha(dados, chaveId, chaveNome) {
+    const itens = {};
+    const datas = new Set();
 
-        alertas.forEach(alerta => {
-            const id = alerta.idServer;
-            const nome = alerta.hostname;
-            const data = new Date(alerta.dia).toLocaleDateString('pt-BR');
+    dados.forEach(item => {
+        const id = item[chaveId];
+        const nome = item[chaveNome];
+        const data = new Date(item.dia).toLocaleDateString('pt-BR');
 
-            if (!maquinas[id]) {
-                maquinas[id] = { nome: nome, alertas: {} };
-            }
-
-            maquinas[id].alertas[data] = alerta.totalAlertas;
-            datas.add(data);
-        });
-
-        const datasOrdenadas = Array.from(datas).sort();
-        const datasets = [];
-
-        let i = 0;
-        for (const id in maquinas) {
-            const maquina = maquinas[id];
-            const dados = [];
-
-            datasOrdenadas.forEach(data => {
-                dados.push(maquina.alertas[data] || 0);
-            });
-            datasets.push({
-                label: maquina.nome,
-                data: dados,
-                backgroundColor: cores[i % cores.length],
-                borderColor: cores[i % cores.length],
-                borderWidth: 2
-            });
-            i++;
+        if (!itens[id]) {
+            itens[id] = { nome, alertas: {} };
         }
 
-        return { labels: datasOrdenadas, datasets: datasets };
-    } catch (erro) {
-        console.log(erro);
-        return { labels: [], datasets: [] };
+        itens[id].alertas[data] = item.totalAlertas;
+        datas.add(data);
+    });
+
+    const datasOrdenadas = Array.from(datas).sort();
+    const datasets = [];
+
+    let i = 0;
+    for (const id in itens) {
+        const item = itens[id];
+        const dados = datasOrdenadas.map(data => item.alertas[data] || 0);
+        
+        datasets.push({
+            label: item.nome,
+            data: dados,
+            backgroundColor: cores[i % cores.length],
+            borderColor: cores[i % cores.length],
+            borderWidth: 2
+        });
+        i++;
     }
+
+    return { labels: datasOrdenadas, datasets };
+}
+
+async function buscarAlertasPorMaquina(quadrante) {
+    const empresa = sessionStorage.ID_EMPRESA || 1;
+    const alertas = await buscarDados(`/dashCientista/listarAlertasPorMaquinaUltimos30Dias/${empresa}/${quadrante}`);
+    return processarDadosGraficoLinha(alertas, 'idServer', 'hostname');
 }
 
 async function atualizarGraficoComponentesMaquina() {
     const quadrante = await verificarQuadranteComMaisAlertas();
-    const dados = await buscarAlertasPorMaquina(quadrante[0].position);
-
-    // Atualiza o título com o número do quadrante
-    document.getElementById('quadranteComponente').textContent = `Quadrante ${quadrante[0].position}`;
+    const quadranteNumero = quadrante.length > 0 && quadrante[0].position ? quadrante[0].position : 1;
+    
+    const dados = await buscarAlertasPorMaquina(quadranteNumero);
+    document.getElementById('quadranteComponente').textContent = `Quadrante ${quadranteNumero}`;
 
     if (window.graficoComponentesMaquina) {
         window.graficoComponentesMaquina.destroy();
@@ -332,6 +344,14 @@ async function atualizarGraficoComponentesMaquina() {
             }
         }
     });
+}
+
+function verificarDiaDaSemana() {
+    maisAlertasDiaKPI.innerHTML = "Segunda";
+}
+
+function encontrarComponenteMaisFrequente() {
+    maisAlertasComponente.innerHTML = "CPU";
 }
 
 function sair() {

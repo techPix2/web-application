@@ -20,14 +20,20 @@ console.log("Executando a instrução SQL: \n" + instrucaoSql);
 }
 
 function listarAlertasPorComponentePorMaquina(fk_company, id_server,periodo, tempo){
-    var instrucaoSql = `SELECT * 
+    var instrucaoSql = `SELECT 
+    Component.name AS componentName,
+    Component.type AS componentType,
+    DATE(AlertMachine.dateTime) as dia,
+    COUNT(*) as totalAlertas
     FROM AlertMachine 
     JOIN Measure ON AlertMachine.fkMeasure = Measure.idMeasure 
     JOIN Component ON Measure.fkComponent = Component.idComponent 
     JOIN Server ON Component.fkServer = Server.idServer 
     WHERE Server.fkCompany = ${fk_company}
     AND idServer = ${id_server}
-    AND AlertMachine.dateTime >= DATE_SUB(NOW(), INTERVAL ${tempo} ${periodo});`
+    AND AlertMachine.dateTime >= DATE_SUB(NOW(), INTERVAL ${tempo} ${periodo})
+    GROUP BY Component.name, Component.type, DATE(AlertMachine.dateTime)
+    ORDER BY dia ASC, componentName ASC;`
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);

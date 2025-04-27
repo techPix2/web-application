@@ -187,48 +187,77 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         chartPizza2 = new Chart(document.getElementById('pizza2'), {
-            type: 'doughnut',
+            type: 'line',
             data: {
-                labels: ['Usado (GB)', 'Disponível (GB)'],
+                labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
                 datasets: [{
-                    label: 'Armazenamento',
-                    data: [180, 320],
-                    backgroundColor: ['#FF6384', '#36A2EB'],
-                    borderWidth: 1
+                    label: 'Armazenamento Usado (GB)',
+                    data: [180, 185, 175, 190, 180],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
                 }]
             },
             options: {
-                responsive: true
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 500
+                    }
+                }
             }
         });
 
         chartPizza3 = new Chart(document.getElementById('pizza3'), {
-            type: 'doughnut',
+            type: 'line',
             data: {
-                labels: ['Usado (GB)', 'Disponível (GB)'],
+                labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
                 datasets: [{
-                    label: 'Swap',
-                    data: [2, 6],
-                    backgroundColor: ['#FFCE56', '#4BC0C0'],
-                    borderWidth: 1
+                    label: 'Swap Usado (GB)',
+                    data: [2, 3, 2.5, 3.5, 2],
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
                 }]
             },
             options: {
-                responsive: true
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 8
+                    }
+                }
             }
         });
 
         chartRamUso = new Chart(document.getElementById('ramUso'), {
-            type: 'doughnut',
+            type: 'line',
             data: {
-                labels: ['Usada (GB)', 'Disponível (GB)'],
+                labels: ['10:00', '10:05', '10:10', '10:15', '10:20'],
                 datasets: [{
-                    data: [6, 10],
-                    backgroundColor: ['#FF6384', '#36A2EB']
+                    label: 'RAM Usada (GB)',
+                    data: [6, 8, 7, 9, 6],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
                 }]
             },
             options: {
-                responsive: true
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 16
+                    }
+                }
             }
         });
 
@@ -310,19 +339,29 @@ document.addEventListener("DOMContentLoaded", function() {
         chartFreqCpu.data.datasets[0].data.shift();
         chartFreqCpu.update();
 
-        const totalStorage = 500;
+        // Update storage chart (now a line chart)
+        chartPizza2.data.labels.push(horaAtual);
+        chartPizza2.data.labels.shift();
         const usedStorage = Math.floor(Math.random() * 300 + 100);
-        chartPizza2.data.datasets[0].data = [usedStorage, totalStorage - usedStorage];
+        chartPizza2.data.datasets[0].data.push(usedStorage);
+        chartPizza2.data.datasets[0].data.shift();
         chartPizza2.update();
 
-        const totalSwap = 8;
+        // Update swap chart (now a line chart)
+        chartPizza3.data.labels.push(horaAtual);
+        chartPizza3.data.labels.shift();
         const usedSwap = Math.floor(Math.random() * 6 + 1);
-        chartPizza3.data.datasets[0].data = [usedSwap, totalSwap - usedSwap];
+        chartPizza3.data.datasets[0].data.push(usedSwap);
+        chartPizza3.data.datasets[0].data.shift();
         chartPizza3.update();
 
+        // Update RAM usage chart (now a line chart)
+        chartRamUso.data.labels.push(horaAtual);
+        chartRamUso.data.labels.shift();
         const totalRam = 16;
         const usedRam = Math.floor(Math.random() * 12 + 2);
-        chartRamUso.data.datasets[0].data = [usedRam, totalRam - usedRam];
+        chartRamUso.data.datasets[0].data.push(usedRam);
+        chartRamUso.data.datasets[0].data.shift();
         chartRamUso.update();
 
         const ramPercentage = (usedRam / totalRam) * 100;

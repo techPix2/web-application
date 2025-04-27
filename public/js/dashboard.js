@@ -339,7 +339,6 @@ document.addEventListener("DOMContentLoaded", function() {
         chartFreqCpu.data.datasets[0].data.shift();
         chartFreqCpu.update();
 
-        // Update storage chart (now a line chart)
         chartPizza2.data.labels.push(horaAtual);
         chartPizza2.data.labels.shift();
         const usedStorage = Math.floor(Math.random() * 300 + 100);
@@ -347,7 +346,6 @@ document.addEventListener("DOMContentLoaded", function() {
         chartPizza2.data.datasets[0].data.shift();
         chartPizza2.update();
 
-        // Update swap chart (now a line chart)
         chartPizza3.data.labels.push(horaAtual);
         chartPizza3.data.labels.shift();
         const usedSwap = Math.floor(Math.random() * 6 + 1);
@@ -355,7 +353,6 @@ document.addEventListener("DOMContentLoaded", function() {
         chartPizza3.data.datasets[0].data.shift();
         chartPizza3.update();
 
-        // Update RAM usage chart (now a line chart)
         chartRamUso.data.labels.push(horaAtual);
         chartRamUso.data.labels.shift();
         const totalRam = 16;

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conta - Servidores</title>
     <link rel="stylesheet" href="../css/gerenciarServidores.css">
-    <link rel="stylesheet" href="../css/dashCientista.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap" rel="stylesheet">
@@ -14,29 +13,20 @@
 </head>
 
 <body onload="listarServidores()">
-    <header>
-        <nav class="navbar">
-            <div class="navlogo">
-                <a href="../index.html"><img src="../assets/icon/logo.png" alt="" /></a>
-            </div>
-            <ul class="botoes_nav">
-                <li><a href="../index.html" class="btn_log">Home</a></li>
-            </ul>
-        </nav>
-    </header>
-
     <div class="container">
         <!-- Sessão Lateral -->
-        <nav class="nav-lateral">
-            <div class="nav-logo-user"></div>
+        <div class="nav-lateral">
+            <div class="nav-logo-user">
+                <img src="../uploads/perfil-padrão.png" alt="">
+            </div>
             <div class="nav-texto">
-                <h1>Olá, <span id="nome_usuario"></span></h1>
+                <h1>Olá, <span id="razao">Administrador</span></h1>
             </div>
             <div class="nav-botoes">
-                <a href="../root/gerenciamentoServidores.html" id="atual" class="btn_nav">Servidores</a>
+                <a href="../root/gerenciamentoServidores.html" id="atual" class="btn_nav_ativado">Servidores</a>
             </div>
             <div class="nav-botoes">
-                <a href="./contaEmpresaRootFuncionarios.html" class="btn_nav_ativado">Funcionários</a>
+                <a href="./contaEmpresaRootFuncionarios.html" class="btn_nav">Funcionários</a>
             </div>
             <div class="nav-botoes">
                 <a href="../index.html" class="btn_nav">Suporte</a>
@@ -44,9 +34,9 @@
             <div class="nav-botoes">
                 <a href="../index.html" class="btn_nav" id="sair">Sair</a>
             </div>
-        </nav>
+        </div>
 
-        <main class="main-content-user">
+        <div class="main-content-user">
             <dialog id="modal" class="modal_todo"></dialog>
             <div class="cabecalho">
                 <div style="width: 95%;display: flex; flex-direction: row; justify-content: space-between;">
@@ -58,14 +48,12 @@
                     </div>
                     <span class="horario" id="horario"></span>
                 </div>
+            </div>
                 <div style="display: flex; flex-direction: row; align-items: center; gap: 1%">
                     <input class="input-search" type="text" oninput="mostrarCards(0)" id="ipt_search">
-                    <div class="filtro" id="div_preferencias">
-                        <img class="icon_filtro" src="../assets/icon/filtroDesativado.svg" alt=""
-                            onclick="ativarFiltro(0)">
-                    </div>
                 </div>
-            </div>
+
+        
             <div>
                 <table id="table_servidores">
                     <tr>
@@ -84,7 +72,7 @@
                 </table>
             </div>
             <div id="div_inferior"></div>
-        </main>
+        </div>
 
 
     </div>

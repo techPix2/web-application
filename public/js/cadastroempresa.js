@@ -63,13 +63,13 @@ function prosseguir(){
 
 async function cadastrarEmpresa(){
     const fk_endereco = sessionStorage.FK_ENDERECO;
-    const response = await fetch(`/empresas/cadastrarEmpresa/${razaosocial}/${cnpj}/${fk_endereco}`, {
+    const response = await fetch(`/empresas/cadastrarEmpresa/${razaoSocial}/${cnpj}/${fk_endereco}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            razaosocial: razaosocial,
+            razaosocial: razaoSocial,
             cnpj: cnpj,
             fk_endereco: fk_endereco
         })

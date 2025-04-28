@@ -1,8 +1,9 @@
 @import url(components.css);
-
-* a{
-    text-decoration: none;
-    color: inherit;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
 }
 
 .header {
@@ -28,6 +29,73 @@
     justify-content: center;
 }
 
+
+
+.nav-lateral{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 2rem;
+    width: 300px;
+    height: 100vh;
+    background: #567EBB;
+    gap: 1rem;
+    position: fixed;
+    color: white;
+}
+
+.nav-logo-user{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 65%;
+    height: 30%;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.nav-logo-user img{
+    height: 60%;
+}
+
+.nav-botoes{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.btn_nav, .btn_nav_sair{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    width: 80%;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.5rem;
+    text-decoration: none;
+    transition: 0.2s ease-in-out;
+    background: #77AFD4;
+    height: 8vh;
+}
+
+.btn_nav:hover{
+    background: #6599bc;
+}
+
+#sair{
+    width: 45%;
+}
+
+#atual{
+    font-weight: bold;
+}
+
+
 .filtroMaquina{
     text-align: center;
     border-radius: 20px;
@@ -37,6 +105,20 @@
     height: 90%;
     width: 50%;
 
+}
+
+.mainContainer{
+    margin-left: 45vh;
+}
+
+.profilePicture{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 65%;
+    height: 30%;
+    border-radius: 50%;
+    background-color: white;
 }
 
 .filtroGrafico{

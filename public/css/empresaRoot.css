@@ -44,7 +44,7 @@
     justify-content: flex-start;
     align-items: center;
     padding-top: 2rem;
-    width: 40vh;
+    width: 270px;
     height: 100vh;
     background: #567EBB;
     gap: 1rem;
@@ -55,8 +55,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 65%;
-    height: 30%;
+    width: 66%;
+    height: 25%;
     border-radius: 50%;
     background-color: white;
 }
@@ -195,7 +195,7 @@ html, body {
 .main-content-user{
     width: 100%;
     height: 100%;
-    margin-left: 50vh;
+    margin-left: 45vh;
     margin-top: 2%;
     display: flex;
     flex-direction: column;
@@ -754,7 +754,7 @@ width: 1920px;
 height: 800px;
 */
 
-@media (min-width: 600px) {
+@media (min-width: 2000px) {
     #div_inferior {
         grid-template-columns: 1fr 1fr 1fr 1fr;
     }
@@ -766,11 +766,11 @@ height: 800px;
     }
 
     .nav-lateral{
-        width: 250px;
+        width: 300px;
     }
 
     .div_inferior{
-        width: 300px;
+        width: 250px;
         margin-left: 2%;
     }
 }

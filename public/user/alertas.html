@@ -11,17 +11,28 @@
     <script src="../js/alert.js"></script>
 </head>
 <body onload="carregarAlertas()">
-    <div class="sideBar">
-        <img src="" alt="" class="profilePicture">
-        <div class="buttonsNavbar">
-            <button class="buttonNavbar">Suporte</button>
-            <button class="buttonNavbar" onclick="window.location.href='dashboard.html'">Dashboard</button>
-            <button class="buttonNavbar active">Alertas</button>
+    <nav class="nav-lateral">
+        <div class="nav-logo-user">
+            <img src="../uploads/yuri.png" alt="">
         </div>
-        <div class="buttonsBaixo">
-            <button class="buttonSair">Sair</button>
+        <div class="nav-texto">
+            <h1>Olá, <span id=""></span>Yuri</h1>
         </div>
-    </div>
+        <div class="nav-botoes">
+            <a href="../user/dashboard.html" class="btn_nav">Servidores</a>
+        </div>
+        <div class="nav-botoes">
+            <a href="../index.html" class="btn_nav">Suporte</a>
+        </div>
+        <div class="nav-botoes">
+            <a id="atual" class="btn_nav">Alertas</a>
+        </div>
+        <div class="nav-botoes">
+            <a href="../index.html" class="btn_nav" id="sair">Sair</a>
+        </div>
+           
+    </nav>
+
     
     <div class="mainContainer">
         <div class="header">

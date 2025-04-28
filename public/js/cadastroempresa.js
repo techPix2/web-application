@@ -8,13 +8,13 @@ var estado;
 var numero;
 function prosseguir(){
 
-    if (document.getElementById('iptrazaosocial').value != null ||
-        document.getElementById('iptcnpj').value != null ||
-        document.getElementById('iptcep').value != null ||
-        document.getElementById('iptrua').value != null ||
-        document.getElementById('iptbairro').value != null ||
-        document.getElementById('iptcidade').value != null ||
-        document.getElementById('iptestado').value != null ||
+    if (document.getElementById('iptrazaosocial').value != null &&
+        document.getElementById('iptcnpj').value != null &&
+        document.getElementById('iptcep').value != null &&
+        document.getElementById('iptrua').value != null &&
+        document.getElementById('iptbairro').value != null &&
+        document.getElementById('iptcidade').value != null &&
+        document.getElementById('iptestado').value != null &&
         document.getElementById('iptnumero').value != null
     ){
         razaoSocial = document.getElementById('iptrazaosocial').value;
@@ -59,8 +59,8 @@ function prosseguir(){
                 <button onclick="colecaoCadastros()">Cadastrar</button>
             </div>
             `
-
 }
+
 async function cadastrarEmpresa(){
     const fk_endereco = sessionStorage.FK_ENDERECO;
     const response = await fetch(`/empresas/cadastrarEmpresa/${razaosocial}/${cnpj}/${fk_endereco}`, {

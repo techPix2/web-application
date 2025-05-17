@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+.kpi-container{
+    display: flex;
+    gap: 24px;
+    position: absolute;
+    max-width: 960px;
+    top: 20px;
+    left: 20%;
+    z-index: 10;
+}
+
+.kpi{
+    background-color: white;
+    flex: 1;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    border-collapse: collapse;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease;
+    align-items: center;
+}
+
+.kpi:hover{
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+ .kpi h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #0078d7;
+    margin: 0;
+  }
+
+.kpi h2 {
+    color: #000000;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin: 0 0 16px;
+    text-align: center;
+  }
+ 

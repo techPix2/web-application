@@ -1,3 +1,6 @@
+
+// Setup dos Gráficos
+
 var diskOptions = {
     series: [{
         name: 'NBX1024FC',
@@ -252,3 +255,5 @@ componentsChart.render()
 packageChart.render()
 
 saturationChart.render()
+
+// DropList

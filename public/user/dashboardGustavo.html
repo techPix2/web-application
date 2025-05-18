@@ -11,13 +11,16 @@
     <script src="../components/gustavo/kpi-container/kpicontainer.js"></script>
     <script src="../components/gustavo/customSelect/customselect.js"></script>
     <script src="../components/gustavo/explorer-container/explorercontainer.js"></script>
+    <script src="../components/gustavo/list-item/listitem.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script defer src="../js/dashboardGustavo.js"></script>
 </head>
 <body>
     <nav-bar></nav-bar>
     <custom-main>
-        <drop-list></drop-list>
+        <drop-list qtdSelects="5" onclick="expandir()">
+            <list-item fileName="NBX1024FC" fileDate="20/05/2025"></list-item>
+        </drop-list>
         <div class="charts dash">
             <div class="kpis">
                 <kpi-container titulo="Máquina com mais alertas"><span class="kpiValue">FC1520SP</span></kpi-container>

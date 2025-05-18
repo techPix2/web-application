@@ -1,0 +1,48 @@
+@import url(dashboards.css);
+
+.charts{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    /*height: 50%;*/
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.kpis{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    /*border: red 1px solid;*/
+}
+
+.chart{
+    width: 100%;
+    border: red 1px solid;
+}
+
+.dash{
+    display: flex;
+}
+
+.fileElement{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 10%;
+    border-bottom: #BDB1B1 1px solid;
+}
+
+.fileInfo{
+    font-weight: 200;
+    font-size: 20px;
+}
+
+.explorer{
+    display: none;
+}
+
+.teste{
+    color: rgba(214,219,237,0.4);
+}

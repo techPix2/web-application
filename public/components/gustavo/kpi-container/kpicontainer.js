@@ -20,11 +20,12 @@ class kpicontainer extends HTMLElement {
     render() {
         this.shadowRoot.innerHTML = `
         <div class="kpicontainer">
+            <span class="tituloKpi">${this.getAttribute('titulo')}</span>
             <slot></slot>
         </div>
         `;
     }
-    
+
     loadStyles() {
         const link = document.createElement('link');
         link.rel = 'stylesheet';

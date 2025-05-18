@@ -11,17 +11,20 @@
     <script src="../components/gustavo/kpi-container/kpicontainer.js"></script>
     <script src="../components/gustavo/customSelect/customselect.js"></script>
     <script src="../components/gustavo/explorer-container/explorercontainer.js"></script>
+    <script src="../components/gustavo/list-item/listitem.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script defer src="../js/dashboardGustavo.js"></script>
 </head>
 <body>
     <nav-bar></nav-bar>
     <custom-main>
-        <drop-list></drop-list>
+        <drop-list qtdSelects="5" onclick="expandir()">
+            <list-item fileName="NBX1024FC" fileDate="20/05/2025"></list-item>
+        </drop-list>
         <div class="charts dash">
             <div class="kpis">
-                <kpi-container></kpi-container>
-                <kpi-container></kpi-container>
+                <kpi-container titulo="Máquina com mais alertas"><span class="kpiValue">FC1520SP</span></kpi-container>
+                <kpi-container titulo="Máquina com maior saturação"><span class="kpiValue">NBX1024FC</span></kpi-container>
             </div>
             <chart-container id="diskChart"></chart-container>
             <chart-container id=""></chart-container>
@@ -29,11 +32,13 @@
         <custom-select class="dash"></custom-select>
         <div class="charts dash">
             <div class="kpis">
-                <kpi-container></kpi-container>
-                <kpi-container></kpi-container>
+                <kpi-container titulo="Índice de Saturação">
+                    <div id="saturationChart" class="saturationChart"></div>
+                </kpi-container>
+                <kpi-container titulo="Quantidade de Alertas"><span class="kpiValue">60</span></kpi-container>
             </div>
             <chart-container id="componentsChart"></chart-container>
-            <chart-container></chart-container>
+            <chart-container id="packageChart"></chart-container>
         </div>
         <explorer-container class="explorer">
             <div class="fileElement">

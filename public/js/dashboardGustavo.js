@@ -1,3 +1,6 @@
+
+// Setup dos Gráficos
+
 var diskOptions = {
     series: [{
         name: 'NBX1024FC',
@@ -36,8 +39,8 @@ var diskOptions = {
         },
     },
     dataLabels: {
-        position: 'top',
-        enabled: true
+        textAnchor: 'middle',
+        enabled: true,
     },
     stroke: {
         show: true,
@@ -134,6 +137,123 @@ var componentsOptions = {
 
 var componentsChart = new ApexCharts(document.getElementById("componentsChart"), componentsOptions)
 
+var packageOptions ={
+    series: [{
+        name: "Pacotes enviados",
+        data: [100000, 200000, 350000, 200000, 200000, 400000, 700000, 750000, 862420, 650120],
+        color: ['#8979FF']
+    },{
+        name: "Pacotes recebidos",
+        data: [650120, 862420, 750000, 700000, 400000, 200000, 200000, 350000, 200000, 100000],
+        color: ['#FF928A']
+    }],
+    chart: {
+        type: 'area',
+        height: 400,
+        zoom: {
+            enabled: false
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        width: 1,
+        curve: 'smooth'
+    },
+    title: {
+        text: 'Análise de pacotes',
+        align: 'center',
+        style: {
+            fontSize:  '24px',
+            fontWeight:  'bold',
+            fontFamily:  'inter',
+            color:  '#263238'
+        },
+    },
+    subtitle: {
+        text: 'Pacotes enviados e recebidos',
+        align: 'center'
+    },
+    labels: ['2020/05/01','2020/05/02','2020/05/03','2020/05/04','2020/05/05','2020/05/06','2020/05/07','2020/05/08','2020/05/09','2020/05/10'],
+    xaxis: {
+        type: 'datetime',
+    },
+    yaxis: {
+        opposite: false
+    },
+    legend: {
+        horizontalAlign: 'center'
+    },
+    markers: {
+        shape: 'circle',
+        size: 4,
+        fillOpacity: 1,
+        strokeColors: ['#8979FF', '#FF928A'],
+        colors: '#FFF'
+    }
+}
+
+var packageChart = new ApexCharts(document.getElementById("packageChart"), packageOptions)
+
+var saturationValue = 20;
+var saturationColor = '#ff0000';
+
+if (saturationValue > 90) {
+    saturationColor = '#00ff00';
+} else if (saturationValue > 60) {
+    saturationColor = '#ffff00';
+}
+
+var saturationOptions = {
+    chart: {
+        height: 150,
+        width: 200,
+        type: "radialBar",
+    },
+    series: [saturationValue],
+    colors: [saturationColor],
+    plotOptions: {
+        radialBar: {
+            startAngle: -90,
+            endAngle: 90,
+            track: {
+                background: '#333',
+                startAngle: -90,
+                endAngle: 90,
+            },
+            dataLabels: {
+                name: {
+                    show: false,
+                },
+                value: {
+                    fontSize: "20px",
+                    show: true
+                }
+            }
+        }
+    },
+    fill: {
+        type: "gradient",
+        gradient: {
+            shade: "light",
+            type: "horizontal",
+        }
+    },
+    stroke: {
+        lineCap: "butt"
+    },
+    labels: ["Progress"]
+}
+
+var saturationChart = new ApexCharts(document.getElementById("saturationChart"), saturationOptions)
+
 diskChart.render()
 
 componentsChart.render()
+
+packageChart.render()
+
+saturationChart.render()
+
+// DropList

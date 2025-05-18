@@ -18,5 +18,22 @@
 }
 
 .dash{
+    display: flex;
+}
+
+.fileElement{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 10%;
+    border-bottom: #BDB1B1 1px solid;
+}
+
+.fileInfo{
+    font-weight: 200;
+    font-size: 20px;
+}
+
+.explorer{
     display: none;
 }

@@ -30,7 +30,9 @@ class explorercontainer extends HTMLElement {
             <span class="columnName" style="width: 20%">Número de registros</span>
             <span class="columnName" style="width: 10%">Tamanho</span>
         </div>
+        <div class="explorerContent">
             <slot></slot>
+        </div>
         </div>
         `;
     }

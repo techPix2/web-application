@@ -1,0 +1,20 @@
+.explorercontainer{
+    /*border: red 1px solid;*/
+    width: 65vw;
+    height: 90vh;
+    border-radius: 13px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;
+}
+
+.explorerHeader{
+    /*border: blue 1px solid;*/
+    border-radius: 13px 13px 0 0;
+    height: 10%;
+    box-shadow: rgba(0, 0, 0, 0.10) 0px 4px 4px 0px;
+    border-bottom: rgba(0, 0, 0, 0.37) 1px solid;
+    position: relative;
+}
+
+.columnName{
+
+}

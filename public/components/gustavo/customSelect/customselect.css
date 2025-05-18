@@ -1,9 +1,10 @@
-.droplist{
-    /*border: red 1px solid;*/
+.customselect{
     background-color: white;
-    margin-top: 10px;
     width: 25vw;
     height: 5vh;
     border-radius: 13px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;
+    border: none;
+    text-align: center;
+    font-size: 24px;
 }

@@ -14,8 +14,8 @@ body {
     gap: 24px;
     position: absolute;
     max-width: 960px;
-    top: 20px;
-    left: 20%;
+    top: 5%;
+    left: 21%;
     z-index: 10;
 }
 
@@ -56,7 +56,7 @@ body {
     gap: 24px;
     position: absolute;
     max-width: 960px;
-    top: 25%;
+    top: 27%;
     left: 20%;
     z-index: 10;
 }
@@ -76,7 +76,7 @@ body {
     gap: 24px;
     position: absolute;
     max-width: 960px;
-    top: 30%;
+    top: 33%;
     left: 20%;
     z-index: 10;
     background-color: white;
@@ -84,6 +84,7 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+
 .listagem{
     background-color: white;
     padding: 10px;
@@ -93,3 +94,59 @@ body {
     justify-content: space-between;
 }
 
+.jira-container{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    max-width: 960px;
+    top: 5%;
+    right: 5%;
+    z-index: 10;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    height: 200px;
+    width: 300px;
+}
+
+
+
+.slack-container{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    max-width: 960px;
+    top: 33%;
+    right: 5%;
+    z-index: 10;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    height: 200px;
+    width: 300px;
+}
+
+.chart-container{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    max-width: 960px;
+    top: 61%;
+    right: 5%;
+    z-index: 10;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    height: 150px;
+    width: 300px;
+}
+
+.chart-container h1{
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0078d7;
+    margin: 0;
+}

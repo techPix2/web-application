@@ -17,6 +17,11 @@
     /*border: red 1px solid;*/
 }
 
+.chart{
+    width: 100%;
+    border: red 1px solid;
+}
+
 .dash{
     display: flex;
 }
@@ -36,4 +41,8 @@
 
 .explorer{
     display: none;
+}
+
+.teste{
+    color: rgba(214,219,237,0.4);
 }

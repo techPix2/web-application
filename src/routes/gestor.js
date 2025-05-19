@@ -10,3 +10,4 @@ router.put("/inativarServidor/:id_server", function (req, res) {
     gestorController.inativarServidor(req, res);
 });
 module.exports = router;
+

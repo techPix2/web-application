@@ -22,7 +22,7 @@ body {
 .kpi{
     background-color: white;
     flex: 1;
-    padding: 24px;
+    padding: 20px;
     border-radius: 12px;
     display: flex;
     flex-direction: column;

@@ -13,10 +13,16 @@ body {
     display: flex;
     gap: 24px;
     position: absolute;
+<<<<<<< HEAD
     max-width: 960px;
     top: 20px;
     left: 20%;
     z-index: 10;
+=======
+    max-width: 800px;
+    top: 5%;
+    left: 22%;
+>>>>>>> main
 }
 
 .kpi{
@@ -37,7 +43,11 @@ body {
 }
 
  .kpi h1 {
+<<<<<<< HEAD
     font-size: 3rem;
+=======
+    font-size: 2rem;
+>>>>>>> main
     font-weight: 700;
     color: #0078d7;
     margin: 0;
@@ -45,7 +55,11 @@ body {
 
 .kpi h2 {
     color: #000000;
+<<<<<<< HEAD
     font-weight: 600;
+=======
+    font-weight: 500;
+>>>>>>> main
     font-size: 1.2rem;
     margin: 0 0 16px;
     text-align: center;
@@ -57,13 +71,21 @@ body {
     position: absolute;
     max-width: 960px;
     top: 25%;
+<<<<<<< HEAD
     left: 20%;
+=======
+    left: 22%;
+>>>>>>> main
     z-index: 10;
 }
 
 
 .listagem-titulo h1{
+<<<<<<< HEAD
     font-size: 2rem;
+=======
+    font-size: 1.5rem;
+>>>>>>> main
     font-weight: 700;
     color: #0078d7;
     margin: 0;
@@ -73,17 +95,28 @@ body {
 .listagem-container{
     display: flex;
     flex-direction: row;
+<<<<<<< HEAD
     gap: 24px;
     position: absolute;
     max-width: 960px;
     top: 30%;
     left: 20%;
     z-index: 10;
+=======
+    gap: 40px;
+    position: absolute;
+    top: 31%;
+    left: 17%;
+>>>>>>> main
     background-color: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 .listagem{
     background-color: white;
     padding: 10px;
@@ -93,3 +126,66 @@ body {
     justify-content: space-between;
 }
 
+<<<<<<< HEAD
+=======
+.listagem h2{
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+
+
+.slack-container{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    max-width: 960px;
+    top: 5%;
+    right: 5%;
+    z-index: 10;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    height: 350px;
+    width: 400px;
+}
+
+.slack h1{
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0078d7;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+
+.chart-container {
+    display: flex;
+    flex-direction: column; 
+    position: absolute;
+    max-width: 960px;
+    top: 55%;
+    right: 5%;
+    z-index: 10;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    height: 350px;
+    width: 400px;
+}
+
+.chart-container h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0078d7;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+
+>>>>>>> main

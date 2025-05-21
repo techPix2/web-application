@@ -14,13 +14,13 @@ body {
 .container {
     flex: 1;
     padding: 20px;
-    margin-left: 15vw; 
-    max-width: calc(100% - 15vw); 
+    max-width:100%; 
+    
 }
 
 .header {
     margin-bottom: 25px;
-    text-align: center;
+    text-align: start;
 }
 
 h1 {
@@ -43,6 +43,10 @@ h1 {
     padding: 18px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     transition: transform 0.2s ease;
+    width: 455px;
+}
+.kpi-conteudo{
+    margin-left: 20px;
 }
 
 .kpi:hover {
@@ -85,7 +89,9 @@ h1 {
     border-radius: 8px;
     padding: 18px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    height: 240px;
+    width: 490px;
+    height: 290px;
+
 }
 
 .grafico-titulo {
@@ -97,7 +103,7 @@ h1 {
 
 .divEspaco {
     background: #f1f3f4;
-    height: 180px;
+    height: 250px;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -106,7 +112,7 @@ h1 {
 }
 
 .lista-processos {
-    width: 320px;
+    width: 390px;
     background: white;
     border-radius: 8px;
     padding: 18px;
@@ -162,7 +168,7 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     font-size: 13px;
-    transition: background 0.2s;
+    transition: 0.6s;
 }
 
 .botao-encerrar:hover {

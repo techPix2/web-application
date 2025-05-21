@@ -13,6 +13,8 @@
     <script src="../components/gustavo/explorer-container/explorercontainer.js"></script>
     <script src="../components/gustavo/list-item/listitem.js"></script>
     <script src="../components/gustavo/fileelement/fileelement.js"></script>
+    <script src="../components/gustavo/pathcontainer/pathcontainer.js"></script>
+    <script src="../components/gustavo/pathelement/pathelement.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script defer src="../js/dashboardGustavo.js"></script>
     <script defer src="../js/dashboardExplorer.js"></script>
@@ -42,15 +44,13 @@
             <chart-container id="componentsChart"></chart-container>
             <chart-container id="packageChart"></chart-container>
         </div>
-        <explorer-container class="explorer" id="explorer-container">
-<!--            <file-element-->
-<!--                    machineName="NBX1024FC"-->
-<!--                    fileDate="20/05/2025"-->
-<!--                    rowsNumber="1000"-->
-<!--                    fileSize="16"-->
-<!--                    filePath=""-->
-<!--            ></file-element>-->
-        </explorer-container>
+
+        <path-container>
+            <path-element pathPart="Meus Arquivos" onclick="buscarEListarArquivos('')" root="true"></path-element>
+        </path-container>
+
+
+        <explorer-container class="explorer" id="explorer-container"></explorer-container>
     </custom-main>
 </body>
 </html>

@@ -43,7 +43,7 @@ class fileelement extends HTMLElement {
             <span class="fileInfo" style="width: 20%">${this.getAttribute('machineName')}</span>
             <span class="fileInfo" style="width: 15%; text-align: center">${this.getAttribute('fileDate')}</span>
             <span class="fileInfo" style="width: 20%; text-align: center">${this.getAttribute('rowsNumber') ?? ''}</span>
-            <span class="fileInfo" style="width: 10%; text-align: center">${this.getAttribute('fileSize')}mb</span>
+            <span class="fileInfo" style="width: 10%; text-align: center">${this.getAttribute('fileSize')}</span>
         </div>
         `;
     }
@@ -55,8 +55,5 @@ class fileelement extends HTMLElement {
         this.shadowRoot.appendChild(link);
     }
 }
-
-customElements.define('file-element', fileelement);
-
 
 customElements.define('file-element', fileelement);

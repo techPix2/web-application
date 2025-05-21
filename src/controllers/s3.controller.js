@@ -3,10 +3,6 @@ const s3Model = require('../models/s3.model')
 async function listarArquivos(req, res) {
     const { path } = req.query;
 
-    // if (!path) {
-    //     return res.status(400).json({ error: 'O parâmetro "path" é obrigatório.' });
-    // }
-
     try {
         const arquivos = await s3Model.listarArquivosPorCaminho(path);
 
@@ -30,7 +26,6 @@ async function listarArquivos(req, res) {
         res.status(500).json({ error: 'Erro ao listar os arquivos.' });
     }
 }
-
 
 module.exports = {
     listarArquivos

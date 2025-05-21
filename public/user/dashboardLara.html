@@ -1,64 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Analista</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.37.1/apexcharts.min.js"></script>
+    
     <link rel="stylesheet" href="../css/dashLara.css">
     <script src="../components/customMain/custommain.js"></script>
     <script src="../components/navbar/navbar.js"></script>
-    <script src="../components/gustavo/chart-container/ChartContainer.js"></script>
 </head>
+
 <body>
     <nav-bar></nav-bar>
     <custom-main>
 
-    <div class="kpi-container">
-        <div class="kpi">
-            <h2>Componente com mais alertas</h2>
-            <h1>CPU</h1>
+        <div class="kpi-container">
+
+            <div class="kpi">
+                <h2>Componente com mais alertas</h2>
+                <h1>CPU</h1>
+            </div>
+
+            <div class="kpi">
+                <h2>Total de chamados em 24h</h2>
+                <h1>4</h1>
+            </div>
+
+            <div class="kpi">
+                <h2>Chamados não atendidos</h2>
+                <h1>3</h1>
+            </div>
+
         </div>
-        <div class="kpi">
-            <h2>Número de alertas em 24h</h2><br>
-            <h1>4</h1>
-        </div><div class="kpi">
-            <h2>Número de chamados não atendidos</h2>
-            <h1>3</h1>
+
+
+        <div class="listagem-titulo">
+            <h1>Servidores com componentes em estado CRÍTICO</h1>
         </div>
-    </div>
 
-    
-    <div class="listagem-titulo">
-        <h1>Servidores com componentes em estado CRÍTICO</h1>
-    </div>
+        <div class="listagem-container">
 
-<div class="listagem-container">
-    <div class="listagem">
-        <h2>Servidor</h2>
-    </div>
+            <div class="listagem">
+                <h2>Servidor</h2>
+            </div>
 
-    <div class="listagem">
-        <h2>Status</h2>
-    </div>
+            <div class="listagem">
+                <h2>Status</h2>
+            </div>
 
-    <div class="listagem">
-        <h2>CPU</h2>
-    </div>
+            <div class="listagem">
+                <h2>CPU</h2>
+            </div>
 
-    <div class="listagem">
-        <h2>MemóriaRAM</h2>
-    </div>
+            <div class="listagem">
+                <h2>MemóriaRAM</h2>
+            </div>
 
-    <div class="listagem">
-        <h2>Disco</h2>
-    </div>
+            <div class="listagem">
+                <h2>Disco</h2>
+            </div>
 
-    <div class="listagem">
-        <h2>Horário</h2>
-    </div>
-</div>
+            <div class="listagem">
+                <h2>Horário</h2>
+            </div>
 
+            <div class="listagem">
+                <h2>Mais detalhes</h2>
+            </div>
+            
+
+        </div>
+
+
+        <div class="slack-container">
+
+            <div class="slack">
+                <h1>Slack</h1>
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+            <h1>Status dos Servidores</h1>
+            <div class="chart"  id="chart"></div>
+        </div>
 
 
     </custom-main>
 </body>
 </html>
+<script>
+       document.addEventListener('DOMContentLoaded', function() {
+            var options = {
+                series: [{
+                    name: 'Crítico',
+                    data: [44]
+                }, {
+                    name: 'Normal',
+                    data: [76]
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 300
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '40%',
+                        borderRadius: 5,
+                        borderRadiusApplication: 'end'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: ['Crítico', 'Normal'],
+                }
+            };
+            
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+        });
+</script>

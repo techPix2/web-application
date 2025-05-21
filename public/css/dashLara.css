@@ -13,10 +13,9 @@ body {
     display: flex;
     gap: 24px;
     position: absolute;
-    max-width: 960px;
-    top: 20px;
-    left: 20%;
-    z-index: 10;
+    max-width: 800px;
+    top: 5%;
+    left: 22%;
 }
 
 .kpi{
@@ -37,7 +36,7 @@ body {
 }
 
  .kpi h1 {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 700;
     color: #0078d7;
     margin: 0;
@@ -45,7 +44,7 @@ body {
 
 .kpi h2 {
     color: #000000;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 1.2rem;
     margin: 0 0 16px;
     text-align: center;
@@ -57,13 +56,13 @@ body {
     position: absolute;
     max-width: 960px;
     top: 25%;
-    left: 20%;
+    left: 22%;
     z-index: 10;
 }
 
 
 .listagem-titulo h1{
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #0078d7;
     margin: 0;
@@ -73,17 +72,16 @@ body {
 .listagem-container{
     display: flex;
     flex-direction: row;
-    gap: 24px;
+    gap: 40px;
     position: absolute;
-    max-width: 960px;
-    top: 30%;
-    left: 20%;
-    z-index: 10;
+    top: 31%;
+    left: 17%;
     background-color: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+
 .listagem{
     background-color: white;
     padding: 10px;
@@ -92,4 +90,64 @@ body {
     flex-direction: row;
     justify-content: space-between;
 }
+
+.listagem h2{
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+
+
+.slack-container{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    max-width: 960px;
+    top: 5%;
+    right: 5%;
+    z-index: 10;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    height: 350px;
+    width: 400px;
+}
+
+.slack h1{
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0078d7;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+
+.chart-container {
+    display: flex;
+    flex-direction: column; 
+    position: absolute;
+    max-width: 960px;
+    top: 55%;
+    right: 5%;
+    z-index: 10;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    height: 350px;
+    width: 400px;
+}
+
+.chart-container h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0078d7;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
 

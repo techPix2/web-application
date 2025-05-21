@@ -1,0 +1,45 @@
+.droplist{
+    /*border: red 1px solid;*/
+    background-color: white;
+    margin-top: 10px;
+    width: 25vw;
+    height: 5vh;
+    border-radius: 13px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropHeader{
+    justify-content: space-around;
+    display: flex;
+    align-items: center;
+    /*border: red 1px solid;*/
+    height: 5vh;
+}
+
+.dropText{
+    width: 60%;
+    /*border: red 1px solid;*/
+    font-size: 20px;
+}
+
+.bi{
+    /*border: red 1px solid;*/
+}
+
+.SelectValue{
+    width: 20%;
+    font-size: 20px;
+    text-align: center;
+    /*border: red 1px solid;*/
+}
+
+.content{
+    display: none;
+    flex-direction: column;
+}
+
+.droplist.expandida {
+    height: fit-content;
+}

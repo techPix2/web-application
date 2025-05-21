@@ -17,17 +17,34 @@ class fileelement extends HTMLElement {
         this.loadStyles();
     }
 
-    render() {
-        this.shadowRoot.innerHTML = `
-        <div class="fileElement">
+    getIconByType(type) {
+        if (type === 'folder') {
+            return `
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-folder" viewBox="0 0 16 16">
+                  <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139q.323-.119.684-.12h5.396z"/>
+                </svg>
+            `;
+        } else {
+            return `
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-filetype-csv" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM3.517 14.841a1.13 1.13 0 0 0 .401.823q.195.162.478.252.284.091.665.091.507 0 .859-.158.354-.158.539-.44.187-.284.187-.656 0-.336-.134-.56a1 1 0 0 0-.375-.357 2 2 0 0 0-.566-.21l-.621-.144a1 1 0 0 1-.404-.176.37.37 0 0 1-.144-.299q0-.234.185-.384.188-.152.512-.152.214 0 .37.068a.6.6 0 0 1 .246.181.56.56 0 0 1 .12.258h.75a1.1 1.1 0 0 0-.2-.566 1.2 1.2 0 0 0-.5-.41 1.8 1.8 0 0 0-.78-.152q-.439 0-.776.15-.337.149-.527.421-.19.273-.19.639 0 .302.122.524.124.223.352.367.228.143.539.213l.618.144q.31.073.463.193a.39.39 0 0 1 .152.326.5.5 0 0 1-.085.29.56.56 0 0 1-.255.193q-.167.07-.413.07-.175 0-.32-.04a.8.8 0 0 1-.248-.115.58.58 0 0 1-.255-.384zM.806 13.693q0-.373.102-.633a.87.87 0 0 1 .302-.399.8.8 0 0 1 .475-.137q.225 0 .398.097a.7.7 0 0 1 .272.26.85.85 0 0 1 .12.381h.765v-.072a1.33 1.33 0 0 0-.466-.964 1.4 1.4 0 0 0-.489-.272 1.8 1.8 0 0 0-.606-.097q-.534 0-.911.223-.375.222-.572.632-.195.41-.196.979v.498q0 .568.193.976.197.407.572.626.375.217.914.217.439 0 .785-.164t.55-.454a1.27 1.27 0 0 0 .226-.674v-.076h-.764a.8.8 0 0 1-.118.363.7.7 0 0 1-.272.25.9.9 0 0 1-.401.087.85.85 0 0 1-.478-.132.83.83 0 0 1-.299-.392 1.7 1.7 0 0 1-.102-.627zm8.239 2.238h-.953l-1.338-3.999h.917l.896 3.138h.038l.888-3.138h.879z"/>
                 </svg>
-                <span class="fileInfo" style="width: 20%">${this.getAttribute('machineName')}</span>
-                <span class="fileInfo" style="width: 15%; text-align: center">${this.getAttribute('fileDate')}</span>
-                <span class="fileInfo" style="width: 20%; text-align: center">${this.getAttribute('rowsNumber')}</span>
-                <span class="fileInfo" style="width: 10%;text-align: center">${this.getAttribute('fileSize')}mb</span>
-            </div>
+            `;
+        }
+    }
+
+    render() {
+        const type = this.getAttribute('type') || 'file';
+        const iconSVG = this.getIconByType(type);
+
+        this.shadowRoot.innerHTML = `
+        <div class="fileElement">
+            ${iconSVG}
+            <span class="fileInfo" style="width: 20%">${this.getAttribute('machineName')}</span>
+            <span class="fileInfo" style="width: 15%; text-align: center">${this.getAttribute('fileDate')}</span>
+            <span class="fileInfo" style="width: 20%; text-align: center">${this.getAttribute('rowsNumber') ?? ''}</span>
+            <span class="fileInfo" style="width: 10%; text-align: center">${this.getAttribute('fileSize')}mb</span>
+        </div>
         `;
     }
 
@@ -38,5 +55,8 @@ class fileelement extends HTMLElement {
         this.shadowRoot.appendChild(link);
     }
 }
+
+customElements.define('file-element', fileelement);
+
 
 customElements.define('file-element', fileelement);

@@ -107,7 +107,6 @@ function atualizarPathContainer(path) {
     pathContainer.innerHTML = '';
 
     const partes = path.split('/').filter(Boolean);
-    let caminhoAcumulado = '';
 
     const rootElement = document.createElement('path-element');
     rootElement.setAttribute('pathPart', 'Meus Arquivos');
@@ -115,7 +114,7 @@ function atualizarPathContainer(path) {
     rootElement.addEventListener('click', () => buscarEListarArquivos(''));
     pathContainer.appendChild(rootElement);
 
-    partes.forEach((parte) => {
+    partes.forEach((parte, index) => {
         const separador = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         separador.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
         separador.setAttribute('width', '40');
@@ -128,11 +127,12 @@ function atualizarPathContainer(path) {
               d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
         `;
         pathContainer.appendChild(separador);
-        caminhoAcumulado += `${parte}/`;
+
+        const caminhoAtual = partes.slice(0, index + 1).join('/') + '/';
 
         const pathElement = document.createElement('path-element');
         pathElement.setAttribute('pathPart', parte);
-        pathElement.addEventListener('click', () => buscarEListarArquivos(caminhoAcumulado));
+        pathElement.addEventListener('click', () => buscarEListarArquivos(caminhoAtual));
         pathContainer.appendChild(pathElement);
     });
 }

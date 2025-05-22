@@ -255,5 +255,3 @@ componentsChart.render()
 packageChart.render()
 
 saturationChart.render()
-
-// DropList

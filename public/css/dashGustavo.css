@@ -39,7 +39,7 @@
 }
 
 .dash{
-    display: flex;
+    display: none;
 }
 
 .fileElement{
@@ -56,11 +56,5 @@
 }
 
 .explorer{
-    display: none;
-}
-
-
-.listItem{
-    border: red 1px solid;
-    width: 100%;
+    display: flex;
 }

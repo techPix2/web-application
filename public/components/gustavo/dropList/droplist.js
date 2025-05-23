@@ -15,6 +15,7 @@ class droplist extends HTMLElement {
     connectedCallback() {
         this.render();
         this.loadStyles();
+        this.shadowRoot.querySelector('.dropHeader').addEventListener('click', this.expandir.bind(this));
     }
 
     render() {
@@ -41,27 +42,26 @@ class droplist extends HTMLElement {
         this.shadowRoot.appendChild(link);
     }
 
-    expandir(){
-        const imagem = this.shadowRoot.querySelector('.bi').style
-        const header = this.shadowRoot.querySelector('.dropHeader').style
+    expandir() {
+        const imagem = this.shadowRoot.querySelector('.bi').style;
+        const header = this.shadowRoot.querySelector('.dropHeader').style;
+        const content = this.shadowRoot.querySelector('.content').style;
         this.shadowRoot.querySelector('.droplist').classList.toggle('expandida');
-        const content = this.shadowRoot.querySelector('.content').style
 
-        if(content.display == 'flex'){
+        if (content.display === 'flex') {
             content.display = 'none';
             header.borderBottom = 'none';
             header.boxShadow = 'none';
             imagem.transform = 'rotate(0deg)';
-        }else{
+        } else {
             content.display = 'flex';
             header.borderBottom = 'rgba(0, 0, 0, 0.37) 1px solid';
             header.boxShadow = 'rgba(0, 0, 0, 0.10) 0px 4px 4px 0px';
             imagem.transform = 'rotate(180deg)';
         }
 
-        console.log('click')
+        console.log('click');
     }
-
 }
 
 customElements.define('drop-list', droplist);

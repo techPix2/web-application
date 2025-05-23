@@ -1,0 +1,10 @@
+.pathcontainer{
+    /*border: red 1px solid;*/
+    width: 65vw;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    overflow: auto;
+}

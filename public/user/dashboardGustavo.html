@@ -13,16 +13,20 @@
     <script src="../components/gustavo/explorer-container/explorercontainer.js"></script>
     <script src="../components/gustavo/list-item/listitem.js"></script>
     <script src="../components/gustavo/fileelement/fileelement.js"></script>
+    <script src="../components/gustavo/pathcontainer/pathcontainer.js"></script>
+    <script src="../components/gustavo/pathelement/pathelement.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script defer src="../js/dashboardGustavo.js"></script>
     <script defer src="../js/dashboardExplorer.js"></script>
 </head>
 <body>
     <nav-bar></nav-bar>
     <custom-main>
-        <drop-list qtdSelects="0" onclick="expandir()">
-<!--            <list-item fileName="NBX1024FC" fileDate="20/05/2025" filePath=""></list-item>-->
-        </drop-list>
+        <div class="headerContainer">
+            <drop-list qtdSelects="0"></drop-list>
+            <button class="buttonIniciar explorer" onclick="enviarArquivosSelecionados()">Iniciar Análise</button>
+        </div>
         <div class="charts dash">
             <div class="kpis">
                 <kpi-container titulo="Máquina com mais alertas"><span class="kpiValue">FC1520SP</span></kpi-container>
@@ -42,15 +46,11 @@
             <chart-container id="componentsChart"></chart-container>
             <chart-container id="packageChart"></chart-container>
         </div>
-        <explorer-container class="explorer" id="explorer-container">
-<!--            <file-element-->
-<!--                    machineName="NBX1024FC"-->
-<!--                    fileDate="20/05/2025"-->
-<!--                    rowsNumber="1000"-->
-<!--                    fileSize="16"-->
-<!--                    filePath=""-->
-<!--            ></file-element>-->
-        </explorer-container>
+
+        <path-container class="explorer">
+            <path-element pathPart="Meus Arquivos" onclick="buscarEListarArquivos('')" root="true"></path-element>
+        </path-container>
+        <explorer-container class="explorer" id="explorer-container"></explorer-container>
     </custom-main>
 </body>
 </html>

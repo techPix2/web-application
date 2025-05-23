@@ -3,10 +3,6 @@ const s3Model = require('../models/s3.model')
 async function listarArquivos(req, res) {
     const { path } = req.query;
 
-    // if (!path) {
-    //     return res.status(400).json({ error: 'O parâmetro "path" é obrigatório.' });
-    // }
-
     try {
         const arquivos = await s3Model.listarArquivosPorCaminho(path);
 
@@ -14,9 +10,8 @@ async function listarArquivos(req, res) {
             console.warn(`Nenhum arquivo encontrado no caminho: "${path}"`);
         }
 
-        // 🔐 Validar cada item antes de processar
         const arquivosFormatados = arquivos
-            .filter((arquivo) => arquivo && arquivo.key) // <-- evita undefined
+            .filter((arquivo) => arquivo && arquivo.key)
             .map((arquivo) => ({
                 nome: arquivo.key.split('/').pop(),
                 caminhoCompleto: arquivo.key,
@@ -31,7 +26,32 @@ async function listarArquivos(req, res) {
     }
 }
 
+async function getFilesContent(req, res) {
+    try {
+        const files = req.body.files;
+        if (!files || !Array.isArray(files)) {
+            return res.status(400).json({ error: 'O array "files" é obrigatório no corpo da requisição' });
+        }
+
+        const results = [];
+
+        for (const filePath of files) {
+            try {
+                const content = await s3Model.getFileContent(filePath);
+                results.push({ filePath, content });
+            } catch (error) {
+                results.push({ filePath, error: error.message });
+            }
+        }
+
+        res.json(results);
+    } catch (error) {
+        console.error('Erro no controller:', error);
+        res.status(500).json({ error: 'Erro interno no servidor' });
+    }
+}
 
 module.exports = {
-    listarArquivos
+    listarArquivos,
+    getFilesContent
 };

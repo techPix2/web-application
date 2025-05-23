@@ -162,6 +162,15 @@ let arquivosRecebidos = [];
 
 async function enviarArquivosSelecionados() {
     try {
+        if (selects.length === 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "Nenhum arquivo selecionado",
+                text: "Selecione ao menos um arquivo para visualizar os dados."
+            });
+            return;
+        }
+
         const response = await fetch('/s3/files', {
             method: 'POST',
             headers: {
@@ -174,7 +183,7 @@ async function enviarArquivosSelecionados() {
             throw new Error('Erro ao recuperar conteúdos dos arquivos.');
         }
 
-        arquivosRecebidos = await response.json();
+        const arquivosRecebidos = await response.json();
         console.log('Arquivos JSON recebidos:', arquivosRecebidos);
 
         document.querySelectorAll('.dash').forEach(el => {
@@ -185,13 +194,14 @@ async function enviarArquivosSelecionados() {
             el.style.display = 'none';
         });
 
-
+        plotarDadosNosGraficos(arquivosRecebidos);
 
     } catch (error) {
         console.error('Erro no front-end ao buscar arquivos:', error);
         alert(error.message);
     }
 }
+
 
 
 buscarEListarArquivos('')

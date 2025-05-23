@@ -158,4 +158,33 @@ function atualizarPathContainer(path) {
     });
 }
 
+let arquivosRecebidos = [];
+
+async function enviarArquivosSelecionados() {
+    try {
+        const response = await fetch('/s3/files', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ files: selects })
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao recuperar conteúdos dos arquivos.');
+        }
+
+        arquivosRecebidos = await response.json();
+        console.log('Arquivos JSON recebidos:', arquivosRecebidos);
+
+
+    } catch (error) {
+        console.error('Erro no front-end ao buscar arquivos:', error);
+        alert(error.message);
+    }
+}
+
+
+
+
 buscarEListarArquivos('')

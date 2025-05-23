@@ -1,0 +1,12 @@
+.pathelement{
+    font-size: 30px;
+    /*background-color: white;*/
+    height: 90%;
+    padding: 5px;
+}
+
+.pathelement:hover{
+    background-color: #0061a4;
+    color: white;
+    border-radius: 13px;
+}

@@ -177,14 +177,21 @@ async function enviarArquivosSelecionados() {
         arquivosRecebidos = await response.json();
         console.log('Arquivos JSON recebidos:', arquivosRecebidos);
 
+        document.querySelectorAll('.dash').forEach(el => {
+            el.style.display = 'flex';
+        });
+
+        document.querySelectorAll('.explorer').forEach(el => {
+            el.style.display = 'none';
+        });
+
+
 
     } catch (error) {
         console.error('Erro no front-end ao buscar arquivos:', error);
         alert(error.message);
     }
 }
-
-
 
 
 buscarEListarArquivos('')

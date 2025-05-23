@@ -101,15 +101,6 @@ h1 {
     color: #202124;
 }
 
-.divEspaco {
-    background: #f1f3f4;
-    height: 250px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #5f6368;
-}
 
 .lista-processos {
     width: 390px;
@@ -176,5 +167,5 @@ h1 {
 }
 
 .botao-encerrar:hover {
-    background: #d32f2f;
+    background: #8f1515;
 }

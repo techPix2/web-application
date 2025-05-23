@@ -1,6 +1,4 @@
 
-// Setup dos Gráficos
-
 var diskOptions = {
     series: [{
         name: 'NBX1024FC',
@@ -247,6 +245,61 @@ var saturationOptions = {
 }
 
 var saturationChart = new ApexCharts(document.getElementById("saturationChart"), saturationOptions)
+
+
+function plotarDadosNosGraficos(arquivosCSV) {
+
+    const nomesMaquinas = Object.keys(arquivosCSV);
+    const discoSeries = [];
+    const componentesSeries = [{ name: "Cpu %", data: [] }, { name: "Ram %", data: [] }, { name: "Disk %", data: [] }];
+    const pacotesEnviados = [];
+    const pacotesRecebidos = [];
+    const datasPacotes = [];
+
+    nomesMaquinas.forEach(nomeArquivo => {
+        const nomeMaquina = nomeArquivo.replace('.csv', '');
+        const registros = arquivosCSV[nomeArquivo];
+
+        if (registros.length) {
+            const ultimo = registros[registros.length - 1];
+            discoSeries.push({
+                name: nomeMaquina,
+                data: [parseFloat(ultimo.diskC), parseFloat(ultimo.diskD), parseFloat(ultimo.diskE)]
+            });
+        }
+
+        registros.forEach(reg => {
+            componentesSeries[0].data.push(parseFloat(reg.cpu));
+            componentesSeries[1].data.push(parseFloat(reg.ram));
+            componentesSeries[2].data.push(parseFloat(reg.diskC));
+        });
+
+        registros.forEach(reg => {
+            datasPacotes.push(reg.data);
+            pacotesEnviados.push(parseInt(reg.pacotesEnviados));
+            pacotesRecebidos.push(parseInt(reg.pacotesRecebidos));
+        });
+    });
+
+    diskChart.updateSeries(discoSeries);
+
+    componentsChart.updateSeries(componentesSeries);
+    componentsChart.updateOptions({
+        xaxis: {
+            categories: arquivosCSV[nomesMaquinas[0]].map(reg => reg.data),
+            max: 10
+        }
+    });
+
+    packageChart.updateSeries([
+        { name: "Pacotes enviados", data: pacotesEnviados, color: '#8979FF' },
+        { name: "Pacotes recebidos", data: pacotesRecebidos, color: '#FF928A' }
+    ]);
+    packageChart.updateOptions({
+        labels: datasPacotes
+    });
+}
+
 
 diskChart.render()
 

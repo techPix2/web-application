@@ -1,27 +1,48 @@
 
 let selects = [];
 
-let relativePath = ''
-
 function selecionarArquivo(fileElement) {
     const filePath = fileElement.getAttribute('filePath');
     const index = selects.indexOf(filePath);
+    const dropList = document.querySelector('drop-list');
 
     if (index !== -1) {
-
-        selects.splice(index, 1); // Remove do array
+        selects.splice(index, 1);
         fileElement.setAttribute('selected', 'no');
-    } else {
 
+        const itemParaRemover = dropList.querySelector(`list-item[filePath="${filePath}"]`);
+        if (itemParaRemover) itemParaRemover.remove();
+    } else {
         if (selects.length >= 10) {
-            alert('Você só pode selecionar até 10 arquivos.');
+            Swal.fire({
+                icon: "error",
+                title: "Limite de arquivos alcançado",
+                text: "Só é possível selecionar 10 arquivos para análise",
+            });
             return;
         }
+
         selects.push(filePath);
         fileElement.setAttribute('selected', 'yes');
+
+        const listItem = document.createElement('list-item');
+        listItem.setAttribute('fileName', fileElement.getAttribute('machineName'));
+        listItem.setAttribute('fileDate', fileElement.getAttribute('fileDate').split(',')[0]);
+        listItem.setAttribute('filePath', filePath);
+
+        listItem.remover = () => {
+            selecionarArquivo(fileElement);
+        };
+
+        dropList.appendChild(listItem);
     }
 
-    console.log(selects)
+    if (dropList) {
+        dropList.setAttribute('qtdSelects', selects.length);
+        dropList.shadowRoot.querySelector('.SelectValue').textContent = `${selects.length} DE 10`;
+    }
+
+    console.log(selects);
 }
 
 function formatarNomeArquivo(nomeArquivo) {
@@ -136,5 +157,51 @@ function atualizarPathContainer(path) {
         pathContainer.appendChild(pathElement);
     });
 }
+
+let arquivosRecebidos = [];
+
+async function enviarArquivosSelecionados() {
+    try {
+        if (selects.length === 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "Nenhum arquivo selecionado",
+                text: "Selecione ao menos um arquivo para visualizar os dados."
+            });
+            return;
+        }
+
+        const response = await fetch('/s3/files', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ files: selects })
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao recuperar conteúdos dos arquivos.');
+        }
+
+        const arquivosRecebidos = await response.json();
+        console.log('Arquivos JSON recebidos:', arquivosRecebidos);
+
+        document.querySelectorAll('.dash').forEach(el => {
+            el.style.display = 'flex';
+        });
+
+        document.querySelectorAll('.explorer').forEach(el => {
+            el.style.display = 'none';
+        });
+
+        plotarDadosNosGraficos(arquivosRecebidos);
+
+    } catch (error) {
+        console.error('Erro no front-end ao buscar arquivos:', error);
+        alert(error.message);
+    }
+}
+
+
 
 buscarEListarArquivos('')

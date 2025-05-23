@@ -1,27 +1,48 @@
 
 let selects = [];
 
-let relativePath = ''
-
 function selecionarArquivo(fileElement) {
     const filePath = fileElement.getAttribute('filePath');
     const index = selects.indexOf(filePath);
+    const dropList = document.querySelector('drop-list');
 
     if (index !== -1) {
-
-        selects.splice(index, 1); // Remove do array
+        selects.splice(index, 1);
         fileElement.setAttribute('selected', 'no');
-    } else {
 
+        const itemParaRemover = dropList.querySelector(`list-item[filePath="${filePath}"]`);
+        if (itemParaRemover) itemParaRemover.remove();
+    } else {
         if (selects.length >= 10) {
-            alert('Você só pode selecionar até 10 arquivos.');
+            Swal.fire({
+                icon: "error",
+                title: "Limite de arquivos alcançado",
+                text: "Só é possível selecionar 10 arquivos para análise",
+            });
             return;
         }
+
         selects.push(filePath);
         fileElement.setAttribute('selected', 'yes');
+
+        const listItem = document.createElement('list-item');
+        listItem.setAttribute('fileName', fileElement.getAttribute('machineName'));
+        listItem.setAttribute('fileDate', fileElement.getAttribute('fileDate').split(',')[0]);
+        listItem.setAttribute('filePath', filePath);
+
+        listItem.remover = () => {
+            selecionarArquivo(fileElement);
+        };
+
+        dropList.appendChild(listItem);
     }
 
-    console.log(selects)
+    if (dropList) {
+        dropList.setAttribute('qtdSelects', selects.length);
+        dropList.shadowRoot.querySelector('.SelectValue').textContent = `${selects.length} DE 10`;
+    }
+
+    console.log(selects);
 }
 
 function formatarNomeArquivo(nomeArquivo) {

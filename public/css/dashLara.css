@@ -50,6 +50,7 @@ body {
     text-align: center;
 }
 
+/* listagem */
 .listagem-titulo {
     display: flex;
     gap: 24px;
@@ -68,7 +69,7 @@ body {
     margin: 0;
 }
 
-
+/* tabela listagem */
 .listagem-container {
     display: flex;
     flex-direction: row;
@@ -83,17 +84,17 @@ body {
 }
 
 .critical-status {
-    color: #dc3545;
+    color: #f50000;
     font-weight: 600;
 }
 
 .metric-warning {
-    color: #dc3545;
+    color: #f50000;
     font-weight: 600;
 }
 
 .metric-normal {
-    color: #212529;
+    color: #000000;
 }
 
 .table-custom {
@@ -116,7 +117,7 @@ body {
     background-color: #f8f9fa;
     border-bottom: 2px solid #dee2e6;
     font-weight: 600;
-    color: #495057;
+    color: #000000;
     padding: 15px 12px;
 }
 
@@ -162,10 +163,10 @@ body {
 }
 
 
-
+/* slack */
 .slack-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     position: absolute;
     max-width: 960px;
     top: 5%;
@@ -189,6 +190,7 @@ body {
 }
 
 
+/* grafico uso dos servidores */
 .chart-container {
     display: flex;
     flex-direction: column;

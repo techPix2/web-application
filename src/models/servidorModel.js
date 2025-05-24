@@ -31,7 +31,7 @@ ORDER BY am.dateTime DESC;`
     return database.executar(instrucaoSql)
         .catch(erro => {
             console.error("Erro ao executar SQL:", erro);
-            throw erro; // Propaga o erro para ser tratado no controller
+            throw erro; 
         });
 }
 

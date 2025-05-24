@@ -8,7 +8,7 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-
+/* KPI */
 .kpi-container {
     display: flex;
     gap: 24px;
@@ -38,7 +38,7 @@ body {
 .kpi h1 {
     font-size: 2rem;
     font-weight: 700;
-    color: #0078d7;
+    color: #f50000;
     margin: 0;
 }
 

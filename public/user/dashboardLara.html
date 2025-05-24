@@ -185,7 +185,10 @@
     chart.render();
 
 
+
+
     async function buscarServidoresComAlerta() {
+        let listaAlertas = [];
         try {
             const fk_company = sessionStorage.ID_EMPRESA || 1;
             const response = await fetch(`/servidores/listarServidoresComAlerta/${fk_company}`);
@@ -196,11 +199,34 @@
 
             const alertas = await response.json();
             console.log(alertas);
+            for (const alerta of alertas) {
+                const servidor = {
+                    id: alerta.idServer,
+                    nome: alerta.hostName,
+                    status: alerta.status,
+                    uso: alerta.usage_percent,
+                    tipoAlerta: alerta.alert_type,
+                    horaAlerta: alerta.alert_time
+                };
+                // Corrigido: nomes das propriedades e lógica do if
+                if (
+                    listaAlertas.some(item => item.nome === servidor.nome) &&
+                    listaAlertas.some(item => item.tipoAlerta === servidor.tipoAlerta)
+                ) {
+                }else{
+                    listaAlertas.push(servidor);
+                }
+            }
+            console.log(listaAlertas);
         } catch (error) {
             console.error("Erro ao buscar alertas:", error);
-            Alert.error("Erro", "Não foi possível carregar os alertas. Por favor, tente novamente mais tarde.");
+            // Remova Alert.error se não houver essa função definida
+            // Alert.error("Erro", "Não foi possível carregar os alertas. Por favor, tente novamente mais tarde.");
+            alert("Não foi possível carregar os alertas. Por favor, tente novamente mais tarde.");
         }
     }
+    
+
 
 </script>
 

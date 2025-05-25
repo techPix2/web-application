@@ -111,3 +111,37 @@ async function buscarServidoresComAlerta() {
         alert("Não foi possível carregar os alertas. Por favor, tente novamente mais tarde.");
     }
 }
+
+
+
+// slack
+
+// inicializar o bot
+
+async function findConversation(name) {
+  try {
+    // Call the conversations.list method using the built-in WebClient
+    const result = await app.client.conversations.list({
+      // The token you used to initialize your app
+      token: "xoxb-8588655585441-8938331177797-fKFQfCztpj5vP4N6teSy1LcP"
+    });
+
+    for (const channel of result.channels) {
+      if (channel.name === name) {
+        conversationId = channel.id;
+
+        // Print result
+        console.log("Found conversation ID: " + conversationId);
+        // Break from for loop
+        break;
+      }
+    }
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
+
+// Find conversation with a specified channel `name`
+findConversation("tester-channel");
+

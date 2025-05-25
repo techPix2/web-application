@@ -11,9 +11,10 @@ body {
 /* KPI */
 .kpi-container {
     display: flex;
-    gap: 24px;
+    gap: 30px;
     position: absolute;
-    max-width: 800px;
+    max-width: 950px;
+    height: 150px;
     top: 5%;
     left: 22%;
 }
@@ -27,7 +28,6 @@ body {
     flex-direction: column;
     border-collapse: collapse;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: box-shadow 0.3s ease;
     align-items: center;
 }
 
@@ -57,7 +57,7 @@ body {
     position: absolute;
     max-width: 960px;
     top: 25%;
-    left: 22%;
+    left: 18%;
     z-index: 10;
 }
 
@@ -75,12 +75,12 @@ body {
     flex-direction: row;
     position: absolute;
     top: 31%;
-    left: 22%;
+    left: 18%;
     background-color: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    width: 50%;
+    width: 55%;
 }
 
 .critical-status {
@@ -176,7 +176,7 @@ body {
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    height: 350px;
+    height: 450px;
     width: 400px;
 }
 
@@ -189,6 +189,56 @@ body {
     justify-content: center;
 }
 
+.slack-chat {
+				background-color: #ffffff;
+				border-radius: 12px;
+				padding: 20px;
+				width: 100%;
+				max-width: 370px;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                display: flex;
+                flex-direction: column;
+                height: 95%;
+		}
+        	ul {
+				list-style-type: none;
+				padding: 0;
+				margin-bottom: 20px;
+				max-height: 300px;
+				overflow-y: auto;
+                flex: 1;
+		}
+        
+		
+		form {
+				display: flex;
+				gap: 10px;
+                margin-top: auto;
+		}
+		input {
+				flex: 1;
+				padding: 10px;
+				border: none;
+				border-radius: 8px;
+				background-color: #cecece;
+				color: #000000;
+				font-size: 16px;
+		}
+
+        
+		.button-slack {
+				background-color: #57ace5;
+				color: white;
+				border: none;
+				border-radius: 8px;
+				padding: 10px 20px;
+				cursor: pointer;
+				font-weight: bold;
+				transition: background-color 0.3s ease;
+		}
+		.button-slack:hover {
+				background-color: #2f7485;
+		}
 
 /* grafico uso dos servidores */
 .chart-container {

@@ -1,3 +1,5 @@
+const { json } = require("express");
+
 //mostrar e esconder os gráficos
 document.querySelectorAll('.button-eye').forEach(button => {
     button.addEventListener('click', () => {
@@ -86,6 +88,10 @@ async function buscarServidoresComAlerta() {
 
         const alertas = await response.json();
         console.log(alertas);
+           let jsonAlertas =[{
+            CPU: 0,
+            RAM: 0
+        }]
         for (const alerta of alertas) {
             const servidor = {
                 id: alerta.idServer,
@@ -95,53 +101,67 @@ async function buscarServidoresComAlerta() {
                 tipoAlerta: alerta.alert_type,
                 horaAlerta: alerta.alert_time
             };
-
-            if (
-                listaAlertas.some(item => item.nome === servidor.nome) &&
-                listaAlertas.some(item => item.tipoAlerta === servidor.tipoAlerta)
-            ) {
-            } else {
+                if (alerta.tipoAlerta === 'CPU') {
+                jsonAlertas[0].CPU += 1;
+            } else if (alerta.tipoAlerta === 'RAM') {
+                jsonAlertas[0].RAM += 1;
+            }
+            // Só adiciona se NÃO existir já um item com mesmo id e tipoAlerta
+            if (!listaAlertas.some(item => item.id === servidor.id && item.tipoAlerta === servidor.tipoAlerta)) {
                 listaAlertas.push(servidor);
             }
+            if(jsonAlertas[0].CPU > jsonAlertas[0].RAM){
+                compMaisAlertas.innerHTML = `CPU`;
+        } else if(jsonAlertas[0].RAM > jsonAlertas[0].CPU){
+                compMaisAlertas.innerHTML = `RAM`;
+            }else {
+                compMaisAlertas.innerHTML = `CPU | RAM`;
+            }
+     
+        tabelaServidores.innerHTML = ""; 
+        for (const alerta of listaAlertas) {
+            tabelaServidores.innerHTML += `
+                <tr>
+                    <td>${alerta.nome}</td>
+                    <td style="color:red; font-weight:bold">CRÍTICO</td>
+                    <td>${alerta.tipoAlerta}</td>
+                    <td style="color:red; font-weight:bold">${alerta.uso}%</td>
+                    <td>
+                        <button class="button-eye" data-id="${alerta.id}">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+
+        document.querySelectorAll('.button-eye').forEach(button => {
+            button.addEventListener('click', function() {
+                const servidorId = this.getAttribute('data-id');
+                mostrarGraficoServidor(servidorId);
+            });
+        });
+        if (jsonAlertas[0].CPU > jsonAlertas[0].RAM) {
+            
         }
         console.log(listaAlertas);
-    } catch (error) {
+    } 
+    }catch (error) {
         console.error("Erro ao buscar alertas:", error);
 
         alert("Não foi possível carregar os alertas. Por favor, tente novamente mais tarde.");
     }
 }
 
-
-
-// slack
-
-// inicializar o bot
-
-async function findConversation(name) {
-  try {
-    // Call the conversations.list method using the built-in WebClient
-    const result = await app.client.conversations.list({
-      // The token you used to initialize your app
-      token: "xoxb-8588655585441-8938331177797-fKFQfCztpj5vP4N6teSy1LcP"
-    });
-
-    for (const channel of result.channels) {
-      if (channel.name === name) {
-        conversationId = channel.id;
-
-        // Print result
-        console.log("Found conversation ID: " + conversationId);
-        // Break from for loop
-        break;
-      }
-    }
-  }
-  catch (error) {
-    console.error(error);
-  }
+// mostrar gráfico de acordo com o servidor clicado
+function mostrarGraficoServidor(servidorId) {
+    // Aqui você pode implementar a lógica para buscar os dados do servidor e exibir o gráfico
+    console.log(`Exibindo gráfico para o servidor com ID: ${servidorId}`);
+    // Exemplo de exibição de gráfico (substitua com sua lógica real)
+    const graficoDiv = document.getElementById('graficoServidor');
+    graficoDiv.style.display = 'block';
 }
 
-// Find conversation with a specified channel `name`
-findConversation("tester-channel");
+
+buscarServidoresComAlerta();
 

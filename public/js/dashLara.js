@@ -1,51 +1,13 @@
-const { json } = require("express");
+// //mostrar e esconder os gráficos
+// document.querySelectorAll('.button-eye').forEach(button => {
+//     button.addEventListener('click', () => {
+//         const chartId = button.getAttribute('data-target');
+//         const chartDiv = document.getElementById(chartId);
+//         chartDiv.style.display = chartDiv.style.display === 'none' ? 'block' : 'none';
+//     });
+// });
 
-//mostrar e esconder os gráficos
-document.querySelectorAll('.button-eye').forEach(button => {
-    button.addEventListener('click', () => {
-        const chartId = button.getAttribute('data-target');
-        const chartDiv = document.getElementById(chartId);
-        chartDiv.style.display = chartDiv.style.display === 'none' ? 'block' : 'none';
-    });
-});
 
-//gráfico de linha dos servidores
-const lineChartOptions = {
-
-    series: [
-        {
-            name: "CPU",
-            data: [30, 40, 35, 50, 49, 60, 70, 91, 125]
-        },
-        {
-            name: "MemóriaRAM",
-            data: [20, 30, 25, 40, 45, 55, 60, 85, 100]
-        }
-    ],
-    chart: {
-        height: 350,
-        type: 'line',
-        zoom: { enabled: false }
-    },
-    dataLabels: { enabled: false },
-    stroke: { curve: 'straight' },
-    title: {
-        text: 'Uso de Recursos dos Servidores',
-        align: 'left'
-    },
-    grid: {
-        row: {
-            colors: ['#f3f3f3', 'transparent'],
-            opacity: 0.5
-        },
-    },
-    xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-    }
-};
-
-const lineChart = new ApexCharts(document.querySelector("#graficoServidor"), lineChartOptions);
-lineChart.render();
 
 
 //chart status dos servidores
@@ -74,7 +36,6 @@ chart.render();
 
 
 
-
 // função para buscar os servidores com alerta
 async function buscarServidoresComAlerta() {
     let listaAlertas = [];
@@ -88,10 +49,12 @@ async function buscarServidoresComAlerta() {
 
         const alertas = await response.json();
         console.log(alertas);
+
            let jsonAlertas =[{
             CPU: 0,
             RAM: 0
         }]
+
         for (const alerta of alertas) {
             const servidor = {
                 id: alerta.idServer,
@@ -101,11 +64,14 @@ async function buscarServidoresComAlerta() {
                 tipoAlerta: alerta.alert_type,
                 horaAlerta: alerta.alert_time
             };
+            
+            //tipo de alerta é CPU ou RAM e incrementa o contador para a KPI
                 if (alerta.tipoAlerta === 'CPU') {
                 jsonAlertas[0].CPU += 1;
             } else if (alerta.tipoAlerta === 'RAM') {
                 jsonAlertas[0].RAM += 1;
             }
+
             // Só adiciona se NÃO existir já um item com mesmo id e tipoAlerta
             if (!listaAlertas.some(item => item.id === servidor.id && item.tipoAlerta === servidor.tipoAlerta)) {
                 listaAlertas.push(servidor);
@@ -127,7 +93,7 @@ async function buscarServidoresComAlerta() {
                     <td>${alerta.tipoAlerta}</td>
                     <td style="color:red; font-weight:bold">${alerta.uso}%</td>
                     <td>
-                        <button class="button-eye" data-id="${alerta.id}">
+                        <button class="button-eye" data-id="${alerta.idServer}">
                             <i class="bi bi-eye"></i>
                         </button>
                     </td>
@@ -139,6 +105,7 @@ async function buscarServidoresComAlerta() {
             button.addEventListener('click', function() {
                 const servidorId = this.getAttribute('data-id');
                 mostrarGraficoServidor(servidorId);
+                console.log(`Exibindo gráfico para o servidor com ID: ${servidorId}`);
             });
         });
         if (jsonAlertas[0].CPU > jsonAlertas[0].RAM) {
@@ -153,15 +120,25 @@ async function buscarServidoresComAlerta() {
     }
 }
 
-// mostrar gráfico de acordo com o servidor clicado
-function mostrarGraficoServidor(servidorId) {
-    // Aqui você pode implementar a lógica para buscar os dados do servidor e exibir o gráfico
-    console.log(`Exibindo gráfico para o servidor com ID: ${servidorId}`);
-    // Exemplo de exibição de gráfico (substitua com sua lógica real)
-    const graficoDiv = document.getElementById('graficoServidor');
-    graficoDiv.style.display = 'block';
-}
-
 
 buscarServidoresComAlerta();
 
+
+//atualizar as kpis do jira  //rever
+
+async function atualizarKPIsJira() {
+    try {
+        const response = await fetch('/apiJira/jira-kpis');
+        if (!response.ok) throw new Error('Erro ao buscar KPIs do Jira');
+        const data = await response.json();
+        document.getElementById('totalJira').innerText = data.totalChamados;
+        document.getElementById('chamadosJira').innerText = data.chamadosEmAndamento;
+    } catch (error) {
+        console.error('Erro ao atualizar KPIs do Jira:', error);
+        document.getElementById('totalJira').innerText = '-';
+        document.getElementById('chamadosJira').innerText = '-';
+    }
+}
+
+//carregar a página
+atualizarKPIsJira();

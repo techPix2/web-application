@@ -24,6 +24,7 @@ var servidorRouter = require("./src/routes/servidores")
 var dashCientistaRouter = require("./src/routes/dashCientista")
 var dashAnalistaRouter = require("./src/routes/dashAnalista");
 var gestorRouter = require("./src/routes/gestor")
+var jiraRouter = require("./src/routes/jiraRoute");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -39,6 +40,7 @@ app.use("/dashAnalista", dashAnalistaRouter);
 app.use("/dashCientista", dashCientistaRouter);
 app.use("/servidores", servidorRouter)
 app.use("/gestor", gestorRouter)
+app.use("/apiJira", jiraRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`

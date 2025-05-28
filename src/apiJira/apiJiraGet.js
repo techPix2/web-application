@@ -1,9 +1,13 @@
+require('dotenv').config();
+
+const JIRA_DOMAIN = process.env.JIRA_DOMAIN;
+const JIRA_USER = process.env.JIRA_USER;
+const JIRA_API_TOKEN = process.env.JIRA_API_TOKEN;
+const JQL_QUERY = process.env.JQL_QUERY;
+
 const axios = require('axios');
 
-const JIRA_DOMAIN = 'seu-dominio.atlassian.net';
-const JIRA_USER = 'seu-email@exemplo.com';
-const JIRA_API_TOKEN = 'seu-token-de-api';
-const JQL_QUERY = 'status = "In Progress"';
+// Configurações do Jira
 
 const auth = Buffer.from(`${JIRA_USER}:${JIRA_API_TOKEN}`).toString('base64');
 

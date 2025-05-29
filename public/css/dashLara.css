@@ -68,12 +68,6 @@ body {
     z-index: 10;
 }
 
-tdbody {
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
 
 
 .listagem-titulo h1 {
@@ -119,13 +113,22 @@ tdbody {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
     width: 100%;
+    max-height: 500px;
+    /* altura da tabela */
+    overflow-y: auto;
+    /* scroll */
+    display: flex;
+    flex-direction: column;
 }
 
-.table-custom table {
-    width: 100%;
-    table-layout: fixed;
-}
 
+/* cabeçalho fixo */
+.table-custom thead {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: #f8f9fa;
+}
 
 
 .table-custom th {
@@ -178,6 +181,17 @@ tdbody {
 }
 
 
+/* config do scrollbar */
+.table-custom::-webkit-scrollbar {
+    width: 6px;
+}
+
+.table-custom::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+
 /* slack */
 .slack-container {
     display: flex;
@@ -186,77 +200,64 @@ tdbody {
     max-width: 960px;
     top: 5%;
     right: 5%;
-    z-index: 10;
     background-color: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     height: 450px;
     width: 400px;
+    overflow: hidden;
 }
 
-.slack h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #0078d7;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-}
-
-.slack-chat {
-    background-color: #ffffff;
-    border-radius: 12px;
+.slack-header {
+    background: #0078d7;
+    color: white;
     padding: 20px;
-    width: 100%;
-    max-width: 370px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    height: 95%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 20px;
-    max-height: 300px;
-    overflow-y: auto;
+.mensagens-container {
     flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: whitesmoke;
 }
 
-
-form {
+.input-container {
+    padding: 20px;
+    background: whitesmoke;
+    border-top: 1px solid #eee;
     display: flex;
     gap: 10px;
-    margin-top: auto;
 }
 
-input {
+.mensagem-input {
     flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background-color: #cecece;
-    color: #000000;
-    font-size: 16px;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
 }
 
-
-.button-slack {
-    background-color: #57ace5;
+.send-button {
+    padding: 12px 24px;
+    background: #0078d7;
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
-    cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.button-slack:hover {
-    background-color: #2f7485;
+.send-button:hover {
+    background: #2c1a5e;
 }
+
 
 /* grafico uso dos servidores */
 .chart-container {

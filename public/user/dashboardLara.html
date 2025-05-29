@@ -36,12 +36,12 @@
 
             <div class="kpi">
                 <h2>Total de alertas em 24h</h2>
-                 <span id="ChamadosUltimoDia"></span>
+                <span id="ChamadosUltimoDia"></span>
             </div>
 
             <div class="kpi">
                 <h2>Chamados não atendidos</h2>
-                <span id="chamadosStatus"></span> 
+                <span id="chamadosStatus"></span>
             </div>
 
         </div>
@@ -65,10 +65,9 @@
                             <th>Mais detalhes</th>
                         </tr>
                     </thead>
-                    
+
                     <tbody id="tabelaServidores">
                         <tr>
-                           
                             <td>
                                 <!-- olho -->
                                 <button class="button-eye" data-target="chartServidores">
@@ -76,8 +75,6 @@
                                 </button>
                             </td>
                         </tr>
-
-
                     </tbody>
                 </table>
                 <!-- gráfico servidores -->
@@ -91,20 +88,24 @@
 
 
         <!-- slack -->
+
         <div class="slack-container">
-            <div class="slack">
-                <h1>Slack</h1>
+            <div class="slack-header">
+                Chat Slack
             </div>
 
-            <div class="slack-chat">
-                <ul id="messages"></ul>
-                <form id="form" action="">
-                    <input id="message" placeholder="Digite sua mensagem..." />
-                    <button class="button-slack" type="submit">Enviar</button>
-                </form>
+            <div class="mensagens-container" id="messagesContainer">
+                <div class="loading"></div>
             </div>
-            
+
+            <div class="input-container">
+                <input type="text" class="mensagem-input" id="messageInput" placeholder="Digite sua mensagem..."
+                    onkeypress="handleKeyPress(event)">
+                <button class="send-button" onclick="enviar()">Enviar</button>
+            </div>
         </div>
+
+
 
         <!-- gráfico do status -->
         <div class="chart-container">

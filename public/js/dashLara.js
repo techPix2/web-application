@@ -121,10 +121,12 @@ async function buscarServidoresComAlerta() {
 
 //atualizar as kpis do jira  
 
-async function buscarServidoresComAlertaJira() {
+
+//mostrar os chamados do último dia
+async function buscarChamadosUltimoDia() {
     console.log("Buscando dados do Jira...");
   try {
-    resposta = await fetch("/apiJira/jira-kpis");
+    resposta = await fetch("/apiJira/jira-kpis?filtro=dia");
     const dados = await resposta.json();
     console.log("Dados do Jira recebidos:", dados);
     if (!resposta.ok) {
@@ -132,8 +134,30 @@ async function buscarServidoresComAlertaJira() {
     }
 
     //atualizar os valores no HTML
-        document.getElementById('totalChamados').innerHTML = dados.totalChamados;
-        document.getElementById('chamadosEmAndamento').innerHTML = dados.chamadosEmAndamento;
+        document.getElementById('ChamadosUltimoDia').innerHTML = dados.totalChamados;
+        
+
+
+  } catch (error) {
+    console.error("Erro ao buscar dados do Jira:", error);
+    return [];
+  }
+}
+
+//mostrar os chamados que estão em abertos
+async function buscarChamadosStatus() {
+    console.log("Buscando dados do Jira...");
+  try {
+    resposta = await fetch("/apiJira/jira-kpis?filtro=status");
+    const dados = await resposta.json();
+    console.log("Dados do Jira recebidos:", dados);
+    if (!resposta.ok) {
+      throw new Error(`Erro ao buscar dados do Jira: ${resposta.status}`);
+    }
+
+    //atualizar os valores no HTML
+    document.getElementById('chamadosStatus').innerHTML = dados.totalChamados;        
+
 
   } catch (error) {
     console.error("Erro ao buscar dados do Jira:", error);

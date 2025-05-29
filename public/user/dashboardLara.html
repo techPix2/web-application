@@ -22,7 +22,7 @@
     <script src="../components/navbar/navbar.js"></script>
 </head>
 
-<body onload="buscarServidoresComAlerta(), buscarServidoresComAlertaJira()">
+<body onload="buscarServidoresComAlerta(), buscarChamadosStatus(),buscarChamadosUltimoDia() ">
     <nav-bar></nav-bar>
     <custom-main>
 
@@ -36,12 +36,12 @@
 
             <div class="kpi">
                 <h2>Total de alertas em 24h</h2>
-                 <span id="totalChamados"></span>
+                 <span id="ChamadosUltimoDia"></span>
             </div>
 
             <div class="kpi">
                 <h2>Chamados não atendidos</h2>
-                <span id="chamadosEmAndamento"></span> 
+                <span id="chamadosStatus"></span> 
             </div>
 
         </div>

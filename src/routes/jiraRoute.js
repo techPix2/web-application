@@ -5,9 +5,20 @@ const axios = require('axios');
 
 
 router.get('/jira-kpis', async (req, res) => {
+     const filtro = req.query.filtro;
+
     try {
+        let jql;
+        if (filtro === 'status') {
+            jql = process.env.JQL_QUERY;
+        } else if (filtro === 'dia') {
+            jql = process.env.JQL_DIA;
+        } else {
+            return res.status(400).json({ error: 'Parâmetro "filtro" inválido. Use ?filtro=status ou ?filtro=dia' });
+        }
+
         const auth = Buffer.from(`${process.env.JIRA_USER}:${process.env.JIRA_API_TOKEN}`).toString('base64');
-        const url = `https://${process.env.JIRA_DOMAIN}/rest/api/2/search?jql=${encodeURIComponent(process.env.JQL_QUERY)}&maxResults=100`;
+        const url = `https://${process.env.JIRA_DOMAIN}/rest/api/2/search?jql=${encodeURIComponent(jql)}&maxResults=100`;
 
         const response = await axios.get(url, {
             headers: {
@@ -19,7 +30,7 @@ router.get('/jira-kpis', async (req, res) => {
         const totalChamados = response.data.total;
         const chamadosEmAndamento = response.data.issues.length;
 
-        res.json({ totalChamados, chamadosEmAndamento });
+        res.json({ totalChamados, chamadosEmAndamento});
     } catch (error) {
         // Printar variáveis de ambiente usadas
         console.error('JIRA_DOMAIN:', process.env.JIRA_DOMAIN);

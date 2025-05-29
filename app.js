@@ -15,6 +15,8 @@ var HOST_APP = process.env.APP_HOST;
 
 var app = express();
 
+
+var dashMatheusRouter = require("./src/routes/dashmatheus")
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var empresasRouter = require("./src/routes/empresas");
@@ -32,6 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
 
+app.use("/dashMatheus", dashMatheusRouter)
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/empresas", empresasRouter);

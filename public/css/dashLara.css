@@ -50,6 +50,13 @@ body {
     text-align: center;
 }
 
+
+.kpi span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f50000;
+}
+
 /* listagem */
 .listagem-titulo {
     display: flex;

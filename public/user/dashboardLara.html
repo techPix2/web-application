@@ -22,7 +22,7 @@
     <script src="../components/navbar/navbar.js"></script>
 </head>
 
-<body onload="buscarServidoresComAlerta()">
+<body onload="buscarServidoresComAlerta(), buscarServidoresComAlertaJira()">
     <nav-bar></nav-bar>
     <custom-main>
 
@@ -31,17 +31,17 @@
 
             <div class="kpi">
                 <h2>Componente com mais alertas</h2>
-                <h1 id="compMaisAlertas">CPU</h1>
+                <h1 id="compMaisAlertas"></h1>
             </div>
 
             <div class="kpi">
                 <h2>Total de alertas em 24h</h2>
-                <h1 id="totalJira">4</h1>
+                 <span id="totalChamados"></span>
             </div>
 
             <div class="kpi">
                 <h2>Chamados não atendidos</h2>
-                <h1 id="chamadosJira">3</h1>
+                <span id="chamadosEmAndamento"></span> 
             </div>
 
         </div>
@@ -75,7 +75,6 @@
                                 </button>
                             </td>
                         </tr>
-
 
 
                     </tbody>

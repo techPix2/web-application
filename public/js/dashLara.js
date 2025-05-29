@@ -50,7 +50,7 @@ async function buscarServidoresComAlerta() {
         const alertas = await response.json();
         console.log(alertas);
 
-           let jsonAlertas =[{
+        let jsonAlertas = [{
             CPU: 0,
             RAM: 0
         }]
@@ -64,9 +64,9 @@ async function buscarServidoresComAlerta() {
                 tipoAlerta: alerta.alert_type,
                 horaAlerta: alerta.alert_time
             };
-            
+
             //tipo de alerta é CPU ou RAM e incrementa o contador para a KPI
-                if (alerta.tipoAlerta === 'CPU') {
+            if (alerta.tipoAlerta === 'CPU') {
                 jsonAlertas[0].CPU += 1;
             } else if (alerta.tipoAlerta === 'RAM') {
                 jsonAlertas[0].RAM += 1;
@@ -76,21 +76,21 @@ async function buscarServidoresComAlerta() {
             if (!listaAlertas.some(item => item.id === servidor.id && item.tipoAlerta === servidor.tipoAlerta)) {
                 listaAlertas.push(servidor);
             }
-            if(jsonAlertas[0].CPU > jsonAlertas[0].RAM){
+            if (jsonAlertas[0].CPU > jsonAlertas[0].RAM) {
                 compMaisAlertas.innerHTML = `CPU`;
-        } else if(jsonAlertas[0].RAM > jsonAlertas[0].CPU){
+            } else if (jsonAlertas[0].RAM > jsonAlertas[0].CPU) {
                 compMaisAlertas.innerHTML = `RAM`;
-            }else {
+            } else {
                 compMaisAlertas.innerHTML = `CPU | RAM`;
             }
-     
-        tabelaServidores.innerHTML = ""; 
-        for (const alerta of listaAlertas) {
-            tabelaServidores.innerHTML += `
+
+            tabelaServidores.innerHTML = "";
+            for (const alerta of listaAlertas) {
+                tabelaServidores.innerHTML += `
                 <tr>
                     <td>${alerta.nome}</td>
                     <td style="color:red; font-weight:bold">CRÍTICO</td>
-                    <td>${alerta.tipoAlerta}</td>
+                    <td>${alerta.tipoAlerta}</td>l
                     <td style="color:red; font-weight:bold">${alerta.uso}%</td>
                     <td>
                         <button class="button-eye" data-id="${alerta.idServer}">
@@ -99,46 +99,45 @@ async function buscarServidoresComAlerta() {
                     </td>
                 </tr>
             `;
-        }
+            }
 
-        document.querySelectorAll('.button-eye').forEach(button => {
-            button.addEventListener('click', function() {
-                const servidorId = this.getAttribute('data-id');
-                mostrarGraficoServidor(servidorId);
-                console.log(`Exibindo gráfico para o servidor com ID: ${servidorId}`);
+            document.querySelectorAll('.button-eye').forEach(button => {
+                button.addEventListener('click', function () {
+                    const servidorId = this.getAttribute('data-id');
+                    mostrarGraficoServidor(servidorId);
+                    console.log(`Exibindo gráfico para o servidor com ID: ${servidorId}`);
+                });
             });
-        });
-        if (jsonAlertas[0].CPU > jsonAlertas[0].RAM) {
-            
+            if (jsonAlertas[0].CPU > jsonAlertas[0].RAM) {
+
+            }
         }
-        console.log(listaAlertas);
-    } 
-    }catch (error) {
+    } catch (error) {
         console.error("Erro ao buscar alertas:", error);
 
         alert("Não foi possível carregar os alertas. Por favor, tente novamente mais tarde.");
     }
 }
 
+//atualizar as kpis do jira  
 
-buscarServidoresComAlerta();
-
-
-//atualizar as kpis do jira  //rever
-
-async function atualizarKPIsJira() {
-    try {
-        const response = await fetch('/apiJira/jira-kpis');
-        if (!response.ok) throw new Error('Erro ao buscar KPIs do Jira');
-        const data = await response.json();
-        document.getElementById('totalJira').innerText = data.totalChamados;
-        document.getElementById('chamadosJira').innerText = data.chamadosEmAndamento;
-    } catch (error) {
-        console.error('Erro ao atualizar KPIs do Jira:', error);
-        document.getElementById('totalJira').innerText = '-';
-        document.getElementById('chamadosJira').innerText = '-';
+async function buscarServidoresComAlertaJira() {
+    console.log("Buscando dados do Jira...");
+  try {
+    resposta = await fetch("/apiJira/jira-kpis");
+    const dados = await resposta.json();
+    console.log("Dados do Jira recebidos:", dados);
+    if (!resposta.ok) {
+      throw new Error(`Erro ao buscar dados do Jira: ${resposta.status}`);
     }
+
+    //atualizar os valores no HTML
+        document.getElementById('totalChamados').innerHTML = dados.totalChamados;
+        document.getElementById('chamadosEmAndamento').innerHTML = dados.chamadosEmAndamento;
+
+  } catch (error) {
+    console.error("Erro ao buscar dados do Jira:", error);
+    return [];
+  }
 }
 
-//carregar a página
-atualizarKPIsJira();

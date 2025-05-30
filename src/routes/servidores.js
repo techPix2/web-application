@@ -7,4 +7,8 @@ router.get("/listarServidorPorEmpresa/:fkEmpresa", function (req, res) {
     servidorController.listarServidorPorEmpresa(req, res);
 });
 
+router.get("/listarServidoresComAlerta/:fkEmpresa", function (req, res) {
+    servidorController.listarServidoresComAlerta(req, res);
+});
+
 module.exports = router;

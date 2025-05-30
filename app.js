@@ -24,10 +24,9 @@ var techpixRouter = require("./src/routes/techpix");
 var servidorRouter = require("./src/routes/servidores");
 var dashCientistaRouter = require("./src/routes/dashCientista");
 var dashAnalistaRouter = require("./src/routes/dashAnalista");
-var gestorRouter = require("./src/routes/gestor");
-
 var gestorRouter = require("./src/routes/gestor")
 var jiraRouter = require("./src/routes/jiraRoute");
+var s3Router = require("./src/routes/s3.route.js");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

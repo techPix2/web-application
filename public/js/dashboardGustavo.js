@@ -70,70 +70,82 @@ var diskOptions = {
 
 var diskChart = new ApexCharts(document.getElementById("diskChart"), diskOptions)
 
-var componentsOptions = {
-    series: [{
-        name: "Cpu %",
-        data: [10, 41, 35, 51, 49, 62, 69, 91, 98, 10, 41, 35, 51, 49, 62, 69, 91, 98]
-    },{
-        name: "Ram %",
-        data: [20, 31, 30, 50, 40, 32, 78, 10, 20, 20, 31, 30, 50, 40, 32, 78, 10, 20]
-    },{
-        name: "Disk %",
-        data: [50, 51, 52, 53, 54, 55, 56, 57, 58, 50, 51, 52, 53, 54, 55, 56, 57, 58]
-    }],
+const componentsOptions = {
+    series: [],
     chart: {
+        id: 'componentesChart',
         height: 400,
         type: 'line',
+        toolbar: {
+            show: true,
+            tools: {
+                download: true,
+                selection: true,
+                zoom: true,
+                zoomin: true,
+                zoomout: true,
+                pan: true,
+                reset: true
+            },
+            autoSelected: 'zoom'
+        },
         zoom: {
             enabled: true,
             autoScaleYaxis: true,
             zoomedArea: {
-                fill: {
-                    color: '#90CAF9',
-                    opacity: 0.4
-                },
-                stroke: {
-                    color: '#0D47A1',
-                    opacity: 0.4,
-                    width: 1
-                }
+                fill: { color: '#90CAF9', opacity: 0.4 },
+                stroke: { color: '#0D47A1', opacity: 0.4, width: 1 }
             }
         }
     },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        curve: 'straight',
-        width: 2,
-    },
+    dataLabels: { enabled: false },
+    stroke: { curve: 'straight', width: 2 },
     title: {
-        text: 'Componentes ao longo do Tempo',
+        text: 'Percentual de Uso',
         align: 'center',
         style: {
-            fontSize:  '24px',
-            fontWeight:  'bold',
-            fontFamily:  'inter',
-            color:  '#263238'
-        },
+            fontSize: '24px',
+            fontWeight: 'bold',
+            fontFamily: 'inter',
+            color: '#263238'
+        }
     },
     grid: {
         row: {
-            colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+            colors: ['#f3f3f3', 'transparent'],
             opacity: 0.5
-        },
+        }
     },
     xaxis: {
-        categories: ['20/05/2025', '21/05/2025', '22/05/2025', '23/05/2025', '24/05/2025', '25/05/2025', '26/05/2025', '27/05/2025', '28/05/2025', '20/05/2025', '21/05/2025', '22/05/2025', '23/05/2025', '24/05/2025', '25/05/2025', '26/05/2025', '27/05/2025', '28/05/2025'],
-        max: 10,
+        categories: [],
+        max: 5
+    },
+    yaxis: {
+        title: {
+            text: 'Porcentagem (%)',
+            style: {
+                fontSize: '12px',
+                fontWeight: 'bold',
+                fontFamily: 'inter',
+                color: '#263238'
+            }
+        },
+        min: 0,
+        max: 100,
+        forceNiceScale: true,
+        labels: {
+            formatter: function(value) {
+                return value + '%';
+            }
+        }
     },
     markers: {
         shape: 'diamond',
-        size: 5,
+        size: 5
     }
 };
 
-var componentsChart = new ApexCharts(document.getElementById("componentsChart"), componentsOptions)
+const chartComponentes = new ApexCharts(document.querySelector("#componentsChart"), componentsOptions);
 
 var packageOptions ={
     series: [{
@@ -246,65 +258,104 @@ var saturationOptions = {
 
 var saturationChart = new ApexCharts(document.getElementById("saturationChart"), saturationOptions)
 
-
-function plotarDadosNosGraficos(arquivosCSV) {
-
-    const nomesMaquinas = Object.keys(arquivosCSV);
-    const discoSeries = [];
-    const componentesSeries = [{ name: "Cpu %", data: [] }, { name: "Ram %", data: [] }, { name: "Disk %", data: [] }];
-    const pacotesEnviados = [];
-    const pacotesRecebidos = [];
-    const datasPacotes = [];
-
-    nomesMaquinas.forEach(nomeArquivo => {
-        const nomeMaquina = nomeArquivo.replace('.csv', '');
-        const registros = arquivosCSV[nomeArquivo];
-
-        if (registros.length) {
-            const ultimo = registros[registros.length - 1];
-            discoSeries.push({
-                name: nomeMaquina,
-                data: [parseFloat(ultimo.diskC), parseFloat(ultimo.diskD), parseFloat(ultimo.diskE)]
-            });
-        }
-
-        registros.forEach(reg => {
-            componentesSeries[0].data.push(parseFloat(reg.cpu));
-            componentesSeries[1].data.push(parseFloat(reg.ram));
-            componentesSeries[2].data.push(parseFloat(reg.diskC));
-        });
-
-        registros.forEach(reg => {
-            datasPacotes.push(reg.data);
-            pacotesEnviados.push(parseInt(reg.pacotesEnviados));
-            pacotesRecebidos.push(parseInt(reg.pacotesRecebidos));
-        });
-    });
-
-    diskChart.updateSeries(discoSeries);
-
-    componentsChart.updateSeries(componentesSeries);
-    componentsChart.updateOptions({
-        xaxis: {
-            categories: arquivosCSV[nomesMaquinas[0]].map(reg => reg.data),
-            max: 10
-        }
-    });
-
-    packageChart.updateSeries([
-        { name: "Pacotes enviados", data: pacotesEnviados, color: '#8979FF' },
-        { name: "Pacotes recebidos", data: pacotesRecebidos, color: '#FF928A' }
-    ]);
-    packageChart.updateOptions({
-        labels: datasPacotes
-    });
-}
-
-
 diskChart.render()
-
-componentsChart.render()
 
 packageChart.render()
 
 saturationChart.render()
+
+chartComponentes.render();
+
+document.getElementById('selectMaquina').addEventListener('change', function() {
+    const idMaquinaSelecionada = this.value;
+    plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada);
+});
+
+function popularSelectMaquinas(dadosPorMaquinaGlobal) {
+    const select = document.getElementById('selectMaquina');
+    const maquinasArray = Object.values(dadosPorMaquinaGlobal);
+
+    maquinasArray.forEach(maquina => {
+        const option = document.createElement('option');
+        option.value = maquina.maquina;
+        option.textContent = maquina.maquina;
+        select.appendChild(option);
+    });
+
+    // Plotar gráfico da primeira máquina ao carregar
+    if (maquinasArray.length > 0) {
+        plotarGraficoComponentes(dadosPorMaquinaGlobal, maquinasArray[0].maquina);
+    }
+}
+
+function plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada) {
+    // Converte o objeto em array de máquinas
+    const maquinasArray = Object.values(dadosPorMaquinaGlobal);
+
+    // Encontra os dados da máquina selecionada
+    const dadosMaquina = maquinasArray.find(maquina => maquina.maquina === idMaquinaSelecionada)?.content;
+
+    if (!dadosMaquina || dadosMaquina.length === 0) {
+        console.error('Dados da máquina não encontrados ou vazios para o ID:', idMaquinaSelecionada);
+        return;
+    }
+
+    // Extrai as categorias (datas/horas)
+    const categorias = dadosMaquina.map(item => item.data_hora);
+
+    // Série fixa para CPU
+    const series = [{
+        name: 'Uso de CPU (%)',
+        data: dadosMaquina.map(item => parseFloat(item.cpu_percent))
+    }];
+
+    // Série fixa para RAM
+    series.push({
+        name: 'Uso de RAM (%)',
+        data: dadosMaquina.map(item => parseFloat(item.ram_percent))
+    });
+
+    // Detecta automaticamente quantos discos existem
+    const discos = [];
+    const primeiroRegistro = dadosMaquina[0];
+
+    // Procura por todas as propriedades de disco
+    for (const key in primeiroRegistro) {
+        if (key.startsWith('disco_') && key.endsWith('_percent')) {
+            const discoNome = key.split('_')[1].toUpperCase();
+            if (!discos.includes(discoNome)) {
+                discos.push(discoNome);
+            }
+        }
+    }
+
+    // Calcula a média dos discos para cada ponto de dados
+    if (discos.length > 0) {
+        const mediaDiscos = dadosMaquina.map(item => {
+            let soma = 0;
+            let contador = 0;
+
+            discos.forEach(disco => {
+                const value = item[`disco_${disco}_percent`];
+                if (value) {
+                    soma += parseFloat(value);
+                    contador++;
+                }
+            });
+
+            return contador > 0 ? soma / contador : 0;
+        });
+
+        // Adiciona apenas uma série para a média dos discos
+        series.push({
+            name: 'Média de Discos (%)',
+            data: mediaDiscos
+        });
+    }
+
+    // Atualiza o gráfico
+    chartComponentes.updateOptions({
+        xaxis: { categories: categorias, max: 5 },
+        series: series
+    });
+}

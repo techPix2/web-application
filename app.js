@@ -25,7 +25,6 @@ var servidorRouter = require("./src/routes/servidores");
 var dashCientistaRouter = require("./src/routes/dashCientista");
 var dashAnalistaRouter = require("./src/routes/dashAnalista");
 var gestorRouter = require("./src/routes/gestor");
-var s3Router = require("./src/routes/s3.route.js");
 
 
 app.use(express.json());
@@ -43,7 +42,6 @@ app.use("/dashAnalista", dashAnalistaRouter);
 app.use("/dashCientista", dashCientistaRouter);
 app.use("/servidores", servidorRouter);
 app.use("/gestor", gestorRouter);
-app.use("/s3", s3Router);
 
 app.listen(PORTA_APP, function () {
     console.log(`

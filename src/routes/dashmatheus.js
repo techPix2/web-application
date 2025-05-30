@@ -1,9 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const dashmatheusController = require("../controllers/dashmatheusController");
 
-router.get("/dadosMaquina", function(req, res){ 
-    dashmatheusController.dadosMaquina
+
+var dadosEnviados;
+
+router.get("/dadosRecebidos", (req, res) => {
+    console.log("aqui")
+    res.status(200).send(dadosEnviados);
+})
+
+router.post("/dadosMaquina", function(req, res){
+    var body = req.body;
+    console.log("Dados recebidos:", body);
+    dadosEnviados = body;
+
+    res.status(200).send("sucesso")
 });
+
 
 module.exports = router;

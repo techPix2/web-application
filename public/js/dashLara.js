@@ -1,15 +1,3 @@
-// //mostrar e esconder os gráficos
-// document.querySelectorAll('.button-eye').forEach(button => {
-//     button.addEventListener('click', () => {
-//         const chartId = button.getAttribute('data-target');
-//         const chartDiv = document.getElementById(chartId);
-//         chartDiv.style.display = chartDiv.style.display === 'none' ? 'block' : 'none';
-//     });
-// });
-
-
-
-
 //chart status dos servidores
 var options = {
     series: [55, 13],
@@ -18,6 +6,7 @@ var options = {
         type: 'pie',
     },
     labels: ['Normal', 'Crítico'],
+    colors: ['#0078d7', '#f50000'],
     responsive: [{
         breakpoint: 480,
         options: {
@@ -39,6 +28,7 @@ chart.render();
 // função para buscar os servidores com alerta
 async function buscarServidoresComAlerta() {
     let listaAlertas = [];
+
     try {
         const fk_company = sessionStorage.ID_EMPRESA || 1;
         const response = await fetch(`/servidores/listarServidoresComAlerta/${fk_company}`);
@@ -71,7 +61,7 @@ async function buscarServidoresComAlerta() {
             } else if (alerta.tipoAlerta === 'RAM') {
                 jsonAlertas[0].RAM += 1;
             }
-
+            
             // Só adiciona se NÃO existir já um item com mesmo id e tipoAlerta
             if (!listaAlertas.some(item => item.id === servidor.id && item.tipoAlerta === servidor.tipoAlerta)) {
                 listaAlertas.push(servidor);
@@ -121,7 +111,6 @@ async function buscarServidoresComAlerta() {
 
 //atualizar as kpis do jira  
 
-
 //mostrar os chamados do último dia
 async function buscarChamadosUltimoDia() {
     console.log("Buscando dados do Jira...");
@@ -165,3 +154,71 @@ async function buscarChamadosStatus() {
   }
 }
 
+
+
+// slack
+async function fetchMessages() {
+  try {
+    const response = await fetch('/apiSlack/mensagens');
+    
+    if (!response.ok) {
+      throw new Error(`Erro HTTP! status: ${response.status}`);
+    }
+    
+    const messages = await response.json();
+    const mensagensContainer = document.getElementById('mensagensContainer');
+    mensagensContainer.innerHTML = ''; 
+    console.log("Mensagens recebidas:", messages);
+    messages.forEach((message) => {
+      const data = new Date(parseFloat(message.ts) * 1000).toLocaleString();
+      const user = message.user || 'Bot';
+      const text = message.text || '';
+      mensagensContainer.innerHTML += `
+        <div class="mensagem">
+          <div class="mensagem-cabecalho">
+            <span class="mensagem-usuario">${user}</span>
+            <span class="mensagem-data">${data}</span>
+          </div>
+          <div class="mensagem-texto">${text}</div>
+        </div>
+      `;
+    });
+  } catch (error) {
+    console.error("Erro ao buscar mensagens:", error);
+
+    const mensagensContainer = document.getElementById('mensagensContainer');
+    mensagensContainer.innerHTML = '<div class="error">Erro ao carregar mensagens. Tente novamente.</div>';
+  }
+}
+
+
+async function enviar() {
+  const messageInput = document.getElementById('messageInput');
+  const messageText = messageInput.value;
+  if (messageText) {
+    try {
+      const response = await fetch('/apiSlack/mensagens', { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: messageText }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Erro HTTP! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      if (result.ok) {
+        console.log(`Mensagem enviada com sucesso: ${result.ts}`);
+        messageInput.value = ''; // Limpa o campo de entrada
+        fetchMessages(); // Atualiza a lista de mensagens
+      } else {
+        console.error("Erro ao enviar mensagem:", result.error);
+      }
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+    }
+  }
+}

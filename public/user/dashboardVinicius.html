@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Gestor</title>
@@ -10,77 +11,96 @@
     <script src="../js/dashboardVinicius.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-<nav-bar></nav-bar>
-<custom-main>
-<div class="select-container">
-    <div class="select-box">
-    <span class="titulo">FILTRAR POR DATA:</span>
-        <div class="select-box-item">
-            <div class="select-data">
-            INÍCIO:
-            <input type="date" id="startDate" value="2023-10-01">
-            </div>
-            <div class="select-data">
-            FINAL:
-            <input type="date" id="endDate" value="2023-10-31">
-            </div>
-            <div class="button">
-                <button id="filterButton">FILTRAR</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="kpi-box">
-    <div class="kpis">
-        <div class="kpi">
-            <div class="kpi-conteudo">
-                <div class="kpi-comeco">
-                    <span class="titulo">CHAMADOS ABERTOS</span>
+    <nav-bar></nav-bar>
+    <custom-main>
+        <div class="colunas">
+            <div class="primeira-coluna">
+                <div class="primeira-box">
+                    <div class="select-container">
+                                <div class="select-data">
+                                    <span>Data de início:</span>
+                                    <input type="date" id="startDate" value="2025-05-01">
+                                </div>
+                                <div class="select-data">
+                                    <span>Data final:</span>
+                                    <input type="date" id="endDate" value="2025-05-31">
+                                </div>
+                            <div class="button">
+                                <button id="filterButton">FILTRAR</button>
+                            </div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpis">
+                            <div class="kpi">
+                                <div class="kpi-conteudo">
+                                    <div class="kpi-comeco">
+                                        <span class="titulo">CHAMADOS ABERTOS</span>
+                                    </div>
+                                    <div class="kpi-meio">-</div>
+                                </div>
+                            </div>
+                            <div class="kpi">
+                                <div class="kpi-conteudo">
+                                    <div class="kpi-comeco">
+                                        <span class="titulo">TEMPO MÉDIO RESOLUÇÃO</span>
+                                    </div>
+                                    <div class="kpi-meio">-</div>
+                                </div>
+                            </div>
+                            <div class="kpi">
+                                <div class="kpi-conteudo">
+                                    <div class="kpi-comeco">
+                                        <span class="titulo">CHAMADOS RESOLVIDOS</span>
+                                    </div>
+                                    <div class="kpi-meio">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="kpi-meio">90</div>
-            </div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-conteudo">
-                <div class="kpi-comeco">
-                    <span class="titulo">TEMPO MÉDIO RESOLUÇÃO CHAMADOS</span>
+                <div class="segunda-box">
+                    <div class="listagem">
+                        <div class="titulo">DESEMPENHO DOS COLABORADORES</div>
+                        <hr>
+                        <div class="cabecalho-funcionarios">
+                            <span>Funcionário</span>
+                            <span>Recebidos</span>
+                            <span>Realizados</span>
+                            <span>Atrasados</span>
+                        </div>
+                        <div class="lista-funcionarios" id="listaFuncionarios">
+                            <!-- FUNCIONÁRIOS -->
+                        </div>
+                    </div>
+
                 </div>
-                <div class="kpi-meio">15 MINUTOS</div>
+
             </div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-conteudo">
-                <div class="kpi-comeco">
-                    <span class="titulo">CHAMADOS RESOLVIDOS</span>
+            <div class="segunda-coluna">
+                <div class="terceira-box">
+                    <div class="box-grafico">
+                        <div class="grafico">
+                            <div class="titulo">SERVIDORES COM MAIOR NÚMERO DE CHAMADOS</div>
+                            <hr>
+                            <div class="grafico-container">
+                                <canvas id="graficoChamadosDia"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="kpi-meio">85</div>
-            </div>
-        </div>
-    </div>
-</div>  
-    <div class="content">
-           <div class="listagem">
-                <div class="titulo">DESEMPENHO DOS COLABORADORES</div>
-                <hr>
-                <div class="cabecalho-funcionarios">
-                    <span>Funcionário</span>
-                    <span>Recebidos</span>
-                    <span>Realizados</span>
-                    <span>Atrasados</span>
+                <div class="quarta-box"> 
+                    <div class="box-grafico">
+                        <div class="grafico">
+                            <div class="titulo">DISTRIBUIÇÃO DE CHAMADOS POR STATUS</div>
+                            <hr>
+                            <div class="grafico-container">
+                                <canvas id="graficoStatusCanvas"></canvas>
+                            </div>
+                    </div>
                 </div>
-                <div class="lista-funcionarios" id="listaFuncionarios">
-                    <!-- FUNCIONÁRIOS -->
-                </div>
-            </div>
-            <div class="grafico">
-                <div class="titulo">SERVIDORES COM MAIOR NÚMERO DE CHAMADOS</div>
-                <hr>
-                <canvas id="graficoServidores" class="grafico-servidores"></canvas>
-            </div>
-        </div>
-    </div>
-   
     </custom-main>
 </body>
+
 </html>

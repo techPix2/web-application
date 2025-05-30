@@ -10,6 +10,26 @@ body {
     display: flex;
 }
 
+html, body {
+    height: 100%;
+}
+
+.colunas{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.primeira-coluna {
+    width: 50%;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .container {
     flex: 1;
     padding: 20px;
@@ -25,14 +45,13 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 20px;
 }
 
 .select-box {
     display: flex;
-    width: 30%;
-    height: 200px;
-    background: #1a73e8;
+    width: 60%;
+    height: 150px;
+    background: #003F69;
     align-items: center;
     justify-content: space-evenly;
     flex-direction: column;
@@ -43,21 +62,45 @@ body {
     color: white;
     font-weight: 600;
     font-size: 18px;
+    display: inline-flex;
+    align-items: center;
 }
+
+.box-grafico{
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.grafico{
+    height: 100%;
+    width: 100%;
+    background: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
 
 .select-box-item {
     width: 100%;
-    height: 60%;
+    height: 30%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
 .select-data{
-    width: 60%;
+    width: 80%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     font-weight: 600;
     font-size: 16px;
     color: white;
@@ -67,7 +110,7 @@ button {
     width: 100%;
     height: 40px;
     background: white;
-    color: #1a73e8;
+    color: #003F69;
     border: none;
     border-radius: 8px;
     font-weight: 600;
@@ -75,14 +118,39 @@ button {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+#graficoStatusChamados{
+    max-height: 300px;
+}
+
 button:hover {
     background-color: #e8f0fe;
     color: #174ea6;
 }
 
+span{
+    color: black;
+}
+
+.primeira-box span{
+    display: inline-flex;
+    align-items: center;
+}
+
+.primeira-box{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 input[type="date"] {
-    width: 60%;
-    border-radius: 8px;
+    text-align: center;
+    width: 50%;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
     cursor: pointer;
 }
 
@@ -94,15 +162,15 @@ h1 {
 }
 
 .kpi-box{
-    width: 100%;
-    height: 400px;
+    width: 90%;
+    height: 80%;
     display: flex;
     
 }
 
 .kpis {
     width: 100%;
-    height: 200px;
+    height: 100%;
     display: grid;
     justify-content: center;
     align-items: center;
@@ -111,11 +179,11 @@ h1 {
 }
 
 .kpi {
-    height: 60%;
-    width: 80%;
+    height: 70%;
+    width: 70%;
     background: white;
     border-radius: 8px;
-    padding: 18px;
+    padding: 20px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     transition: transform 0.2s ease;
     display: flex;
@@ -158,24 +226,51 @@ h1 {
     width: 70%;
 }
 
-.content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-}
-
 .listagem {
-    max-height: 400px;
+    height: 100%;
     background: white;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 18px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     width: 95%;
-
 }
+
+.segunda-box{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.segunda-coluna {
+    width: 50%;
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.terceira-box{
+    width: 90%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.quarta-box{
+    width: 90%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
 
 .cabecalho-funcionarios,
 .card-funcionario {
@@ -209,41 +304,52 @@ h1 {
 }
 
 .lista-funcionarios {
-    max-height: 300px;
-    overflow-y:scroll;
+    height: 350px;
+    overflow-y: scroll;
     margin-top: 10px;
 }
 
-.grafico {
-    background: white;
-    border-radius: 8px;
-    padding: 18px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    border: 1px solid #ccc;
-    width: 95%;
-    height: 400px;
-    margin-bottom: 30px;
+.grafico-servidores {
+    width: 70%;
+    height: 70%;
+    max-height: 300px;
+    display: block;
 }
 
-.grafico-servidores {
+.grafico-container{
     width: 100%;
-    max-width: 700px;
-    height: auto;
-    margin: 20px auto;
-    display: block;
+    margin: 10px;
+    max-height: 400px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  width: auto;
+}
+
+.segunda-coluna .titulo{
+    padding-top: 20px;
 }
 
 .titulo {
     font-weight: 600;
-    font-size: 16px;
+    font-size: 12px;
     color: #003F69;
     text-align: center;
 }
 
-hr{
-    border: none;
-    border-top: 3px solid #1a73e8;
-    margin: 20px 0;
+hr {
+  border: none;
+  border-top: 3px solid #003F69;
+  margin: 20px 0;
+  height: 0;
+  width: 100%;
 }
-
 

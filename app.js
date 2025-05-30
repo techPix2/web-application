@@ -13,18 +13,18 @@ var path = require("path");
 var PORTA_APP = process.env.APP_PORT;
 var HOST_APP = process.env.APP_HOST;
 
+
 var app = express();
 
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var empresasRouter = require("./src/routes/empresas");
-var techpixRouter = require("./src/routes/techpix");
-var servidorRouter = require("./src/routes/servidores");
-var dashCientistaRouter = require("./src/routes/dashCientista");
+var techpixRouter = require("./src/routes/techpix")
+var servidorRouter = require("./src/routes/servidores")
+var dashCientistaRouter = require("./src/routes/dashCientista")
 var dashAnalistaRouter = require("./src/routes/dashAnalista");
-var gestorRouter = require("./src/routes/gestor");
-var s3Router = require("./src/routes/s3.route.js");
-
+var gestorRouter = require("./src/routes/gestor")
+var jiraRouter = require("./src/routes/jiraRoute");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,9 +38,9 @@ app.use("/empresas", empresasRouter);
 app.use("/techpix", techpixRouter);
 app.use("/dashAnalista", dashAnalistaRouter);
 app.use("/dashCientista", dashCientistaRouter);
-app.use("/servidores", servidorRouter);
-app.use("/gestor", gestorRouter);
-app.use("/s3", s3Router);
+app.use("/servidores", servidorRouter)
+app.use("/gestor", gestorRouter)
+app.use("/apiJira", jiraRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`

@@ -9,7 +9,6 @@
     <script src="../components/gustavo/chart-container/ChartContainer.js"></script>
     <script src="../components/gustavo/dropList/droplist.js"></script>
     <script src="../components/gustavo/kpi-container/kpicontainer.js"></script>
-    <script src="../components/gustavo/customSelect/customselect.js"></script>
     <script src="../components/gustavo/explorer-container/explorercontainer.js"></script>
     <script src="../components/gustavo/list-item/listitem.js"></script>
     <script src="../components/gustavo/fileelement/fileelement.js"></script>
@@ -35,7 +34,7 @@
             <chart-container id="diskChart"></chart-container>
             <chart-container id=""></chart-container>
         </div>
-        <custom-select class="dash"></custom-select>
+        <select class="customselect dash" id="selectMaquina"></select>
         <div class="charts dash">
             <div class="kpis">
                 <kpi-container titulo="Índice de Saturação">
@@ -43,7 +42,9 @@
                 </kpi-container>
                 <kpi-container titulo="Quantidade de Alertas"><span class="kpiValue">60</span></kpi-container>
             </div>
-            <chart-container id="componentsChart"></chart-container>
+            <chart-container id="componentsChart">
+
+            </chart-container>
             <chart-container id="packageChart"></chart-container>
         </div>
 

@@ -12,7 +12,7 @@ body {
 
 .grafico {
     position: relative;
-    height: 290px;
+    max-height: 290px;
     width: 100%;
 }
 

@@ -160,10 +160,11 @@ async function carregarGraficos() {
     // CPU (linha)
     if (!chartCPU) {
         chartCPU = new ApexCharts(document.querySelector("#chartcpu"), {
+            
             series: [{ name: "CPU (%)", data: historicoCPU }],
-            chart: { type: "line", height: 300 },
+            chart: { type: "line", height: 290 },
             xaxis: { categories: categorias },
-            yaxis: { min: 0, max: 100, title: { text: "Uso" } }
+            yaxis: { min: 0, max: 100, title: { text: "Uso de CPU" } }
         });
         chartCPU.render();
     } else {
@@ -178,7 +179,7 @@ async function carregarGraficos() {
                 { name: "RAM (%)", data: historicoRAMpercent },
                 { name: "RAM (GB)", data: historicoRAMGB }
             ],
-            chart: { type: 'line', height: 300 },
+            chart: { type: 'line', height: 290 },
             xaxis: { categories: categorias },
             yaxis: { title: { text: "Uso" }, min: 0 },
             tooltip: { shared: true, intersect: false },
@@ -194,7 +195,7 @@ async function carregarGraficos() {
     if (!chartDISK) {
         chartDISK = new ApexCharts(document.querySelector("#chartdisco"), {
             series: [discoUsado, discoDisponivel],
-            chart: { type: "pie", height: 300 },
+            chart: { type: "pie", height: 290 },
             labels: ["Uso (%)", "Disponível (%)"],
             colors: ["#FF4560", "#00E396"],
             legend: { position: "bottom" }
@@ -211,7 +212,7 @@ async function carregarGraficos() {
                 { name: "Pacotes Enviados", data: historicoREDEenv },
                 { name: "Pacotes Recebidos", data: historicoREDErec }
             ],
-            chart: { type: "line", height: 300 },
+            chart: { type: "line", height: 290 },
             xaxis: { categories: categorias },
             yaxis: { title: { text: "Pacotes" } },
             legend: { position: "bottom" }

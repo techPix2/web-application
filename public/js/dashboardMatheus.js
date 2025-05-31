@@ -181,7 +181,7 @@ async function carregarGraficos() {
             ],
             chart: { type: 'line', height: 290 },
             xaxis: { categories: categorias },
-            yaxis: { title: { text: "Uso" }, min: 0 },
+            yaxis: { title: { text: "Uso de Ram" }, min: 0 },
             tooltip: { shared: true, intersect: false },
             legend: { position: 'top' }
         });
@@ -197,7 +197,7 @@ async function carregarGraficos() {
             series: [discoUsado, discoDisponivel],
             chart: { type: "pie", height: 290 },
             labels: ["Uso (%)", "Disponível (%)"],
-            colors: ["#FF4560", "#00E396"],
+            colors: ["#FF6347", "#00E396"],
             legend: { position: "bottom" }
         });
         chartDISK.render();

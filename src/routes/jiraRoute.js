@@ -60,6 +60,7 @@ router.get('/jira-kpis', async (req, res) => {
             chamadosEmAndamento,
             tempoMedioResolucao
         });
+
     } catch (error) {
         console.error('Erro ao buscar dados do Jira:', error.message);
         res.status(500).json({ error: 'Erro ao buscar dados do Jira', detalhe: error.message });
@@ -166,8 +167,7 @@ router.get('/jira-status', async (req, res) => {
         res.status(500).json({ error: "Erro ao buscar status dos chamados" });
     }
 });
-
-router.get('/jira-chamados-dia-tipo', async (req, res) => {
+router.get('/jira-chamados-dia-prioridade', async (req, res) => {
     const { start, end } = req.query;
 
     if (!start || !end) {
@@ -188,40 +188,38 @@ router.get('/jira-chamados-dia-tipo', async (req, res) => {
 
         const issues = response.data.issues;
         const dadosAgrupados = {};
-        const tiposSet = new Set();
+        const prioridadesSet = new Set();
 
-        // Agrupar por data e tipo de chamado
         issues.forEach(issue => {
             const data = new Date(issue.fields.created);
-            const tipo = issue.fields.issuetype?.name || "Desconhecido";
+            const prioridade = issue.fields.priority?.name || "Sem prioridade";
             const diaFormatado = data.toISOString().split("T")[0];
 
-            tiposSet.add(tipo);
+            prioridadesSet.add(prioridade);
 
             if (!dadosAgrupados[diaFormatado]) {
                 dadosAgrupados[diaFormatado] = {};
             }
 
-            if (!dadosAgrupados[diaFormatado][tipo]) {
-                dadosAgrupados[diaFormatado][tipo] = 0;
+            if (!dadosAgrupados[diaFormatado][prioridade]) {
+                dadosAgrupados[diaFormatado][prioridade] = 0;
             }
 
-            dadosAgrupados[diaFormatado][tipo]++;
+            dadosAgrupados[diaFormatado][prioridade]++;
         });
 
-        // Preparar os dados no formato esperado pelo gráfico
-        const labels = Object.keys(dadosAgrupados).sort(); // datas ordenadas
-        const tipos = Array.from(tiposSet); // tipos únicos
+        const labels = Object.keys(dadosAgrupados).sort();
+        const prioridades = Array.from(prioridadesSet);
 
-        const datasets = tipos.map(tipo => ({
-            label: tipo,
-            data: labels.map(dia => dadosAgrupados[dia]?.[tipo] || 0)
+        const datasets = prioridades.map(prioridade => ({
+            label: prioridade,
+            data: labels.map(dia => dadosAgrupados[dia]?.[prioridade] || 0)
         }));
 
         res.json({ labels, datasets });
 
     } catch (error) {
-        console.error("Erro ao buscar chamados por dia e tipo:", error.message);
+        console.error("Erro ao buscar chamados por dia e prioridade:", error.message);
         res.status(500).json({ error: "Erro ao buscar dados", detalhe: error.message });
     }
 });

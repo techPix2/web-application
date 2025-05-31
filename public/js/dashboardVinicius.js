@@ -11,6 +11,15 @@ async function carregarGraficoStatusChamados(startDate, endDate) {
         const statusLabels = Object.keys(statusData);
         const statusValores = Object.values(statusData);
 
+        const corPorStatus = {
+            "Work in progress": "#2196f3",
+            "Concluída": "#4caf50",
+            "Fechada": "#f44336",     
+            "Reaberto": "#fbc02d",
+            "Aberto": "#9c27b0",        
+        };
+
+        const cores = statusLabels.map(label => corPorStatus[label] || "#9e9e9e");
         const canvasId = "graficoStatusCanvas";
         if (!document.getElementById(canvasId)) {
             const canvas = document.createElement("canvas");
@@ -29,13 +38,7 @@ async function carregarGraficoStatusChamados(startDate, endDate) {
                 datasets: [{
                     label: "Status",
                     data: statusValores,
-                    backgroundColor: [
-                        "#4caf50", // verde
-                        "#ff9800", // laranja
-                        "#f44336", // vermelho
-                        "#2196f3", // azul
-                        "#9c27b0"  // roxo
-                    ],
+                    backgroundColor: cores,
                     borderWidth: 1
                 }]
             },
@@ -112,7 +115,7 @@ async function buscarKpis(dataInicio, dataFim) {
         } catch (error) {
             console.error("Erro ao buscar KPIs:", error);
         }
-    }
+}
 
 async function carregarGraficoChamadosPorDia(start, end) {
     if (!start || !end) {
@@ -121,11 +124,18 @@ async function carregarGraficoChamadosPorDia(start, end) {
     }
 
     try {
-        const url = `http://localhost/apiJira/jira-chamados-dia-tipo?start=${start}&end=${end}`;
+        const url = `http://localhost/apiJira/jira-chamados-dia-prioridade?start=${start}&end=${end}`;
         const resposta = await fetch(url);
         const dados = await resposta.json();
 
-        const cores = ['#1a73e8', '#34a853', '#fbbc04', '#ea4335', '#9c27b0', '#ff5722'];
+        const corPorPrioridade = {
+            "High": "#ea4335",  
+            "Medium": "#fbbc04",   
+            "Low": "#34a853",   
+            "Highest": "#9c27b0", 
+            "Sem prioridade": "#9e9e9e"
+        };
+
 
         if (window.graficoChamadosAgrupado) {
             window.graficoChamadosAgrupado.destroy();
@@ -133,36 +143,44 @@ async function carregarGraficoChamadosPorDia(start, end) {
 
         const ctx = document.getElementById('graficoChamadosDia').getContext('2d');
 
-        window.graficoChamadosAgrupado = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dados.labels,
-                datasets: dados.datasets.map((dataset, index) => ({
-                    ...dataset,
-                    backgroundColor: cores[index % cores.length]
-                }))
-            },
-            options: {
-                responsive: false,
-                plugins: {
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
-                    }
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                        title: { display: true, text: 'Data' }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        stacked: true,
-                        title: { display: true, text: 'Quantidade de Chamados' }
+
+window.graficoChamadosAgrupado = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: dados.labels,
+        datasets: dados.datasets.map(dataset => ({
+            ...dataset,
+            backgroundColor: corPorPrioridade[dataset.label] || '#1a73e8'
+        }))
+    },
+    options: {
+        responsive: false,
+        plugins: {
+            tooltip: {
+                mode: 'index',
+                intersect: false
+            }
+        },
+        scales: {
+            x: {
+                stacked: true,
+                title: { display: true, text: 'Data' },
+                ticks: {
+                    autoSkip: true,
+                    maxTicksLimit: 20,
+                    font: {
+                        size: 10
                     }
                 }
+            },
+            y: {
+                beginAtZero: true,
+                stacked: true,
+                title: { display: true, text: 'Quantidade' }
             }
-        });
+        }
+    }
+});
 
     } catch (erro) {
         console.error("Erro ao carregar gráfico:", erro);

@@ -171,6 +171,49 @@ function carregarTudo(){
     carregarGraficos();
 }
 // Loop de atualização a cada 2 segundos
+
+document.querySelectorAll(".botao-encerrar").forEach(botao => { 
+    botao.addEventListener("click", function() {
+        const nomeProcesso = this.value;
+        console.log("Tentando encerrar processo:", nomeProcesso);
+
+        fetch('http://localhost:5000/dashMatheus/removerProcesso', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ processo: nomeProcesso })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().catch(() => null).then(errorBody => {
+                    const errorMessage = errorBody && errorBody.messages ? errorBody.messages.join('; ') : `Erro HTTP: ${response.status} ${response.statusText}`;
+                    throw new Error(errorMessage);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Resposta do servidor:", data);
+            let feedbackMessage = `Resultado para '${nomeProcesso}':\n`;
+            if (data.messages && data.messages.length > 0) {
+                feedbackMessage += data.messages.join('\n');
+            } else {
+                feedbackMessage += (data.success ? "Operação concluída com sucesso." : "Operação falhou sem mensagens detalhadas.");
+            }
+            alert(feedbackMessage);
+
+            if (data.success) {
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao tentar encerrar processo:', error);
+            alert(`Falha na comunicação ou na operação de encerrar '${nomeProcesso}':\n${error.message}`);
+        });
+    });
+});
+
+
 setInterval(carregarTudo, 2000);
 
 

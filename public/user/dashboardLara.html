@@ -20,7 +20,7 @@
     <script src="../components/gustavo/chart-container/ChartContainer.js"></script>
 </head>
 
-<body onload="buscarServidoresComAlerta(), buscarChamadosStatus(),buscarChamadosUltimoDia(), fetchMessages();">
+<body>
     <nav-bar></nav-bar>
     <custom-main>
 
@@ -49,7 +49,6 @@
         <div class="listagem-titulo">
             <h1>Servidores com componentes em estado CRÍTICO</h1>
         </div>
-    </div>
 
 
         <div class="listagem-container">
@@ -65,14 +64,7 @@
                         </tr>
                     </thead>
                     <tbody id="tabelaServidores">
-                        <tr>
-                            <td>
-                                <!-- olho -->
-                                <button class="button-eye" data-target="chartServidores">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
+                            
                     </tbody>
                 </table>
                 <!-- gráfico servidores -->

@@ -12,10 +12,11 @@ router.get('/jira-kpis', async (req, res) => {
         if (filtro === 'status') {
             jql = process.env.JQL_QUERY;
         } else if (filtro === 'dia') {
-            if (!start || !end) {
-                return res.status(400).json({ error: 'Parâmetros "start" e "end" são obrigatórios para o filtro por dia.' });
+            if (start && end) {
+                jql = `created >= "${start}" AND created <= "${end}"`;
+            } else {
+                jql = process.env.JQL_DIA;
             }
-            jql = `created >= "${start}" AND created <= "${end}"`;
         } else {
             return res.status(400).json({ error: 'Parâmetro "filtro" inválido. Use ?filtro=status ou ?filtro=dia' });
         }
@@ -31,8 +32,9 @@ router.get('/jira-kpis', async (req, res) => {
         });
 
         const issues = response.data.issues;
-        const totalChamados = issues.length;
-        let chamadosEmAndamento = 0;
+        const totalChamados = response.data.total || issues.length;
+        const chamadosEmAndamento = issues.filter(issue => !issue.fields.resolutiondate).length;
+
         let resolvidos = 0;
         let somaTempos = 0;
 
@@ -40,9 +42,7 @@ router.get('/jira-kpis', async (req, res) => {
             const created = new Date(issue.fields.created);
             const resolved = issue.fields.resolutiondate ? new Date(issue.fields.resolutiondate) : null;
 
-            if (!resolved) {
-                chamadosEmAndamento++;
-            } else {
+            if (resolved) {
                 resolvidos++;
                 somaTempos += (resolved - created);
             }
@@ -50,10 +50,9 @@ router.get('/jira-kpis', async (req, res) => {
 
         let tempoMedioResolucao = null;
         if (resolvidos > 0) {
-        const mediaMs = somaTempos / resolvidos;
-        const mediaMin = mediaMs / (1000 * 60);
-        tempoMedioResolucao = `${Math.round(mediaMin)} minutos`;
-}
+            const mediaMin = somaTempos / resolvidos / (1000 * 60);
+            tempoMedioResolucao = `${Math.round(mediaMin)} minutos`;
+        }
 
         res.json({
             totalChamados,
@@ -66,6 +65,7 @@ router.get('/jira-kpis', async (req, res) => {
         res.status(500).json({ error: 'Erro ao buscar dados do Jira', detalhe: error.message });
     }
 });
+
 
 router.get('/jira-funcionarios', async (req, res) => {
     try {

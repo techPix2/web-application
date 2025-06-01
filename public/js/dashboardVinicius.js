@@ -169,7 +169,7 @@ window.graficoChamadosAgrupado = new Chart(ctx, {
                     autoSkip: true,
                     maxTicksLimit: 20,
                     font: {
-                        size: 10
+                        size: 8
                     }
                 }
             },

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9); 
+            z-index: 9999;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        
+        #loading-overlay p {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        custom-main {
+            opacity: 1; 
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        custom-main.hidden {
+            opacity: 0;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+
+<body> 
+    <div id="loading-overlay">
+        <div id="loading-spinner"></div>
+        <p>Carregando dados...</p>
+    </div>
+
+    <nav-bar></nav-bar>
+    <custom-main class="hidden" style="width: 100%;"> 
+        <chart-container>
+            <div class="dashboard-content" style="margin-top: 2em;"> 
+                <div
+                    style="display: flex; align-items: center; justify-content: center; padding-bottom: 15px; height: 2em;">
+                    <select name="" id="periodoSelect"
+                        style="width: 25%; height: 100%; text-align: center; background-color: rgb(241, 241, 241); border: none; border-radius: 5px; font-size: 16px; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;">
+                        <option value="30" selected>30 dias</option>
+                        <option value="90">90 dias</option>
+                        <option value="180">180 dias</option>
+                        <option value="360">360 dias</option>
+                    </select>
+                </div>
+                <div class="kpi-container"
+                    style="display: flex; flex-direction: row; justify-content: space-around; margin-bottom: 20px;">
+                    <div id="kpi-card-mes-alertas" class="kpi-card"
+                        style="width: 25%; text-align: center;border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;">
+                        <h3>Mês com mais alertas</h3>
+                        <p id="kpi-mes-alertas-valor" class="kpi-value"
+                            style="color: #1a73e8;font-size: 27px; font-weight: 700;">-</p>
+                    </div>
+                    <div class="kpi-card"
+                        style=" width: 25%; text-align: center; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;">
+                        <h3>Dia da semana com mais alertas</h3>
+                        <p id="kpi-dia-semana-alertas-valor" class="kpi-value"
+                            style="color: #1a73e8;font-size: 27px; font-weight: 700">-</p>
+                    </div>
+                    <div class="kpi-card"
+                        style=" width: 25%; text-align: center;border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;">
+                        <h3>Componente que mais emitiu alertas</h3>
+                        <p id="kpi-componente-alertas-valor" class="kpi-value"
+                            style="color: #1a73e8;font-size: 27px; font-weight: 700">-</p>
+                    </div>
+                </div>
+
+
+                <div class="charts-container">
+                    
+                    <div class="chart-row" id="graficos_dias" style="display: flex; flex-direction: row; justify-content:space-around;">
+                        <div class="chart" id="consumoComponente"
+                            style="width: 48%; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px; border-radius: 13px;">
+                        </div>
+                        <div class="chart" id="frequenciaCPU"
+                            style="width: 48%; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px; border-radius: 13px;">
+                        </div>
+                    </div>
+                    <div class="chart-row"
+                        style="display:flex; justify-content: space-around; flex-direction: row; padding-top: 35px;">
+                        <div class="chart" id="barraGrupoProcesso"
+                            style="width: 48%; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px; border-radius: 13px;">
+                        </div>
+                        <div class="chart" id="barrasProcessoRAM"
+                            style="width: 48%; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px; border-radius: 13px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </chart-container>
+    </custom-main>
+
+    <script src="../../components/navbar/navbar.js"></script>
+    <script src="../../public/components/customMain/custommain.js"></script>
+    <script type="module" src="../js/dashboardFelipe.js"></script>
+</body>
+
+</html>

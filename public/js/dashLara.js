@@ -23,11 +23,11 @@ var options = {
 var chart = new ApexCharts(document.querySelector("#chart"), options);
 chart.render();
 
-// Declarar variáveis globais - aguardar DOM carregar
+//variáveis globais
 let tabelaServidores;
 let compMaisAlertas;
 
-// Inicializar após DOM carregar
+//inicializa
 document.addEventListener('DOMContentLoaded', function () {
   tabelaServidores = document.getElementById('tabelaServidores');
   compMaisAlertas = document.getElementById('compMaisAlertas');
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-// função para buscar os servidores com alerta
+//função para buscar os servidores com alerta
 async function buscarServidoresComAlerta() {
   let listaAlertas = [];
 
@@ -68,14 +68,14 @@ async function buscarServidoresComAlerta() {
         horaAlerta: alerta.alert_time
       };
 
-      //tipo de alerta é CPU ou RAM e incrementa o contador para a KPI
-      if (alerta.tipoAlerta === 'CPU') {
+      //tipo de alerta e incrementa o contador para a KPI
+      if (servidor.tipoAlerta === 'CPU') {
         jsonAlertas[0].CPU += 1;
-      } else if (alerta.tipoAlerta === 'RAM') {
+      } else if (servidor.tipoAlerta === 'RAM') {
         jsonAlertas[0].RAM += 1;
       }
 
-      // Só adiciona se NÃO existir já um item com mesmo id e tipoAlerta
+      //adiciona se NÃO existir um item com mesmo id e tipoAlerta
       if (!listaAlertas.some(item => item.id === servidor.id && item.tipoAlerta === servidor.tipoAlerta)) {
         listaAlertas.push(servidor);
       }
@@ -95,25 +95,28 @@ async function buscarServidoresComAlerta() {
       //mostra os dados
       for (const alerta of listaAlertas) {
         tabelaServidores.innerHTML += `
-                <tr>
-                    <td>${alerta.nome}</td>
-                    <td style="color:red; font-weight:bold">CRÍTICO</td>
-                    <td>${alerta.tipoAlerta}</td>
-                    <td style="color:red; font-weight:bold">${alerta.uso}%</td>
-                    <td>
-                        <button class="button-eye" data-id="${alerta.id}">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
+      <tr>
+        <td>${alerta.nome}</td>
+        <td style="color:red; font-weight:bold">CRÍTICO</td>
+        <td>${alerta.tipoAlerta}</td>
+        <td style="color:red; font-weight:bold">${alerta.uso}%</td>
+        <td>
+          <button class="button-eye" data-id="${alerta.id}">
+            <i class="bi bi-eye"></i>
+          </button>
+        </td>
+      </tr>
+      <tr class="grafico-row" id="grafico-row-${alerta.id}" style="display:none;">
+        <td colspan="5">
+          <div class="graficoServidor" id="graficoServidor-${alerta.id}"></div>
+        </td>
+      </tr>
+    `;
       }
 
       document.querySelectorAll('.button-eye').forEach(button => {
         button.addEventListener('click', function () {
           const servidorId = this.getAttribute('data-id');
-
-          console.log(`Exibindo gráfico para o servidor com ID: ${servidorId}`);
           mostrarGraficoServidor(servidorId);
         });
       });
@@ -125,8 +128,31 @@ async function buscarServidoresComAlerta() {
   }
 }
 
+//variável global para controlar o gráfico aberto
+let servidorGraficoAberto = null;
+
 function mostrarGraficoServidor(idServer) {
-  // Lógica para buscar dados do servidor e renderizar o gráfico
+  //esconde o gráfico de antes se TIVER aberto
+
+  if (servidorGraficoAberto && servidorGraficoAberto !== idServer) {
+    document.getElementById(`grafico-row-${servidorGraficoAberto}`).style.display = 'none';
+    document.getElementById(`graficoServidor-${servidorGraficoAberto}`).innerHTML = '';
+  }
+
+  const graficoRow = document.getElementById(`grafico-row-${idServer}`);
+  const chartContainer = document.getElementById(`graficoServidor-${idServer}`);
+
+  //se já estiver aberto para este servidor ele fecha
+  if (servidorGraficoAberto === idServer) {
+    graficoRow.style.display = 'none';
+    chartContainer.innerHTML = '';
+    servidorGraficoAberto = null;
+    return;
+  }
+
+  servidorGraficoAberto = idServer;
+  graficoRow.style.display = '';
+
   fetch(`/servidores/dados/${idServer}`)
     .then(response => {
       if (!response.ok) {
@@ -135,23 +161,24 @@ function mostrarGraficoServidor(idServer) {
       return response.json();
     })
     .then(data => {
-      // Renderizar o gráfico com os dados recebidos
-      console.log("Dados do servidor recebidos:", data);
       const options = {
-        series: data.series, // Supondo que 'data.series' contém os dados do gráfico
+        series: data.series,
         chart: {
-          type: 'bar', // Tipo de gráfico
+          type: 'line',
           height: 350
         },
         xaxis: {
-          categories: data.categories // Supondo que 'data.categories' contém as categorias do eixo X
+          categories: data.categories
         }
       };
-      const chart = new ApexCharts(document.querySelector("#graficoServidor"), options);
+      chartContainer.innerHTML = ""; //limpa o gráfico de antes
+
+      //cria o gráfico com os dados 
+      const chart = new ApexCharts(chartContainer, options);
       chart.render();
-      document.getElementById('chartServidores').style.display = 'block'; // Mostrar o gráfico
     })
     .catch(error => {
+      chartContainer.innerHTML = '<span style="color:red;">Erro ao carregar gráfico.</span>';
       console.error("Erro ao buscar dados do servidor:", error);
     });
 }
@@ -271,9 +298,10 @@ async function enviar() {
   }
 }
 
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', () => {
   buscarServidoresComAlerta();
   buscarChamadosStatus();
   buscarChamadosUltimoDia();
   fetchMessages();
-};
+});
+

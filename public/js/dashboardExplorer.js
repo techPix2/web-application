@@ -160,6 +160,45 @@ function atualizarPathContainer(path) {
 
 let arquivosRecebidos = [];
 
+function extrairNomeMaquina(filePath) {
+    if (!filePath || typeof filePath !== 'string') return 'desconhecido';
+
+    const partesPath = filePath.split('/');
+    const nomeArquivo = partesPath[partesPath.length - 1];
+
+    const nomeSemExtensao = nomeArquivo.split('.')[0];
+    const partes = nomeSemExtensao.split('_');
+
+    if (partes.length >= 2) {
+        return partes[1];
+    }
+    return 'desconhecido';
+}
+
+function combinarDadosPorMaquina(arquivos) {
+    const maquinas = {};
+
+    arquivos.forEach(arquivo => {
+        const nomeMaquina = extrairNomeMaquina(arquivo.filePath);
+
+        if (!maquinas[nomeMaquina]) {
+            maquinas[nomeMaquina] = [];
+        }
+
+        if (Array.isArray(arquivo.content)) {
+            maquinas[nomeMaquina].push(...arquivo.content);
+        } else {
+            console.warn(`Arquivo sem conteúdo válido: ${arquivo.filePath}`);
+        }
+    });
+
+
+    return Object.entries(maquinas).map(([maquina, content]) => ({
+        maquina,
+        content
+    }));
+}
+
 async function enviarArquivosSelecionados() {
     try {
         if (selects.length === 0) {
@@ -186,6 +225,36 @@ async function enviarArquivosSelecionados() {
         const arquivosRecebidos = await response.json();
         console.log('Arquivos JSON recebidos:', arquivosRecebidos);
 
+        const maquinasMap = {};
+
+        arquivosRecebidos.forEach(arquivo => {
+
+            const partes = arquivo.filePath.split(/[/\\]/);
+            const nomeArquivo = partes[partes.length - 1];
+            const nomeMaquina = nomeArquivo.split('_')[1] || 'desconhecido';
+
+            if (!maquinasMap[nomeMaquina]) {
+                maquinasMap[nomeMaquina] = [];
+            }
+
+            maquinasMap[nomeMaquina].push(...arquivo.content);
+        });
+
+        const nomesMaquinas = Object.keys(maquinasMap);
+        const dadosAgrupados = nomesMaquinas.map(nome => ({
+            maquina: nome,
+            content: maquinasMap[nome]
+        }));
+
+        console.log("Máquinas agrupadas:", nomesMaquinas);
+        console.log("Dados combinados por máquina:", dadosAgrupados);
+        window.dadosPorMaquinaGlobal = dadosAgrupados;
+        console.log('dadosPorMaquinaGlobal', window.dadosPorMaquinaGlobal);
+
+
+
+        popularSelectMaquinas(dadosAgrupados, '#selectMaquina');
+
         document.querySelectorAll('.dash').forEach(el => {
             el.style.display = 'flex';
         });
@@ -194,14 +263,18 @@ async function enviarArquivosSelecionados() {
             el.style.display = 'none';
         });
 
-        plotarDadosNosGraficos(arquivosRecebidos);
+        setTimeout(() => {
+            const select = document.querySelector('#selectMaquina');
+            const maquinaSelecionada = select?.value;
+            if (maquinaSelecionada && window.dadosPorMaquinaGlobal) {
+                plotarGraficoComponentes(maquinaSelecionada, window.dadosPorMaquinaGlobal);
+            }
+        }, 100); // 100ms geralmente é suficiente
 
     } catch (error) {
         console.error('Erro no front-end ao buscar arquivos:', error);
         alert(error.message);
     }
 }
-
-
 
 buscarEListarArquivos('')

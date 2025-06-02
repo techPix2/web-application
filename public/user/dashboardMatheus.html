@@ -5,15 +5,22 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="../css/dashMatheus.css">
     <script src="../components/customMain/custommain.js"></script>
+    <script src="../js/dashboardMatheus.js"></script>
     <script src="../components/navbar/navbar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+
     <script src="../components/gustavo/chart-container/ChartContainer.js"></script>
 </head>
-<body>
+<body onload="carregarDados()">
     <nav-bar></nav-bar>
-    <custom-main>
+   <custom-main>
     <div class="container">
+    
     <div class="header">
         <h1>Monitoramento do servidor: </h1>
+      
+        
     </div>  
     <div class="kpis">
 <div class="kpi">
@@ -23,8 +30,8 @@
             <img src="../assets/imgs/cpu.png" class="kpi-icon" alt="CPU">
             <span>Uso de CPU</span>
         </div>
-        <div class="kpi-meio">80%</div>
-          <span style ="color: red;">Limite: 70%</span>     
+      <div class="kpi-meio">80%</div>   <!--  aqui vai a porcentagem de cpu  -->
+          <span style ="color: red;">Limite: 75%</span>     
     </div>
     <hr>
          <div class="kpi-conteudo">
@@ -41,8 +48,8 @@
             <img src="../assets/imgs/ram.png" class="kpi-icon" alt="RAM">
             <span>Uso de Ram</span>
         </div>
-        <div class="kpi-meio">78%</div>
-        <span style ="color: red;">Limite: 70%</span>     
+        <div class="kpi-meio">78%</div>   <!--  aqui vai a porcentagem de ram  -->
+        <span style ="color: red;">Limite: 75%</span>     
     </div>
     <hr>
       <div class="kpi-conteudo">
@@ -59,8 +66,8 @@
             <img src="../assets/imgs/disco.png" class="kpi-icon" alt="Disco">
             <span>Uso de Disco</span>
         </div>
-        <div class="kpi-meio">65%</div>
-        <span style ="color: red;">Limite: 70%</span>     
+        <div class="kpi-meio">65%</div> <!--  aqui vai a porcentagem de disco  -->
+        <span style ="color: red;">Limite: 75%</span>     
     </div>
     <hr>
       <div class="kpi-conteudo">
@@ -73,102 +80,104 @@
     </div>
     
     <div class="content">
-        <div class="graficos">
-            <div class="grafico">
-                <div class="grafico-titulo">CPU</div>
-            </div>
-            
-            <div class="grafico">
-                <div class="grafico-titulo">Memória</div>
-               
-            </div>
-            
-            <div class="grafico">
-                <div class="grafico-titulo">Disco</div>
-               
-            </div>
-            
-            <div class="grafico">
-                <div class="grafico-titulo">Rede</div>
-            </div>
-        </div>
+       <div class="graficos">
+    <div class="grafico">
+        <div class="grafico-titulo">CPU</div>
+        <div id="chartcpu" style="width: 100%; height: 100%;"></div>
+    </div>
+    
+    <div class="grafico">
+        <div class="grafico-titulo">Memória</div>
+        <div id="chartram" style="width: 100%; height: 100%;"></div>
+    </div>
+    
+    <div class="grafico">
+        <div class="grafico-titulo">Disco</div>
+        <div id="chartdisco" style="width: 100%; height: 100%;"></div>            
+    </div>
+
+    <div class="grafico">
+        <div class="grafico-titulo">Rede</div>
+        <div id="chartrede" style="width: 100%; height: 100%;"></div>
+    </div>
+</div>
         
         <div class="lista-processos">
             <div class="titulo-lista">Processos em Execução</div>
             
             <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">chrome.exe</div>
-                    <div class="uso-cpu">42% CPU</div>
+                    <div class="nome-processo">chrome.exe</div>  
+                    <div class="uso-cpu">42% CPU</div>   
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
             
             <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">captura.exe</div>
-                    <div class="uso-cpu">28% CPU</div>
+                    <div class="nome-processo">captura.exe</div>    
+                    <div class="uso-cpu">28% CPU</div>  
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
             
             <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">mysqld.exe</div>
-                    <div class="uso-cpu">15% CPU</div>
+                    <div class="nome-processo">mysqld.exe</div>  
+                    <div class="uso-cpu">15% CPU</div>  
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
             
             <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">explorer.exe</div>
-                    <div class="uso-cpu">8% CPU</div>
+                    <div class="nome-processo">explorer.exe</div>  
+                    <div class="uso-cpu">8% CPU</div> 
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
             
             <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">spotify.exe</div>
-                    <div class="uso-cpu">4% CPU</div>
+                    <div class="nome-processo">spotify.exe</div>   
+                    <div class="uso-cpu">4% CPU</div>  
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
             
             <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">discord.exe</div>
-                    <div class="uso-cpu">3% CPU</div>
+                    <div class="nome-processo">discord.exe</div>   
+                    <div class="uso-cpu">3% CPU</div>  
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
             
             <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">teams.exe</div>
-                    <div class="uso-cpu">2% CPU</div>
+                    <div class="nome-processo">teams.exe</div>   
+                    <div class="uso-cpu">2% CPU</div>  
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
              <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">excel.exe</div>
-                    <div class="uso-cpu">2% CPU</div>
+                    <div class="nome-processo">excel.exe</div>   
+                    <div class="uso-cpu">2% CPU</div>  
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
              <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">copilot.exe</div>
-                    <div class="uso-cpu">2% CPU</div>
+                    <div class="nome-processo">copilot.exe</div>   
+                    <div class="uso-cpu">2% CPU</div>  
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>
             <div class="processo">
                 <div class="info-processo">
-                    <div class="nome-processo">GPT.exe</div>
-                    <div class="uso-cpu">2% CPU</div>
+                    <div class="nome-processo">GPT.exe</div>   
+                    <div class="uso-cpu">2% CPU</div>   
                 </div>
                 <button class="botao-encerrar">Encerrar</button>
             </div>

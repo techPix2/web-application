@@ -8,24 +8,18 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-
-.kpi-container{
+/* KPI */
+.kpi-container {
     display: flex;
-    gap: 24px;
+    gap: 30px;
     position: absolute;
-<<<<<<< HEAD
-    max-width: 960px;
-    top: 20px;
-    left: 20%;
-    z-index: 10;
-=======
-    max-width: 800px;
+    max-width: 950px;
+    height: 150px;
     top: 5%;
     left: 22%;
->>>>>>> main
 }
 
-.kpi{
+.kpi {
     background-color: white;
     flex: 1;
     padding: 20px;
@@ -34,137 +28,247 @@ body {
     flex-direction: column;
     border-collapse: collapse;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: box-shadow 0.3s ease;
     align-items: center;
 }
 
-.kpi:hover{
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+.kpi:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
- .kpi h1 {
-<<<<<<< HEAD
-    font-size: 3rem;
-=======
+.kpi h1 {
     font-size: 2rem;
->>>>>>> main
     font-weight: 700;
-    color: #0078d7;
+    color: #f50000;
     margin: 0;
-  }
+}
 
 .kpi h2 {
     color: #000000;
-<<<<<<< HEAD
     font-weight: 600;
-=======
     font-weight: 500;
->>>>>>> main
     font-size: 1.2rem;
     margin: 0 0 16px;
     text-align: center;
-  }
- 
-.listagem-titulo{
+}
+
+
+.kpi span {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #f50000;
+}
+
+/* listagem */
+.listagem-titulo {
     display: flex;
     gap: 24px;
     position: absolute;
     max-width: 960px;
     top: 25%;
-<<<<<<< HEAD
-    left: 20%;
-=======
-    left: 22%;
->>>>>>> main
+    left: 18%;
     z-index: 10;
 }
 
-
-.listagem-titulo h1{
-<<<<<<< HEAD
-    font-size: 2rem;
-=======
+.listagem-titulo h1 {
     font-size: 1.5rem;
->>>>>>> main
     font-weight: 700;
     color: #0078d7;
     margin: 0;
 }
 
-
-.listagem-container{
+/* tabela listagem */
+.listagem-container {
     display: flex;
     flex-direction: row;
-<<<<<<< HEAD
-    gap: 24px;
-    position: absolute;
-    max-width: 960px;
-    top: 30%;
-    left: 20%;
-    z-index: 10;
-=======
-    gap: 40px;
     position: absolute;
     top: 31%;
-    left: 17%;
->>>>>>> main
+    left: 18%;
     background-color: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 55%;
+    max-height: 600px;
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> main
-.listagem{
-    background-color: white;
-    padding: 10px;
-    border-radius: 12px;
+
+.table-custom {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    width: 100%;
+    max-height: 500px;
+    overflow-y: auto;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
 }
 
-<<<<<<< HEAD
-=======
-.listagem h2{
+
+/* cabeçalho fixo */
+.table-custom thead {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background-color: #f8f9fa;
+}
+
+
+.table-custom th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
     font-weight: 600;
-    font-size: 1.2rem;
-    text-align: center;
+    color: #000000;
+    padding: 15px 12px;
+}
+
+.table-custom td {
+    padding: 15px 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.expand-btn {
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.expand-btn:hover {
+    color: #495057;
+}
+
+.expand-btn i {
+    transition: transform 0.3s ease;
+}
+
+.server-name {
+    font-weight: 500;
+    color: #212529;
+}
+
+.servers-section {
+    margin: 2rem 0;
+}
+
+.button-eye {
+    margin-left: auto;
+    margin-bottom: 1rem;
 }
 
 
+/* config do scrollbar */
+.table-custom::-webkit-scrollbar {
+    width: 5px;
+}
 
-.slack-container{
+.table-custom::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+/* slack */
+.slack-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     position: absolute;
     max-width: 960px;
     top: 5%;
     right: 5%;
-    z-index: 10;
     background-color: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    height: 350px;
+    height: 450px;
     width: 400px;
+    overflow: hidden;
 }
 
-.slack h1{
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #0078d7;
-    margin: 0;
+.slack-header {
+    background: #0078d7;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.mensagens-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: whitesmoke;
+}
+
+.input-container {
+    padding: 20px;
+    background: whitesmoke;
+    border-top: 1px solid #eee;
     display: flex;
-    justify-content: center;
+    gap: 10px;
+}
+
+.mensagem-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.send-button {
+    padding: 12px 24px;
+    background: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.send-button:hover {
+    background: #2c1a5e;
+}
+
+.mensagem {
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+.mensagem-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  color: #555;
+}
+.mensagem-usuario {
+  font-weight: bold;
+  color: #0078d7;
+}
+.mensagem-data {
+  font-style: italic;
+}
+.mensagem-texto {
+  margin-top: 4px;
+  font-size: 1em;
+  color: #222;
 }
 
 
+/* grafico uso dos servidores */
 .chart-container {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     position: absolute;
     max-width: 960px;
     top: 55%;
@@ -187,5 +291,3 @@ body {
     justify-content: center;
 }
 
-
->>>>>>> main

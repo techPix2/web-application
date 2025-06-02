@@ -26,21 +26,22 @@ chart.render();
 //variáveis globais
 let tabelaServidores;
 let compMaisAlertas;
-
-//inicializa
+let historicoCPU =[]
+let historicoRAMpercent=[]
+let chartCPU
+//inicializa e armazena os dados da tabela e kpis
 document.addEventListener('DOMContentLoaded', function () {
   tabelaServidores = document.getElementById('tabelaServidores');
   compMaisAlertas = document.getElementById('compMaisAlertas');
   buscarServidoresComAlerta();
 });
 
-
-
 //função para buscar os servidores com alerta
 async function buscarServidoresComAlerta() {
   let listaAlertas = [];
 
   try {
+    //busca o id da empresa ou usa 1 como padrão
     const fk_company = sessionStorage.ID_EMPRESA || 1;
     const response = await fetch(`/servidores/listarServidoresComAlerta/${fk_company}`);
 
@@ -48,9 +49,11 @@ async function buscarServidoresComAlerta() {
       throw new Error(`Erro ao buscar servidores: ${response.status}`);
     }
 
+    //requisição para pegar os dados dos servidores com alerta
     const alertas = await response.json();
     console.log(alertas);
 
+    //contador
     let jsonAlertas = [{
       CPU: 0,
       RAM: 0
@@ -58,6 +61,8 @@ async function buscarServidoresComAlerta() {
 
     tabelaServidores.innerHTML = ""; //limpar tabela
 
+
+    //inicializa o contador
     for (const alerta of alertas) {
       const servidor = {
         id: alerta.idServer,
@@ -83,18 +88,18 @@ async function buscarServidoresComAlerta() {
     }
 
     //atualiza a kpi
-      if (jsonAlertas[0].CPU > jsonAlertas[0].RAM) {
-        compMaisAlertas.innerHTML = `CPU`;
-      } else if (jsonAlertas[0].RAM > jsonAlertas[0].CPU) {
-        compMaisAlertas.innerHTML = `RAM`;
-      } else {
-        compMaisAlertas.innerHTML = `CPU | RAM`;
-      }
- 
+    if (jsonAlertas[0].CPU > jsonAlertas[0].RAM) {
+      compMaisAlertas.innerHTML = `CPU`;
+    } else if (jsonAlertas[0].RAM > jsonAlertas[0].CPU) {
+      compMaisAlertas.innerHTML = `RAM`;
+    } else {
+      compMaisAlertas.innerHTML = `CPU | RAM`;
+    }
 
-      //mostra os dados
-      for (const alerta of listaAlertas) {
-        tabelaServidores.innerHTML += `
+
+    //mostra os dados na tabela
+    for (const alerta of listaAlertas) {
+      tabelaServidores.innerHTML += `
       <tr>
         <td>${alerta.nome}</td>
         <td style="color:red; font-weight:bold">CRÍTICO</td>
@@ -112,16 +117,18 @@ async function buscarServidoresComAlerta() {
         </td>
       </tr>
     `;
-      }
+    }
 
-      document.querySelectorAll('.button-eye').forEach(button => {
-        button.addEventListener('click', function () {
-          const servidorId = this.getAttribute('data-id');
-          mostrarGraficoServidor(servidorId);
-        });
+
+    //função do olho para mostrar o gráfico
+    document.querySelectorAll('.button-eye').forEach(button => {
+      button.addEventListener('click', function () {
+        const servidorId = this.getAttribute('data-id');
+        mostrarGraficoServidor(servidorId);
       });
-    
-  } 
+    });
+
+  }
   catch (error) {
     console.error("Erro ao buscar alertas:", error);
     alert("Não foi possível carregar os alertas. Por favor, tente novamente mais tarde.");
@@ -132,8 +139,8 @@ async function buscarServidoresComAlerta() {
 let servidorGraficoAberto = null;
 
 function mostrarGraficoServidor(idServer) {
-  //esconde o gráfico de antes se TIVER aberto
 
+  //fecha o gráfico de antes
   if (servidorGraficoAberto && servidorGraficoAberto !== idServer) {
     document.getElementById(`grafico-row-${servidorGraficoAberto}`).style.display = 'none';
     document.getElementById(`graficoServidor-${servidorGraficoAberto}`).innerHTML = '';
@@ -142,7 +149,7 @@ function mostrarGraficoServidor(idServer) {
   const graficoRow = document.getElementById(`grafico-row-${idServer}`);
   const chartContainer = document.getElementById(`graficoServidor-${idServer}`);
 
-  //se já estiver aberto para este servidor ele fecha
+  //se estiver aberto para este servidor ele fecha
   if (servidorGraficoAberto === idServer) {
     graficoRow.style.display = 'none';
     chartContainer.innerHTML = '';
@@ -153,6 +160,7 @@ function mostrarGraficoServidor(idServer) {
   servidorGraficoAberto = idServer;
   graficoRow.style.display = '';
 
+  //busca os dados do servidor
   fetch(`/servidores/dados/${idServer}`)
     .then(response => {
       if (!response.ok) {
@@ -173,7 +181,7 @@ function mostrarGraficoServidor(idServer) {
       };
       chartContainer.innerHTML = ""; //limpa o gráfico de antes
 
-      //cria o gráfico com os dados 
+      //cria o gráfico com os dados
       const chart = new ApexCharts(chartContainer, options);
       chart.render();
     })
@@ -190,6 +198,7 @@ function mostrarGraficoServidor(idServer) {
 async function buscarChamadosUltimoDia() {
   console.log("Buscando dados do Jira...");
   try {
+    //buscando dados dos chamados abertos do ULTIMO DIA do jira
     resposta = await fetch("/apiJira/jira-kpis?filtro=dia");
     const dados = await resposta.json();
     console.log("Dados do Jira recebidos:", dados);
@@ -212,6 +221,7 @@ async function buscarChamadosUltimoDia() {
 async function buscarChamadosStatus() {
   console.log("Buscando dados do Jira...");
   try {
+    //buscando dados do TOTAL dos chamados ABERTOS do jira
     resposta = await fetch("/apiJira/jira-kpis?filtro=status");
     const dados = await resposta.json();
     console.log("Dados do Jira recebidos:", dados);
@@ -234,6 +244,8 @@ async function buscarChamadosStatus() {
 // slack
 async function fetchMessages() {
   try {
+
+    //busca as mensagens
     const response = await fetch('/apiSlack/mensagens');
 
     if (!response.ok) {
@@ -245,6 +257,8 @@ async function fetchMessages() {
     mensagensContainer.innerHTML = '';
     console.log("Mensagens recebidas:", messages);
     messages.forEach((message) => {
+
+      //formata a data e hora
       const data = new Date(parseFloat(message.ts) * 1000).toLocaleString();
       const user = message.user || 'Bot';
       const text = message.text || '';
@@ -272,6 +286,8 @@ async function enviar() {
   const messageText = messageInput.value;
   if (messageText) {
     try {
+
+      //envia a mensagem
       const response = await fetch('/apiSlack/enviarMensagem', {
         method: 'POST',
         headers: {
@@ -287,8 +303,8 @@ async function enviar() {
       const result = await response.json();
       if (result.ok) {
         console.log(`Mensagem enviada com sucesso: ${result.ts}`);
-        messageInput.value = ''; // Limpa o campo de entrada
-        fetchMessages(); // Atualiza a lista de mensagens
+        messageInput.value = ''; //limpa o campo do input
+        fetchMessages(); //atualiza a lista de mensagens
       } else {
         console.error("Erro ao enviar mensagem:", result.error);
       }
@@ -298,10 +314,92 @@ async function enviar() {
   }
 }
 
+async function carregarDados() {
+  try {
+    const response = await fetch('/dashMatheus/dadosRecebidos', {
+      method: 'GET',
+    });
+    const resultado = await response.json();
+    const dados = resultado.dadosEnviados
+    console.log(dados)
+    return dados;
+  } catch (error) {
+    console.error("Erro ao carregar dados:", error);
+  }
+
+}
+
+async function carregarGraficos() {
+  const dados = await carregarDados();
+
+  function adicionarComLimite(historico, valor) {
+    if (historico.length >= 10) {
+      historico.shift();
+    }
+    historico.push(valor);
+  }
+
+  const cpuUsage = dados && dados.cpu && typeof dados.cpu["Uso (%)"] !== 'undefined' ? dados.cpu["Uso (%)"] : 0;
+  const ramUsage = dados && dados.ram && typeof dados.ram["Uso (%)"] !== 'undefined' ? dados.ram["Uso (%)"] : 0;
+
+  adicionarComLimite(historicoCPU, cpuUsage);
+  adicionarComLimite(historicoRAMpercent, ramUsage);
+
+  const containerChartCPU = document.querySelector("#monitorGeralCPURAM"); 
+
+  if (!containerChartCPU) {
+    console.error("Contêiner #monitorGeralCPURAM não encontrado para chartCPU.");
+    return;
+  }
+
+  if (!chartCPU) {
+    chartCPU = new ApexCharts(containerChartCPU, {
+      series: [
+        { name: "CPU (%)", data: historicoCPU },
+        { name: "RAM (%)", data: historicoRAMpercent }
+      ],
+      chart: {
+        type: "line",
+        height: 300,
+        animations: {
+          enabled: true,
+          easing: 'linear',
+          dynamicAnimation: {
+            speed: 1000
+          }
+        }
+      },
+      tooltip: {
+        x: {
+          format: 'dd MMM HH:mm:ss' 
+        }
+      },
+      xaxis: {
+      },
+      yaxis: {
+        min: 0,
+        max: 100,
+        title: { text: "Uso" }
+      },
+      stroke: {
+        curve: 'smooth'
+      }
+    });
+    chartCPU.render();
+  } else {
+    chartCPU.updateSeries([
+      { name: "CPU (%)", data: historicoCPU },
+      { name: "RAM (%)", data: historicoRAMpercent }
+    ]);
+  }
+}
+
+//executando as funções
 document.addEventListener('DOMContentLoaded', () => {
   buscarServidoresComAlerta();
   buscarChamadosStatus();
   buscarChamadosUltimoDia();
   fetchMessages();
+  setInterval(carregarGraficos, 2000)
 });
 

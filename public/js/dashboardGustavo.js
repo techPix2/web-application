@@ -289,10 +289,8 @@ function popularSelectMaquinas(dadosPorMaquinaGlobal) {
 }
 
 function plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada) {
-    // Converte o objeto em array de máquinas
     const maquinasArray = Object.values(dadosPorMaquinaGlobal);
 
-    // Encontra os dados da máquina selecionada
     const dadosMaquina = maquinasArray.find(maquina => maquina.maquina === idMaquinaSelecionada)?.content;
 
     if (!dadosMaquina || dadosMaquina.length === 0) {
@@ -300,26 +298,21 @@ function plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada) {
         return;
     }
 
-    // Extrai as categorias (datas/horas)
     const categorias = dadosMaquina.map(item => item.data_hora);
 
-    // Série fixa para CPU
     const series = [{
         name: 'Uso de CPU (%)',
         data: dadosMaquina.map(item => parseFloat(item.cpu_percent))
     }];
 
-    // Série fixa para RAM
     series.push({
         name: 'Uso de RAM (%)',
         data: dadosMaquina.map(item => parseFloat(item.ram_percent))
     });
 
-    // Detecta automaticamente quantos discos existem
     const discos = [];
     const primeiroRegistro = dadosMaquina[0];
 
-    // Procura por todas as propriedades de disco
     for (const key in primeiroRegistro) {
         if (key.startsWith('disco_') && key.endsWith('_percent')) {
             const discoNome = key.split('_')[1].toUpperCase();
@@ -329,7 +322,6 @@ function plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada) {
         }
     }
 
-    // Calcula a média dos discos para cada ponto de dados
     if (discos.length > 0) {
         const mediaDiscos = dadosMaquina.map(item => {
             let soma = 0;
@@ -346,16 +338,98 @@ function plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada) {
             return contador > 0 ? soma / contador : 0;
         });
 
-        // Adiciona apenas uma série para a média dos discos
         series.push({
             name: 'Média de Discos (%)',
             data: mediaDiscos
         });
     }
 
-    // Atualiza o gráfico
     chartComponentes.updateOptions({
         xaxis: { categories: categorias, max: 5 },
         series: series
     });
+}
+
+function plotarGraficoDiscoComparativo(dadosPorMaquinaGlobal) {
+    const maquinasArray = Object.values(dadosPorMaquinaGlobal);
+
+    const discosSet = new Set();
+
+    maquinasArray.forEach(maquina => {
+        const primeiroRegistro = maquina.content?.[0];
+        if (!primeiroRegistro) return;
+
+        for (const key in primeiroRegistro) {
+            if (key.startsWith('disco_') && key.endsWith('_percent')) {
+                const discoNome = key.split('_')[1].toUpperCase();
+                discosSet.add(discoNome);
+            }
+        }
+    });
+
+    const discos = Array.from(discosSet).sort();
+
+    const series = maquinasArray.map(maquina => {
+        const dados = maquina.content;
+        if (!dados || dados.length === 0) return null;
+
+        const mediasDiscos = discos.map(disco => {
+            let soma = 0;
+            let contador = 0;
+
+            dados.forEach(item => {
+                const valor = item[`disco_${disco}_percent`];
+                if (valor !== undefined) {
+                    soma += parseFloat(valor);
+                    contador++;
+                }
+            });
+
+            return contador > 0 ? parseFloat((soma / contador).toFixed(2)) : null;
+        });
+
+        return {
+            name: maquina.maquina,
+            data: mediasDiscos
+        };
+    }).filter(Boolean);
+
+    diskChart.updateOptions({
+        series: series,
+        xaxis: {
+            categories: discos.map(disco => `Disco ${disco}`)
+        }
+    });
+}
+
+function calcularMaiorSaturacao(dadosPorMaquinaGlobal) {
+    let maiorSaturacao = 0;
+    let maquinaMaisSaturada = "";
+
+    dadosPorMaquinaGlobal.forEach(maquina => {
+        const nomeMaquina = maquina.maquina;
+
+        maquina.content.forEach(item => {
+            const cpu = parseFloat(item.cpu_percent?.replace(",", ".") || 0);
+            const ram = parseFloat(item.ram_percent?.replace(",", ".") || 0);
+
+            const discoPercents = Object.entries(item)
+                .filter(([key, _]) => key.startsWith("disco_") && key.endsWith("_percent"))
+                .map(([_, value]) => parseFloat(value?.replace(",", ".") || 0));
+
+            const discoMax = Math.max(...discoPercents, 0);
+
+            const saturacao = (cpu * 0.4) + (ram * 0.3) + (discoMax * 0.3);
+
+            if (saturacao > maiorSaturacao) {
+                maiorSaturacao = saturacao;
+                maquinaMaisSaturada = nomeMaquina;
+            }
+        });
+    });
+
+    const elemento = document.getElementById("maiorSaturacao");
+    if (elemento) {
+        elemento.innerText = maquinaMaisSaturada || "N/A";
+    }
 }

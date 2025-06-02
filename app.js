@@ -13,6 +13,7 @@ var path = require("path");
 var PORTA_APP = process.env.APP_PORT;
 var HOST_APP = process.env.APP_HOST;
 
+
 var app = express();
 
 
@@ -20,9 +21,9 @@ var dashMatheusRouter = require("./src/routes/dashmatheus")
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var empresasRouter = require("./src/routes/empresas");
-var techpixRouter = require("./src/routes/techpix");
-var servidorRouter = require("./src/routes/servidores");
-var dashCientistaRouter = require("./src/routes/dashCientista");
+var techpixRouter = require("./src/routes/techpix")
+var servidorRouter = require("./src/routes/servidores")
+var dashCientistaRouter = require("./src/routes/dashCientista")
 var dashAnalistaRouter = require("./src/routes/dashAnalista");
 var gestorRouter = require("./src/routes/gestor")
 var jiraRouter = require("./src/routes/jiraRoute");

@@ -9,7 +9,7 @@ async function carregarDados() {
         }
 
         const resultado = await response.json();
-        const dados = resultado.dadosEnviados || resultado;
+        const dados = resultado.dadosEnviados || resultado; // Tenta "dadosEnviados", senão usa o objeto direto
         console.log("Dados recebidos:", dados);
 
 
@@ -17,10 +17,12 @@ async function carregarDados() {
             throw new Error("Dados não foram recebidos ou estão vazios.");
         }
 
+        // Atualiza KPIs (com fallback para 0 se não existir)
         document.querySelectorAll(".kpi-meio")[0].textContent = `${dados.cpu?.["Uso (%)"] ?? 0}%`;
         document.querySelectorAll(".kpi-meio")[1].textContent = `${dados.ram?.["Uso (%)"] ?? 0}%`;
         document.querySelectorAll(".kpi-meio")[2].textContent = `${dados.disk?.["Uso (%)"] ?? 0}%`;
 
+        // Atualiza processos (só se existir)
         const listaProcessos = document.querySelector(".lista-processos");
         listaProcessos.innerHTML = '<div class="titulo-lista">Processos em Execução</div>';
 

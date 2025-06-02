@@ -4,15 +4,21 @@ const router = express.Router();
 const axios = require('axios');
 
 
+
 router.get('/jira-kpis', async (req, res) => {
-     const filtro = req.query.filtro;
+    const { filtro, start, end } = req.query;
 
     try {
         let jql;
+
         if (filtro === 'status') {
             jql = process.env.JQL_QUERY;
         } else if (filtro === 'dia') {
-            jql = process.env.JQL_DIA;
+            if (start && end) {
+                jql = `created >= "${start}" AND created <= "${end}"`;
+            } else {
+                jql = process.env.JQL_DIA;
+            }
         } else {
             return res.status(400).json({ error: 'Parâmetro "filtro" inválido. Use ?filtro=status ou ?filtro=dia' });
         }
@@ -27,35 +33,38 @@ router.get('/jira-kpis', async (req, res) => {
             }
         });
 
-        const totalChamados = response.data.total;
-        const chamadosEmAndamento = response.data.issues.length;
+        const issues = response.data.issues;
+        const totalChamados = response.data.total || issues.length;
+        const chamadosEmAndamento = issues.filter(issue => !issue.fields.resolutiondate).length;
 
-        res.json({ totalChamados, chamadosEmAndamento});
-    } catch (error) {
-        // Printar variáveis de ambiente usadas
-        console.error('JIRA_DOMAIN:', process.env.JIRA_DOMAIN);
-        console.error('JIRA_USER:', process.env.JIRA_USER);
-        console.error('JIRA_API_TOKEN:', process.env.JIRA_API_TOKEN ? '***' : 'NÃO DEFINIDO');
-        console.error('JQL_QUERY:', process.env.JQL_QUERY);
+        let resolvidos = 0;
+        let somaTempos = 0;
 
-        // Printar detalhes do erro do axios
-        if (error.response) {
-            // Erro de resposta do Jira (ex: 401, 403, 404, 500)
-            console.error('Status:', error.response.status);
-            console.error('Headers:', error.response.headers);
-            console.error('Data:', error.response.data);
-        } else if (error.request) {
-            // Erro de conexão (sem resposta)
-            console.error('Request:', error.request);
-        } else {
-            // Outro erro (ex: erro de código)
-            console.error('Error:', error.message);
+        issues.forEach(issue => {
+            const created = new Date(issue.fields.created);
+            const resolved = issue.fields.resolutiondate ? new Date(issue.fields.resolutiondate) : null;
+
+            if (resolved) {
+                resolvidos++;
+                somaTempos += (resolved - created);
+            }
+        });
+
+        let tempoMedioResolucao = null;
+        if (resolvidos > 0) {
+            const mediaMin = somaTempos / resolvidos / (1000 * 60);
+            tempoMedioResolucao = `${Math.round(mediaMin)} minutos`;
         }
-        // Stack trace
-        console.error('Stack:', error.stack);
 
-        res.status(500).json({ error: 'Erro ao buscar dados do Jira', detalhe: error.message });
-    }
+        res.json({
+            totalChamados,
+            chamadosEmAndamento,
+            tempoMedioResolucao
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar dados do Jira:', error.message);
+        res.status(500).json({ error: 'Erro ao buscar dados do Jira', detalhe: error.message });
+    }
 });
-
 module.exports = router;

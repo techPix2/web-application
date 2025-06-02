@@ -17,7 +17,6 @@ body {
     height: 150px;
     top: 5%;
     left: 22%;
->>>>>>> main
 }
 
 .kpi {
@@ -38,7 +37,6 @@ body {
 
 .kpi h1 {
     font-size: 2rem;
->>>>>>> main
     font-weight: 700;
     color: #f50000;
     margin: 0;
@@ -46,11 +44,8 @@ body {
 
 .kpi h2 {
     color: #000000;
-<<<<<<< HEAD
     font-weight: 600;
-=======
     font-weight: 500;
->>>>>>> main
     font-size: 1.2rem;
     margin: 0 0 16px;
     text-align: center;
@@ -74,11 +69,8 @@ body {
     z-index: 10;
 }
 
-
-
 .listagem-titulo h1 {
     font-size: 1.5rem;
->>>>>>> main
     font-weight: 700;
     color: #0078d7;
     margin: 0;
@@ -98,22 +90,7 @@ body {
     width: 55%;
     max-height: 600px;
 }
-<<<<<<< HEAD
-=======
 
-.critical-status {
-    color: #f50000;
-    font-weight: 600;
-}
-
-.metric-warning {
-    color: #f50000;
-    font-weight: 600;
-}
-
-.metric-normal {
-    color: #000000;
-}
 
 .table-custom {
     background-color: #fff;
@@ -123,9 +100,7 @@ body {
     margin-bottom: 2rem;
     width: 100%;
     max-height: 500px;
-    /* altura da tabela */
     overflow-y: auto;
-    /* scroll */
     display: flex;
     flex-direction: column;
 }
@@ -192,14 +167,13 @@ body {
 
 /* config do scrollbar */
 .table-custom::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
 
 .table-custom::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 3px;
 }
-
 
 /* slack */
 .slack-container {
@@ -267,6 +241,29 @@ body {
     background: #2c1a5e;
 }
 
+.mensagem {
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+.mensagem-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  color: #555;
+}
+.mensagem-usuario {
+  font-weight: bold;
+  color: #0078d7;
+}
+.mensagem-data {
+  font-style: italic;
+}
+.mensagem-texto {
+  margin-top: 4px;
+  font-size: 1em;
+  color: #222;
+}
+
 
 /* grafico uso dos servidores */
 .chart-container {
@@ -293,3 +290,4 @@ body {
     display: flex;
     justify-content: center;
 }
+

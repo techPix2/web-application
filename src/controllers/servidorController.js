@@ -31,6 +31,24 @@ function listarServidoresComAlerta(req,res){
     });
 }
 
+
+function obterDadosServidor(req, res) {
+    //simulando 10 coletas para CPU e RAM //   MUDAR
+    const cpuData = Array.from({length: 10}, () => Math.floor(Math.random() * 100));
+    const ramData = Array.from({length: 10}, () => Math.floor(Math.random() * 100));
+    const categories = [
+        "10min atrás", "9min", "8min", "7min", "6min", "5min", "4min", "3min", "2min", "1min"
+    ];
+    res.json({
+        series: [
+            { name: "CPU", data: cpuData },
+            { name: "RAM", data: ramData }
+        ],
+        categories
+    });
+}
+
+
 module.exports = {
-    listarServidorPorEmpresa, listarServidoresComAlerta
+    listarServidorPorEmpresa, listarServidoresComAlerta, obterDadosServidor
 }

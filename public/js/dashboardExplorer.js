@@ -254,6 +254,7 @@ async function enviarArquivosSelecionados() {
 
         plotarGraficoDiscoComparativo(dadosAgrupados);
         calcularMaiorSaturacao(dadosAgrupados);
+        calcularMaquinaComMaisAlertas(dadosAgrupados);
 
         document.querySelectorAll('.dash').forEach(el => {
             el.style.display = 'flex';

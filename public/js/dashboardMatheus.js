@@ -79,6 +79,14 @@ document.querySelector(".botao-encerrar").forEach(botao => {
             alert(`Falha na comunicação ou na operação de encerrar '${nomeProcesso}':\n${error.message}`);
         });
     });
+
+    fetch('http://localhost:5000/removerProcessos', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ nomePeocesso: proc.name, dataHoraProcesso: new Date().toISOString(), percentualCpuProcesso: proc.cpu_percent, fkMaquina: 1 }) // Ajuste fkMaquina conforme necessário
+    })
 });
             });
         } else {

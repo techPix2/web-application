@@ -13,10 +13,11 @@ async function carregarGraficoStatusChamados(startDate, endDate) {
 
         const corPorStatus = {
             "Work in progress": "#2196f3",
-            "Concluída": "#4caf50",
+            "Concluído": "#4caf50",
             "Fechada": "#f44336",     
             "Reaberto": "#fbc02d",
-            "Aberto": "#9c27b0",        
+            "Aberto": "#9c27b0",
+            "Pending": "#ff9800",        
         };
 
         const cores = statusLabels.map(label => corPorStatus[label] || "#9e9e9e");

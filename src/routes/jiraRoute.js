@@ -121,7 +121,7 @@ router.get('/jira-funcionarios', async (req, res) => {
 
             funcionarios[responsavel].recebidos++;
 
-            if (status.toLowerCase() === 'done' || status.toLowerCase() === 'concluída') {
+            if (status.toLowerCase() === 'done' || status.toLowerCase() === 'concluído') {
                 funcionarios[responsavel].realizados++;
             }
 

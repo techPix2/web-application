@@ -272,7 +272,7 @@ async function enviar() {
   const messageText = messageInput.value;
   if (messageText) {
     try {
-      const response = await fetch('/apiSlack/mensagens', {
+      const response = await fetch('/apiSlack/enviarMensagem', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

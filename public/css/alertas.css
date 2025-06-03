@@ -218,3 +218,10 @@ body {
     margin: 8px auto 24px auto;
 }
 
+.sidebar-separator-bottom {
+    width: 90%;
+    border: none;
+    border-top: 3px solid white;
+    margin: 32px auto 16px auto;
+}
+

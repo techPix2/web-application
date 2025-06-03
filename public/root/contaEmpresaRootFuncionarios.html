@@ -14,24 +14,22 @@
 <body onload="mostrarCards()">
         <div class="container">
             <!-- Sessão Lateral -->
-            <div class="nav-lateral">
-                <div class="nav-logo-user">
-                    <img src="../uploads/perfil-padrão.png" alt="">
+            <div class="nav-lateral sideBar">
+                <div class="profileHeader">
+                    <img src="../uploads/perfil-padrão.png" alt="" class="profilePicture">
+                    <div class="profileInfo">
+                        <span class="usuario">Olá, <span id="razao">Administrador</span> <br> TechPix</span>
+                    </div>
                 </div>
-                <div class="nav-texto">
-                    <h1>Olá, <span id="razao">Administrador</span></h1>
+                <hr class="sidebar-separator">
+                <div class="buttonsNavbar">
+                    <button class="buttonNavbar" onclick="window.location.href='./gerenciamentoServidores.html'">Servidores</button>
+                    <button class="buttonNavbar" onclick="window.location.href='./contaEmpresaRootFuncionarios.html'">Funcionários</button>
+                    <button class="buttonNavbar" onclick="window.location.href='../index.html'">Suporte</button>
                 </div>
-                <div class="nav-botoes">
-                    <a href="./gerenciamentoServidores.html" id="atual" class="btn_nav">Servidores</a>
-                </div>
-                <div class="nav-botoes">
-                    <a href="./contaEmpresaRootFuncionarios.html" id="atual" class="btn_nav_ativado">Funcionários</a>
-                </div>
-                <div class="nav-botoes">
-                    <a href="../index.html" class="btn_nav">Suporte</a>
-                </div>
-                <div class="nav-botoes">
-                    <a href="../index.html" class="btn_nav" id="sair">Sair</a>
+                <hr class="sidebar-separator-bottom">
+                <div class="buttonsBaixo">
+                    <button class="buttonNavbar" onclick="window.location.href='../index.html'">Sair</button>
                 </div>
             </div>
             

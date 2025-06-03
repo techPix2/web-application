@@ -270,35 +270,36 @@ function getSaturationColor(value) {
 
 document.getElementById('selectMaquina').addEventListener('change', function () {
     const idMaquinaSelecionada = this.value;
+    console.log("🔁 Máquina selecionada:", idMaquinaSelecionada);
 
-    // Atualiza gráfico de componentes
-    plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada);
+    // DEBUG: ver todas as máquinas disponíveis
+    console.log("🔍 Todas as máquinas disponíveis:");
+    dadosPorMaquinaGlobal.forEach(m => console.log(m.maquina));
 
-    // Calcula saturação da máquina
-    const saturacao = calcularSaturacaoMaquinaSelecionada(dadosPorMaquinaGlobal, idMaquinaSelecionada);
-
-    // Garante número com duas casas decimais
-    const saturacaoArredondada = parseFloat(saturacao.toFixed(2));
-
-    // Determina a cor correspondente
-    const cor = getSaturationColor(saturacaoArredondada);
+    // DEBUG: ver conteúdo da máquina selecionada
+    const maquinaData = dadosPorMaquinaGlobal.find(m => m.maquina === idMaquinaSelecionada);
+    console.log("📦 Dados da máquina selecionada:", maquinaData);
 
     const alertasMaquinaSelecionada = calcularAlertasMaquinaSelecionada(dadosPorMaquinaGlobal, idMaquinaSelecionada);
+    console.log("🚨 Total de alertas:", alertasMaquinaSelecionada);
 
-    // Atualiza a cor do gráfico
-    saturationChart.updateOptions({
-        colors: [cor]
-    });
+    // ⚙️ Atualiza gráfico de componentes
+    plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada);
 
-    // Atualiza o valor da série
+    // ⚙️ Calcula e atualiza saturação
+    const saturacao = calcularSaturacaoMaquinaSelecionada(dadosPorMaquinaGlobal, idMaquinaSelecionada);
+    const saturacaoArredondada = parseFloat(saturacao.toFixed(2));
+    const cor = getSaturationColor(saturacaoArredondada);
+    saturationChart.updateOptions({ colors: [cor] });
     saturationChart.updateSeries([saturacaoArredondada]);
 
-    // Atualiza o valor textual da máquina selecionada
+    // Atualiza valor textual da saturação
     const elementoSelecionada = document.getElementById("saturacaoMaquinaSelecionada");
     if (elementoSelecionada) {
         elementoSelecionada.innerText = `${idMaquinaSelecionada}: ${saturacaoArredondada}%`;
     }
 
+    // Atualiza número de alertas
     const maquinaSelecionada = document.getElementById("alertasMaquina");
     if(maquinaSelecionada) {
         maquinaSelecionada.innerText = `${alertasMaquinaSelecionada}`;
@@ -571,23 +572,30 @@ function calcularMaquinaComMaisAlertas(dadosPorMaquinaGlobal) {
 }
 
 function calcularAlertasMaquinaSelecionada(dados, idMaquina) {
-    const maquina = dados.find(m => m.maquina === idMaquina);
+    const idMaquinaNormalizada = idMaquina.toLowerCase();
+
+    // Encontra a máquina com o nome normalizado
+    const maquina = dados.find(m => m.maquina.toLowerCase() === idMaquinaNormalizada);
     if (!maquina || !maquina.content.length) return 0;
 
-    // Pega o último registro (mais recente)
-    const ultimo = maquina.content[maquina.content.length - 1];
+    let totalAlertas = 0;
 
-    const cpu = parseFloat(ultimo.cpu_percent?.replace(",", ".") || 0);
-    const ram = parseFloat(ultimo.ram_percent?.replace(",", ".") || 0);
+    maquina.content.forEach(item => {
+        const cpu = parseFloat(item.cpu_percent?.replace(",", ".") || 0);
+        const ram = parseFloat(item.ram_percent?.replace(",", ".") || 0);
 
-    const discoPercents = Object.entries(ultimo)
-        .filter(([key]) => key.startsWith("disco_") && key.endsWith("_percent"))
-        .map(([_, value]) => parseFloat(value?.replace(",", ".") || 0));
+        const discoPercents = Object.entries(item)
+            .filter(([key]) => key.startsWith("disco_") && key.endsWith("_percent"))
+            .map(([_, value]) => parseFloat(value?.replace(",", ".") || 0));
 
-    let alertas = 0;
-    if (cpu > 80) alertas++;
-    if (ram > 80) alertas++;
-    if (discoPercents.some(p => p > 80)) alertas++;
+        const discoAcima = discoPercents.some(p => p > 80);
+        const cpuAcima = cpu > 80;
+        const ramAcima = ram > 80;
 
-    return alertas;
+        if (cpuAcima || ramAcima || discoAcima) {
+            totalAlertas += 1;
+        }
+    });
+
+    return totalAlertas;
 }

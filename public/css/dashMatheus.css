@@ -14,7 +14,7 @@ body {
     background: white;
     border-radius: 8px;
     padding: 18px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     width: 490px;
     height: 313px;
 }
@@ -28,6 +28,7 @@ body {
     flex: 1;
     padding: 20px;
     max-width: 100%;
+    
 
 }
 
@@ -54,12 +55,13 @@ h1 {
     background: white;
     border-radius: 8px;
     padding: 18px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease;
     width: 455px;
     display: flex;
     align-items: space-between;
     justify-content: space-around;
+  
 
 }
 
@@ -67,7 +69,8 @@ hr {}
 
 .kpi:hover {
     transform: scale(1.02);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    
 }
 
 .kpi-comeco {
@@ -125,7 +128,7 @@ hr {}
     background: white;
     border-radius: 8px;
     padding: 18px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .titulo-lista {

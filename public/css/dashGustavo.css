@@ -28,10 +28,23 @@
 
 .kpiValue{
     font-size: 26px;
+    /*justify-content: center;*/
+    align-items: center;
+    display: flex;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 100%
+}
+
+kpiValue2{
+    font-size: 26px;
     justify-content: center;
     align-items: center;
     display: flex;
     width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
     height: 100%
 }
 

@@ -1,0 +1,360 @@
+
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f8fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    font-size: 15px;
+    display: flex;
+}
+
+html, body {
+    height: 100%;
+}
+
+.colunas{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.primeira-coluna {
+    width: 50%;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container {
+    flex: 1;
+    padding: 20px;
+}
+
+.header {
+    margin-bottom: 25px;
+    text-align: start;
+}
+
+.select-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.select-box {
+    display: flex;
+    width: 60%;
+    height: 150px;
+    background: #003F69;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    border-radius: 20px;
+}
+
+.select-box span {
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.box-grafico{
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.grafico{
+    height: 100%;
+    width: 100%;
+    background: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+
+.select-box-item {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.select-data{
+    width: 80%;
+    display: flex;
+    justify-content: space-evenly;
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+}
+
+button {
+    width: 100%;
+    height: 40px;
+    background: white;
+    color: #003F69;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#graficoStatusChamados{
+    max-height: 300px;
+}
+
+button:hover {
+    background-color: #e8f0fe;
+    color: #174ea6;
+}
+
+span{
+    color: black;
+}
+
+.primeira-box span{
+    display: inline-flex;
+    align-items: center;
+}
+
+.primeira-box{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+input[type="date"] {
+    text-align: center;
+    width: 50%;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+h1 {
+    color: #1a73e8;
+    margin: 0;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.kpi-box{
+    width: 90%;
+    height: 80%;
+    display: flex;
+    
+}
+
+.kpis {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.kpi {
+    height: 70%;
+    width: 70%;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+    display: flex;
+    justify-content: space-around;
+    align-self: center;
+    justify-self: center;
+}
+
+.kpi:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.kpi-comeco {
+    color: #5f6368;
+    font-size: 18px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.kpi-meio {
+    color: #1a73e8;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.kpi-fim {
+    color: #70757a;
+    font-size: 15px;
+    text-align: center;
+}
+
+.kpi-conteudo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 70%;
+}
+
+.listagem {
+    height: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    width: 95%;
+}
+
+.segunda-box{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.segunda-coluna {
+    width: 50%;
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.terceira-box{
+    width: 90%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.quarta-box{
+    width: 90%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+
+.cabecalho-funcionarios,
+.card-funcionario {
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 10px;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.card-funcionario {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.card-funcionario:hover {
+    background-color: #f1f1f1;
+}
+
+.card-funcionario span {
+    flex: 1;
+    text-align: center;
+}
+
+.lista-funcionarios {
+    height: 350px;
+    overflow-y: scroll;
+    margin-top: 10px;
+}
+
+.grafico-servidores {
+    width: 70%;
+    height: 70%;
+    max-height: 300px;
+    display: block;
+}
+
+.grafico-container{
+    width: 100%;
+    margin: 10px;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#graficoChamadosDia {
+    width: 80% !important;
+    height: 100% !important;
+}
+
+canvas {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  width: auto;
+}
+
+.segunda-coluna .titulo{
+    padding-top: 20px;
+}
+
+.titulo {
+    font-weight: 600;
+    font-size: 12px;
+    color: #003F69;
+    text-align: center;
+}
+
+hr {
+  border: none;
+  border-top: 3px solid #003F69;
+  margin: 20px 0;
+  height: 0;
+  width: 100%;
+}
+

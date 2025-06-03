@@ -29,6 +29,8 @@ var gestorRouter = require("./src/routes/gestor")
 var jiraRouter = require("./src/routes/jiraRoute");
 var s3Router = require("./src/routes/s3.route.js");
 var slackRouter = require("./src/routes/slackRoutes");
+var machineRouter = require('./src/routes/machine.route');
+var realtimeRouter = require('./src/routes/realtime.route');
 var bodyParser = require("body-parser");
 
 app.use(express.json());
@@ -51,6 +53,8 @@ app.use("/servidores", servidorRouter)
 app.use("/gestor", gestorRouter)
 app.use("/apiJira", jiraRouter);
 app.use("/apiSlack", slackRouter);
+app.use('/machine', machineRouter);
+app.use('/realtime', realtimeRouter);
 app.use(bodyParser.json());
 
 app.listen(PORTA_APP, function () {

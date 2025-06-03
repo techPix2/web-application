@@ -14,9 +14,9 @@ router.post('/getMachineId', getMachineId);
 
 router.post('/getCompanyName', buscarNomeEmpresa)
 
-router.get('/getComponents', getComponents);
+router.get('/getComponents/:fkServer', getComponents);
 
-router.put('/updateComponents', updateComponents);
+router.put('/updateComponent', updateComponents);
 
 router.post('/registerComponent', registerComponent);
 

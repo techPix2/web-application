@@ -1,10 +1,10 @@
 const db = require('../database/config');
 
-async function buscarUsuario(name, password) {
+async function buscarUsuario(email, password) {
     const instrucao = `
         SELECT idEmployer, fkCompany 
         FROM Employer 
-        WHERE name = '${name}' AND password = '${password}'
+        WHERE email = '${email}' AND password = '${password}'
     `;
 
     try {
@@ -26,7 +26,7 @@ async function buscarUsuario(name, password) {
 async function cadastrarMaquina(hostname, macAddress, mobuId, fkCompany) {
     const instrucao = `
         INSERT INTO server (hostName, macAddress, mobuId, fkCompany, active)
-        VALUES ('${hostname}', '${macAddress}', '${mobuId}', '${fkCompany}', '1');
+        VALUES ('${hostname}', '${macAddress}', '${mobuId}', ${fkCompany}, 1);
     `;
 
     try {

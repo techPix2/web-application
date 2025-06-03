@@ -7,14 +7,14 @@ function getMachineList(req, res) {
 }
 
 async function loginMachine(req, res) {
-    const { name, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!name || !password) {
-        return res.status(400).json({ error: 'Os campos name e password são obrigatórios.' });
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Os campos email e password são obrigatórios.' });
     }
 
     try {
-        const resultado = await buscarUsuario(name, password);
+        const resultado = await buscarUsuario(email, password);
 
         if (resultado.success) {
             return res.status(200).json({
@@ -22,7 +22,7 @@ async function loginMachine(req, res) {
                 companyId: resultado.companyId
             });
         } else {
-            return res.status(401).json({ error: 'Usuário ou senha inválidos.' });
+            return res.status(401).json({ error: 'email ou senha inválidos.' });
         }
     } catch (error) {
         console.error('Erro ao realizar login:', error);
@@ -134,7 +134,6 @@ async function registerComponent(req, res) {
         });
     }
 }
-
 
 module.exports = {
     getMachineList,

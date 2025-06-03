@@ -62,8 +62,57 @@ async function buscarMaquina(mobuId, fkCompany) {
     }
 }
 
+async function getCompanyName(companyId) {
+    const instrucao = `
+        SELECT socialReason FROM Company WHERE idCompany = ${companyId};
+    `;
+
+    try {
+        const resultado = await db.executar(instrucao);
+
+        if (resultado.length > 0) {
+            return { success: true, name: resultado[0].socialReason };
+        } else {
+            return { success: false, name: "TechPix" }; // valor padrão
+        }
+    } catch (erro) {
+        console.error("Erro ao buscar nome da empresa:", erro);
+        return { success: false, error: erro, name: "TechPix" };
+    }
+}
+
+async function listarComponentesPorServidor(fkServer) {
+    const instrucao = `
+        SELECT idComponent, name, type, description
+        FROM Component 
+        WHERE fkServer = ${fkServer}
+    `;
+    return db.executar(instrucao);
+}
+
+async function atualizarComponente({ idComponent, fkServer, type, description }) {
+    const instrucao = `
+        UPDATE Component
+        SET type = '${type}', description = '${description}'
+        WHERE idComponent = ${idComponent} AND fkServer = ${fkServer}
+    `;
+    return db.executar(instrucao);
+}
+
+async function inserirComponente({ name, type, description, fkServer }) {
+    const instrucao = `
+        INSERT INTO Component (name, type, description, fkServer)
+        VALUES ('${name}', '${type}', '${description}', ${fkServer})
+    `;
+    return db.executar(instrucao);
+}
+
 module.exports = {
     buscarUsuario,
     cadastrarMaquina,
-    buscarMaquina
+    buscarMaquina,
+    getCompanyName,
+    listarComponentesPorServidor,
+    atualizarComponente,
+    inserirComponente
 };

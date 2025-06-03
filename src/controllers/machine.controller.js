@@ -1,5 +1,5 @@
 const { dadosMaquinas } = require('./realtime.controller');
-const { buscarUsuario, cadastrarMaquina, buscarMaquina } = require('../models/machine.model');
+const { buscarUsuario, cadastrarMaquina, buscarMaquina, getCompanyName, listarComponentesPorServidor, atualizarComponente, inserirComponente} = require('../models/machine.model');
 
 function getMachineList(req, res) {
     const machines = Array.from(dadosMaquinas.keys());
@@ -72,9 +72,77 @@ async function getMachineId(req, res) {
     }
 }
 
+async function buscarNomeEmpresa(req, res) {
+    const { companyId } = req.body;
+
+    if (!companyId) {
+        return res.status(400).json({ error: "O campo companyId é obrigatório." });
+    }
+
+    try {
+        const resultado = await getCompanyName(companyId);
+
+        if (resultado.success) {
+            return res.status(200).json({ name: resultado.name });
+        } else {
+            return res.status(200).json({ name: resultado.name, aviso: "Nome padrão retornado." });
+        }
+    } catch (erro) {
+        console.error("Erro no controller ao buscar nome da empresa:", erro);
+        return res.status(500).json({ error: "Erro interno ao buscar nome da empresa." });
+    }
+}
+
+async function getComponents(req, res) {
+    const { fkServer } = req.params;
+
+    try {
+        const resultado = await listarComponentesPorServidor(fkServer);
+        res.status(200).json(resultado);
+    } catch (erro) {
+        res.status(500).json({
+            error: "Erro ao listar componentes",
+            detalhes: erro
+        });
+    }
+}
+
+async function updateComponents(req, res) {
+    const { idComponent, fkServer, type, description } = req.body;
+
+    try {
+        await atualizarComponente({ idComponent, fkServer, type, description });
+        res.status(200).json({ success: true, message: "Componente atualizado com sucesso" });
+    } catch (erro) {
+        res.status(500).json({
+            error: "Erro ao atualizar componente",
+            detalhes: erro
+        });
+    }
+}
+
+async function registerComponent(req, res) {
+    const { name, type, description, fkServer } = req.body;
+
+    try {
+        await inserirComponente({ name, type, description, fkServer });
+        res.status(201).json({ success: true, message: "Componente inserido com sucesso" });
+    } catch (erro) {
+        res.status(500).json({
+            error: "Erro ao inserir componente",
+            detalhes: erro
+        });
+    }
+}
+
+
 module.exports = {
     getMachineList,
     loginMachine,
     registerMachine,
-    getMachineId
+    getMachineId,
+    buscarNomeEmpresa,
+    getComponents,
+    updateComponents,
+    registerComponent
 };

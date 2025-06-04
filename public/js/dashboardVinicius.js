@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', function () {
 
+    esconderLoading(); 
     let graficoStatus;
 
 async function carregarGraficoStatusChamados(startDate, endDate) {
@@ -202,9 +203,11 @@ window.graficoChamadosAgrupado = new Chart(ctx, {
         alert("Erro ao carregar gráfico de chamados por dia.");
     }
 }
+
     
-    const btnFiltrar = document.getElementById("filterButton");
-    btnFiltrar.addEventListener("click", () => {
+const btnFiltrar = this.document.getElementById("filterButton");
+
+  btnFiltrar.addEventListener("click", async () => {
     const startDate = document.getElementById("startDate").value;
     const endDate = document.getElementById("endDate").value;
 
@@ -213,9 +216,29 @@ window.graficoChamadosAgrupado = new Chart(ctx, {
         return;
     }
 
-    buscarKpis(startDate, endDate);
-    listarFuncionarios(startDate, endDate);
-    carregarGraficoStatusChamados(startDate, endDate);
-    carregarGraficoChamadosPorDia(startDate, endDate);
+    mostrarLoading(); 
+
+    try {
+        await Promise.all([
+            buscarKpis(startDate, endDate),
+            listarFuncionarios(startDate, endDate),
+            carregarGraficoStatusChamados(startDate, endDate),
+            carregarGraficoChamadosPorDia(startDate, endDate)
+        ]);
+    } catch (e) {
+        console.error("Erro ao filtrar:", e);
+        alert("Erro ao carregar dados.");
+    } finally {
+        esconderLoading(); 
+    }
 });
+
 });
+
+function mostrarLoading() {
+    document.getElementById("loading-overlay").style.display = "flex";
+}
+
+function esconderLoading() {
+    document.getElementById("loading-overlay").style.display = "none";
+}

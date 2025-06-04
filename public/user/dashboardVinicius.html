@@ -12,16 +12,89 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
+<!-- Modal Jira
+<div id="jiraModal" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+">
+  <div style="
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+  ">
+    <h2 style="color: #003F69; margin-bottom: 20px;">Conectar ao Jira</h2>
+    
+    <label for="projectInput" style="display: block; text-align: left; margin-bottom: 5px;">Nome do Projeto:</label>
+    <input type="text" id="projectInput" style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;" required>
+
+    <label for="tokenInput" style="display: block; text-align: left; margin-bottom: 5px;">Token de Acesso:</label>
+    <input type="password" id="tokenInput" style="width: 100%; padding: 8px; margin-bottom: 25px; border: 1px solid #ccc; border-radius: 6px;" required>
+
+    <button id="confirmBtn" style="padding: 10px 25px; background: #003F69; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+      Confirmar
+    </button>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('load', () => {
+    const modal = document.getElementById("jiraModal");
+    const projectInput = document.getElementById("projectInput");
+    const tokenInput = document.getElementById("tokenInput");
+    const confirmBtn = document.getElementById("confirmBtn");
+
+    // Verifica se já existe no sessionStorage
+    const hasProject = sessionStorage.getItem("jira_project");
+    const hasToken = sessionStorage.getItem("jira_token");
+
+    if (!hasProject || !hasToken) {
+      modal.style.display = "flex";
+    }
+
+    confirmBtn.addEventListener("click", () => {
+      const project = projectInput.value.trim();
+      const token = tokenInput.value.trim();
+
+      if (!project || !token) {
+        alert("Preencha todos os campos.");
+        return;
+      }
+
+      sessionStorage.setItem("jira_project", project);
+      sessionStorage.setItem("jira_token", token);
+
+      modal.style.display = "none";
+
+      // Se quiser chamar alguma função aqui após o login, faça:
+      // iniciarDashboard();
+    });
+  });
+</script> -->
+
 <body>
     <nav-bar></nav-bar>
     <custom-main>
+        <div id="loading-overlay">
+            <div id="loading-spinner"></div>
+            <p>Carregando dados...</p>
+        </div>
         <div class="colunas">
             <div class="primeira-coluna">
                 <div class="primeira-box">
                     <div class="select-container">
                                 <div class="select-data">
                                     <span>Data de início:</span>
-                                    <input type="date" id="startDate" value="2025-05-01">
+                                    <input type="date" id="startDate" value="2025-06-01">
                                 </div>
                                 <div class="select-data">
                                     <span>Data final:</span>

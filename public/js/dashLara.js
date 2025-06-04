@@ -36,106 +36,196 @@ document.addEventListener('DOMContentLoaded', function () {
   buscarServidoresComAlerta();
 });
 
-//função para buscar os servidores com alerta
+const intervalosAtualizacao = {};
 async function buscarServidoresComAlerta() {
-  let listaAlertas = [];
-
   try {
-    //busca o id da empresa ou usa 1 como padrão
-    const fk_company = sessionStorage.ID_EMPRESA || 1;
-    const response = await fetch(`/servidores/listarServidoresComAlerta/${fk_company}`);
+    const response = await fetch(`/machine/list`);
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar servidores: ${response.status}`);
+      throw new Error(`Erro ao buscar máquinas: ${response.status}`);
     }
 
-    //requisição para pegar os dados dos servidores com alerta
-    const alertas = await response.json();
-    console.log(alertas);
+    const { machines } = await response.json();
+    console.log("Máquinas ativas:", machines);
 
-    //contador
-    let jsonAlertas = [{
-      CPU: 0,
-      RAM: 0
-    }]
+    // Atualiza a lista, removendo servidores que saíram
+    // Vamos garantir que só tenha linhas para máquinas atuais
+    const linhasExistentes = Array.from(tabelaServidores.querySelectorAll('tr[id^="linha-"]'))
+        .map(tr => tr.id.replace("linha-", ""));
 
-    tabelaServidores.innerHTML = ""; //limpar tabela
-
-
-    //inicializa o contador
-    for (const alerta of alertas) {
-      const servidor = {
-        id: alerta.idServer,
-        nome: alerta.hostName,
-        status: alerta.status,
-        uso: alerta.usage_percent,
-        tipoAlerta: alerta.alert_type,
-        horaAlerta: alerta.alert_time
-      };
-
-      //tipo de alerta e incrementa o contador para a KPI
-      if (servidor.tipoAlerta === 'CPU') {
-        jsonAlertas[0].CPU += 1;
-      } else if (servidor.tipoAlerta === 'RAM') {
-        jsonAlertas[0].RAM += 1;
+    // Remove linhas das máquinas que não estão mais na lista
+    linhasExistentes.forEach(mobuIdExistente => {
+      if (!machines.includes(mobuIdExistente)) {
+        // Para o interval se existir
+        if (intervalosAtualizacao[mobuIdExistente]) {
+          clearInterval(intervalosAtualizacao[mobuIdExistente]);
+          delete intervalosAtualizacao[mobuIdExistente];
+        }
+        // Remove linhas da tabela
+        const linha = document.getElementById(`linha-${mobuIdExistente}`);
+        const graficoRow = document.getElementById(`grafico-row-${mobuIdExistente}`);
+        if (linha) linha.remove();
+        if (graficoRow) graficoRow.remove();
       }
-
-      //adiciona se NÃO existir um item com mesmo id e tipoAlerta
-      if (!listaAlertas.some(item => item.id === servidor.id && item.tipoAlerta === servidor.tipoAlerta)) {
-        listaAlertas.push(servidor);
-      }
-
-    }
-
-    //atualiza a kpi
-    if (jsonAlertas[0].CPU > jsonAlertas[0].RAM) {
-      compMaisAlertas.innerHTML = `CPU`;
-    } else if (jsonAlertas[0].RAM > jsonAlertas[0].CPU) {
-      compMaisAlertas.innerHTML = `RAM`;
-    } else {
-      compMaisAlertas.innerHTML = `CPU | RAM`;
-    }
-
-
-    //mostra os dados na tabela
-    for (const alerta of listaAlertas) {
-      tabelaServidores.innerHTML += `
-      <tr>
-        <td>${alerta.nome}</td>
-        <td style="color:red; font-weight:bold">CRÍTICO</td>
-        <td>${alerta.tipoAlerta}</td>
-        <td style="color:red; font-weight:bold">${alerta.uso}%</td>
-        <td>
-          <button class="button-eye" data-id="${alerta.id}">
-            <i class="bi bi-eye"></i>
-          </button>
-        </td>
-      </tr>
-      <tr class="grafico-row" id="grafico-row-${alerta.id}" style="display:none;">
-        <td colspan="5">
-          <div class="graficoServidor" id="graficoServidor-${alerta.id}"></div>
-        </td>
-      </tr>
-    `;
-    }
-
-
-    //função do olho para mostrar o gráfico
-    document.querySelectorAll('.button-eye').forEach(button => {
-      button.addEventListener('click', function () {
-        const servidorId = this.getAttribute('data-id');
-        mostrarGraficoServidor(servidorId);
-      });
     });
 
-  }
-  catch (error) {
-    console.error("Erro ao buscar alertas:", error);
-    alert("Não foi possível carregar os alertas. Por favor, tente novamente mais tarde.");
+    // Adiciona as novas máquinas que ainda não estão na tabela
+    for (const mobuId of machines) {
+      if (!document.getElementById(`linha-${mobuId}`)) {
+        tabelaServidores.innerHTML += `
+          <tr id="linha-${mobuId}">
+            <td>${mobuId}</td>
+            <td id="status-${mobuId}" style="color: green; font-weight: bold;">NORMAL</td>
+            <td id="componente-${mobuId}">--</td>
+            <td id="uso-${mobuId}" style="font-weight: bold;">--</td>
+            <td>
+              <button class="button-eye" data-id="${mobuId}">
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
+          </tr>
+          <tr class="grafico-row" id="grafico-row-${mobuId}" style="display:none;">
+            <td colspan="5">
+              <div class="graficoServidor" id="graficoServidor-${mobuId}"></div>
+            </td>
+          </tr>
+        `;
+
+        // Remove intervalo antigo, se existir, para evitar múltiplos
+        if (intervalosAtualizacao[mobuId]) {
+          clearInterval(intervalosAtualizacao[mobuId]);
+        }
+        intervalosAtualizacao[mobuId] = setInterval(() => atualizarDadosRealtime(mobuId), 2000);
+      }
+    }
+
+    // Atualiza eventos dos botões
+    document.querySelectorAll('.button-eye').forEach(button => {
+      button.removeEventListener('click', button._clickHandler);
+      button._clickHandler = function () {
+        const servidorId = this.getAttribute('data-id');
+        mostrarGraficoServidor(servidorId);
+      };
+      button.addEventListener('click', button._clickHandler);
+    });
+
+  } catch (error) {
+    console.error("Erro ao buscar máquinas:", error);
+    alert("Não foi possível carregar a lista de máquinas. Por favor, tente novamente mais tarde.");
   }
 }
 
-//variável global para controlar o gráfico aberto
+setInterval(() => {
+  buscarServidoresComAlerta();
+}, 10000); // Atua
+
+async function atualizarDadosRealtime(mobuId) {
+  try {
+    const res = await fetch(`/realtime/${mobuId}`);
+    if (!res.ok) return;
+
+    const dados = await res.json();
+    const ultima = dados.entries[dados.entries.length - 1];
+    if (!ultima || !ultima.data) return;
+
+    const { cpu, ram, disk } = ultima.data;
+
+    const usoCpu = cpu?.["Uso (%)"] ?? 0;
+    const usoRam = ram?.["Uso (%)"] ?? 0;
+    const usoDisk = disk?.["Uso (%)"] ?? 0;
+
+    const maior = [
+      { componente: "CPU", uso: usoCpu },
+      { componente: "RAM", uso: usoRam },
+      { componente: "Disco", uso: usoDisk }
+    ].reduce((a, b) => (a.uso > b.uso ? a : b));
+
+    let statusText = "NORMAL";
+    let statusColor = "green";
+
+    if (maior.uso > 80) {
+      statusText = "CRÍTICO";
+      statusColor = "red";
+    } else if (maior.uso >= 70) {
+      statusText = "ATENÇÃO";
+      statusColor = "orange";
+    }
+
+    const statusEl = document.getElementById(`status-${mobuId}`);
+    const componenteEl = document.getElementById(`componente-${mobuId}`);
+    const usoEl = document.getElementById(`uso-${mobuId}`);
+
+    if (statusEl) {
+      statusEl.textContent = statusText;
+      statusEl.style.color = statusColor;
+    }
+    if (componenteEl) componenteEl.textContent = maior.componente;
+    if (usoEl) {
+      usoEl.textContent = `${maior.uso.toFixed(1)}%`;
+      usoEl.style.color = statusColor;
+    }
+
+    ordenarTabelaPorStatus();
+    atualizarComponenteMaisCritico();
+
+  } catch (err) {
+    console.warn(`Erro ao atualizar dados de ${mobuId}:`, err);
+  }
+}
+
+function ordenarTabelaPorStatus() {
+  const tabela = tabelaServidores;
+  const linhas = Array.from(tabela.querySelectorAll('tr[id^="linha-"]'));
+
+  const prioridade = { "CRÍTICO": 1, "ATENÇÃO": 2, "NORMAL": 3 };
+
+  linhas.sort((a, b) => {
+    const statusA = a.querySelector('td[id^="status-"]')?.textContent || "NORMAL";
+    const statusB = b.querySelector('td[id^="status-"]')?.textContent || "NORMAL";
+
+    return prioridade[statusA] - prioridade[statusB];
+  });
+
+  linhas.forEach(linha => {
+    tabela.appendChild(linha);
+    const mobuId = linha.id.replace("linha-", "");
+    const graficoRow = document.getElementById(`grafico-row-${mobuId}`);
+    if (graficoRow) tabela.appendChild(graficoRow);
+  });
+}
+
+function atualizarComponenteMaisCritico() {
+  const linhas = Array.from(tabelaServidores.querySelectorAll('tr[id^="linha-"]'));
+
+  // Contadores por componente para status CRÍTICO
+  const contagem = { CPU: 0, RAM: 0, Disco: 0 };
+
+  linhas.forEach(linha => {
+    const status = linha.querySelector('td[id^="status-"]')?.textContent || "";
+    const componente = linha.querySelector('td[id^="componente-"]')?.textContent || "";
+    if (status === "CRÍTICO" && componente in contagem) {
+      contagem[componente]++;
+    }
+  });
+
+  // Encontra o(s) componente(s) com maior quantidade
+  const maxValor = Math.max(...Object.values(contagem));
+
+  if (maxValor === 0) {
+    compMaisAlertas.textContent = "Nenhum";
+    return;
+  }
+
+  const componentesComMax = Object.entries(contagem)
+      .filter(([_, val]) => val === maxValor)
+      .map(([comp]) => comp);
+
+  compMaisAlertas.textContent = componentesComMax.join(" | ");
+}
+
+
+
+
 let servidorGraficoAberto = null;
 
 function mostrarGraficoServidor(idServer) {
@@ -193,9 +283,10 @@ function mostrarGraficoServidor(idServer) {
 }
 
 
-//atualizar as kpis do jira  
 
-//mostrar os chamados do último dia
+
+
+
 async function buscarChamadosUltimoDia() {
   console.log("Buscando dados do Jira...");
   try {
@@ -218,7 +309,6 @@ async function buscarChamadosUltimoDia() {
   }
 }
 
-//mostrar os chamados que estão em abertos
 async function buscarChamadosStatus() {
   console.log("Buscando dados do Jira...");
   try {
@@ -240,13 +330,8 @@ async function buscarChamadosStatus() {
   }
 }
 
-
-
-// slack
 async function fetchMessages() {
   try {
-
-    //busca as mensagens
     const response = await fetch('/apiSlack/mensagens');
 
     if (!response.ok) {
@@ -281,7 +366,6 @@ async function fetchMessages() {
   }
 }
 
-
 async function enviar() {
   const messageInput = document.getElementById('messageInput');
   const messageText = messageInput.value;
@@ -314,6 +398,15 @@ async function enviar() {
     }
   }
 }
+
+
+
+
+
+
+
+
+
 
 async function carregarDados() {
   try {
@@ -359,7 +452,6 @@ async function carregarGraficos() {
   }
 }
 
-//executando as funções
 document.addEventListener('DOMContentLoaded', () => {
   buscarServidoresComAlerta();
   buscarChamadosStatus();

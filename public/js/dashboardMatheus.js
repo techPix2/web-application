@@ -4,7 +4,7 @@ const resourceTimers = {
     disk: { currentTime: 0, isExceeded: false, interval: null, element: null }
 };
 
-const LIMITE = 75;
+const LIMITE = 80;
 const UPDATE_INTERVAL = 2000; // 2 segundos
 
 function initializeTimers() {
@@ -44,16 +44,31 @@ function controlTimer(resource, currentValue) {
     }
 }
 
+function capturarMaquina(){
+    const params = new URLSearchParams(window.location.search);
+    const maquina = params.get('maquina');
+    return maquina
+}
+
 async function carregarDados() {
+    const maquina = capturarMaquina();
+    console.log("Máquina:", maquina);
+
+    document.getElementById("nomeMaquinaMonitorada").innerText = maquina;
+
     try {
-        const response = await fetch('/dashMatheus/dadosRecebidos', { method: 'GET' });
+        const response = await fetch(`/realtime/${maquina}`, { method: 'GET' });
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const resultado = await response.json();
-        const dados = resultado.dadosEnviados || resultado;
-        console.log("Dados recebidos:", dados);
+        console.log("Resultado completo:", resultado);
+
+        const ultimaEntrada = resultado.entries?.at(-1); // pega o último registro
+        const dados = ultimaEntrada?.data;
 
         if (!dados) throw new Error("Dados não foram recebidos ou estão vazios.");
+
+        console.log("Dados recebidos:", dados);
 
         document.querySelectorAll(".kpi-meio")[0].textContent = `${dados.cpu?.["Uso (%)"] ?? 0}%`;
         document.querySelectorAll(".kpi-meio")[1].textContent = `${dados.ram?.["Uso (%)"] ?? 0}%`;
@@ -69,13 +84,13 @@ async function carregarDados() {
                 processo.innerHTML = `
                     <div class="info-processo">
                         <div class="nome-processo">${proc.name || "Processo desconhecido"}</div>
-                        <div class="uso-cpu">${proc.cpu_percent || "CPU nao encontrada"} % </div>
+                        <div class="uso-cpu">${proc.cpu_percent ?? "N/A"}%</div>
                     </div>
                     <button data-id="${proc.name}" class="botao-encerrar">Encerrar</button>
                 `;
                 listaProcessos.appendChild(processo);
 
-                processo.querySelector(".botao-encerrar").addEventListener("click", function() {
+                processo.querySelector(".botao-encerrar").addEventListener("click", function () {
                     const nomeProcesso = this.getAttribute("data-id");
                     console.log("Tentando encerrar processo:", nomeProcesso);
 
@@ -84,32 +99,31 @@ async function carregarDados() {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ processo: nomeProcesso })
                     })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.json().catch(() => null).then(errorBody => {
-                                const errorMessage = errorBody?.messages?.join('; ') || `Erro HTTP: ${response.status} ${response.statusText}`;
-                                throw new Error(errorMessage);
-                            });
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log("Resposta do servidor:", data);
-                        let feedbackMessage = `Resultado para '${nomeProcesso}':\n`;
-                        feedbackMessage += data.messages?.join('\n') || (data.success ? "Operação concluída com sucesso." : "Operação falhou sem mensagens detalhadas.");
-                        alert(feedbackMessage);
-                    })
-                    .catch(error => {
-                        console.error('Erro ao tentar encerrar processo:', error);
-                        alert(`Falha na comunicação ou na operação de encerrar '${nomeProcesso}':\n${error.message}`);
-                    });
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().catch(() => null).then(errorBody => {
+                                    const errorMessage = errorBody?.messages?.join('; ') || `Erro HTTP: ${response.status} ${response.statusText}`;
+                                    throw new Error(errorMessage);
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log("Resposta do servidor:", data);
+                            let feedbackMessage = `Resultado para '${nomeProcesso}':\n`;
+                            feedbackMessage += data.messages?.join('\n') || (data.success ? "Operação concluída com sucesso." : "Operação falhou sem mensagens detalhadas.");
+                            alert(feedbackMessage);
+                        })
+                        .catch(error => {
+                            console.error('Erro ao tentar encerrar processo:', error);
+                            alert(`Falha na comunicação ou na operação de encerrar '${nomeProcesso}':\n${error.message}`);
+                        });
                 });
             });
         } else {
             listaProcessos.innerHTML += '<div class="processo">Nenhum processo em execução</div>';
         }
 
-        // Controle dos timers
         controlTimer('cpu', dados.cpu?.["Uso (%)"] ?? 0);
         controlTimer('ram', dados.ram?.["Uso (%)"] ?? 0);
         controlTimer('disk', dados.disk?.["Uso (%)"] ?? 0);
@@ -119,6 +133,7 @@ async function carregarDados() {
         console.error("Erro ao carregar dados:", error);
     }
 }
+
 
 let chartCPU, chartRAM, chartDISK, chartREDE;
 let historicoCPU = [];

@@ -77,9 +77,13 @@ async function listarFuncionarios(startDate, endDate) {
             const div = document.createElement("div");
             div.className = "card-funcionario";
 
-            const estiloAtrasados = func.atrasados > 0 ? 'style="color: red; font-weight: bold;"' : '';
+            // Estilo para chamados atrasados
+            const estiloAtrasados = func.atrasados > 0 
+                ? 'style="color: red; font-weight: bold;"' 
+                : '';
 
-            const eficiencia = func.eficiencia ?? 0;
+            // Cálculo de eficiência e estilo de cor
+            const eficiencia = func.eficiencia?.toFixed(1) ?? 0;
             let corEficiência = '';
 
             if (eficiencia < 30) {
@@ -90,6 +94,7 @@ async function listarFuncionarios(startDate, endDate) {
                 corEficiência = 'style="color: green;"';
             }
 
+            // Montagem do card HTML
             div.innerHTML = `
                 <span>${func.nome}</span>
                 <span>${func.recebidos}</span>

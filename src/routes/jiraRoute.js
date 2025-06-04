@@ -66,7 +66,6 @@ router.get('/jira-kpis', async (req, res) => {
     }
 });
 
-
 router.get('/jira-funcionarios', async (req, res) => {
     try {
         const auth = Buffer.from(`${process.env.JIRA_USER}:${process.env.JIRA_API_TOKEN}`).toString('base64');
@@ -114,7 +113,6 @@ router.get('/jira-funcionarios', async (req, res) => {
             const statusLower = status.toLowerCase();
             const isFeito = statusLower === 'done' || statusLower === 'concluído';
 
-
             if (isFeito) {
                 funcionarios[responsavel].realizados++;
             }
@@ -128,9 +126,17 @@ router.get('/jira-funcionarios', async (req, res) => {
             }
         }
 
-        : 0;
         // Cálculo da eficiência para cada funcionário
         const resultado = Object.values(funcionarios).map(func => {
+            const eficiencia = func.recebidos > 0 
+                ? (func.realizados / func.recebidos) * 100 
+                : 0;
+            return {
+                ...func,
+                eficiencia: Number(eficiencia.toFixed(1))
+            };
+        });
+
         res.json(resultado);
     } catch (error) {
         console.error("Erro ao buscar dados dos funcionários:", error);

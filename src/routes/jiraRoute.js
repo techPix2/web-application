@@ -128,15 +128,9 @@ router.get('/jira-funcionarios', async (req, res) => {
             }
         }
 
-   const resultado = Object.values(funcionarios).map(func => {
-    const eficiencia = func.recebidos > 0 
-        ? (func.realizados / func.recebidos) * 100 
         : 0;
-    return {
-        ...func,
-        eficiencia: Number(eficiencia.toFixed(1))
-    };
-});
+        // Cálculo da eficiência para cada funcionário
+        const resultado = Object.values(funcionarios).map(func => {
         res.json(resultado);
     } catch (error) {
         console.error("Erro ao buscar dados dos funcionários:", error);

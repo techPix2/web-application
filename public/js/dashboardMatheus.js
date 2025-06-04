@@ -86,38 +86,16 @@ async function carregarDados() {
                         <div class="nome-processo">${proc.name || "Processo desconhecido"}</div>
                         <div class="uso-cpu">${proc.cpu_percent ?? "N/A"}%</div>
                     </div>
-                    <button data-id="${proc.name}" class="botao-encerrar">Encerrar</button>
+                    <button class="botao-encerrar">Encerrar</button>
                 `;
                 listaProcessos.appendChild(processo);
 
-                processo.querySelector(".botao-encerrar").addEventListener("click", function () {
-                    const nomeProcesso = this.getAttribute("data-id");
-                    console.log("Tentando encerrar processo:", nomeProcesso);
+                processo.querySelector(".botao-encerrar").addEventListener("click", () => {
+                    const nomeProcesso = proc.name;
+                    const pid = proc.pid || 0;
+                    const cpuPercent = proc.cpu_percent || 0;
 
-                    fetch('http://localhost:5000/dashMatheus/removerProcesso', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ processo: nomeProcesso })
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                return response.json().catch(() => null).then(errorBody => {
-                                    const errorMessage = errorBody?.messages?.join('; ') || `Erro HTTP: ${response.status} ${response.statusText}`;
-                                    throw new Error(errorMessage);
-                                });
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log("Resposta do servidor:", data);
-                            let feedbackMessage = `Resultado para '${nomeProcesso}':\n`;
-                            feedbackMessage += data.messages?.join('\n') || (data.success ? "Operação concluída com sucesso." : "Operação falhou sem mensagens detalhadas.");
-                            alert(feedbackMessage);
-                        })
-                        .catch(error => {
-                            console.error('Erro ao tentar encerrar processo:', error);
-                            alert(`Falha na comunicação ou na operação de encerrar '${nomeProcesso}':\n${error.message}`);
-                        });
+                    enfileirarComandoEncerrar(nomeProcesso, pid, cpuPercent);
                 });
             });
         } else {
@@ -134,6 +112,41 @@ async function carregarDados() {
     }
 }
 
+async function enfileirarComandoEncerrar(nomeProcesso, pid, cpuPercent) {
+    const mobuId = capturarMaquina();
+
+    const payload = {
+        machineId: mobuId,
+        comando: {
+            acao: "encerrar_processo",
+            pid: pid,
+            nome: nomeProcesso,
+            cpu_percent: cpuPercent
+        }
+    };
+
+    try {
+        const response = await fetch('http://localhost:80/process/excluir', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.json().catch(() => null);
+            const errorMessage = errorBody?.messages?.join('; ') || `Erro HTTP: ${response.status}`;
+            throw new Error(errorMessage);
+        }
+
+        const resultado = await response.json();
+        console.log("Comando enfileirado com sucesso:", resultado);
+        alert(`Comando para encerrar '${nomeProcesso}' foi enfileirado com sucesso!`);
+
+    } catch (error) {
+        console.error("Erro ao enfileirar comando:", error);
+        alert(`Erro ao enfileirar comando para '${nomeProcesso}':\n${error.message}`);
+    }
+}
 
 let chartCPU, chartRAM, chartDISK, chartREDE;
 let historicoCPU = [];

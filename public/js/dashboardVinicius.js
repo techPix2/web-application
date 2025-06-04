@@ -75,15 +75,28 @@ async function listarFuncionarios(startDate, endDate) {
         funcionarios.forEach(func => {
             const div = document.createElement("div");
             div.className = "card-funcionario";
-            const estiloAtrasados = func.atrasados > 0 
-            ? 'style="color: red; font-weight: bold;"' 
-            : '';
+
+            const estiloAtrasados = func.atrasados > 0 ? 'style="color: red; font-weight: bold;"' : '';
+
+            const eficiencia = func.eficiencia ?? 0;
+            let corEficiência = '';
+
+            if (eficiencia < 30) {
+                corEficiência = 'style="color: red; font-weight: bold;"';
+            } else if (eficiencia < 70) {
+                corEficiência = 'style="color: orange;"';
+            } else {
+                corEficiência = 'style="color: green;"';
+            }
+
             div.innerHTML = `
                 <span>${func.nome}</span>
                 <span>${func.recebidos}</span>
                 <span>${func.realizados}</span>
                 <span ${estiloAtrasados}>${func.atrasados}</span>
+                <span ${corEficiência}>${eficiencia}%</span>
             `;
+
             lista.appendChild(div);
         });
 
@@ -92,6 +105,7 @@ async function listarFuncionarios(startDate, endDate) {
         alert("Erro ao carregar dados dos funcionários: " + error.message);
     }
 }
+
 
 async function buscarKpis(dataInicio, dataFim) {
     try {

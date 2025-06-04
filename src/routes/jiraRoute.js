@@ -22,27 +22,17 @@ router.get('/jira-kpis', async (req, res) => {
         }
 
         const auth = Buffer.from(`${process.env.JIRA_USER}:${process.env.JIRA_API_TOKEN}`).toString('base64');
+        const url = `https://${process.env.JIRA_DOMAIN}/rest/api/2/search?jql=${encodeURIComponent(jql)}&maxResults=100`;
 
-        let startAt = 0;
-        const maxResults = 100;
-        let issues = [];
-        let total;
+        const response = await axios.get(url, {
+            headers: {
+                'Authorization': `Basic ${auth}`,
+                'Accept': 'application/json'
+            }
+        });
 
-        do {
-            const url = `https://${process.env.JIRA_DOMAIN}/rest/api/2/search?jql=${encodeURIComponent(jql)}&startAt=${startAt}&maxResults=${maxResults}`;
-            const response = await axios.get(url, {
-                headers: {
-                    'Authorization': `Basic ${auth}`,
-                    'Accept': 'application/json'
-                }
-            });
-
-            issues.push(...response.data.issues);
-            total = response.data.total;
-            startAt += maxResults;
-        } while (startAt < total);
-
-        const totalChamados = issues.length;
+        const issues = response.data.issues;
+        const totalChamados = response.data.total || issues.length;
         const chamadosEmAndamento = issues.filter(issue => !issue.fields.resolutiondate).length;
 
         let resolvidos = 0;
@@ -121,19 +111,32 @@ router.get('/jira-funcionarios', async (req, res) => {
 
             funcionarios[responsavel].recebidos++;
 
-            if (status.toLowerCase() === 'done' || status.toLowerCase() === 'concluído') {
+            const statusLower = status.toLowerCase();
+            const isFeito = statusLower === 'done' || statusLower === 'concluído';
+
+            if (isFeito) {
                 funcionarios[responsavel].realizados++;
             }
 
             const created = new Date(fields.created);
             const hoje = new Date();
             const dias = (hoje - created) / (1000 * 60 * 60 * 24);
-            if (dias > 1 && status.toLowerCase() !== 'done') {
+
+            if (dias > 1 && !isFeito) {
                 funcionarios[responsavel].atrasados++;
             }
         }
 
-        res.json(Object.values(funcionarios));
+   const resultado = Object.values(funcionarios).map(func => {
+    const eficiencia = func.recebidos > 0 
+        ? (func.realizados / func.recebidos) * 100 
+        : 0;
+    return {
+        ...func,
+        eficiencia: Number(eficiencia.toFixed(1))
+    };
+});
+        res.json(resultado);
     } catch (error) {
         console.error("Erro ao buscar dados dos funcionários:", error);
         res.status(500).json({ error: "Erro ao buscar dados dos funcionários" });
@@ -151,24 +154,16 @@ router.get('/jira-status', async (req, res) => {
         const auth = Buffer.from(`${process.env.JIRA_USER}:${process.env.JIRA_API_TOKEN}`).toString('base64');
         const jql = `created >= "${start}" AND created <= "${end}"`;
 
-        let startAt = 0;
-        const maxResults = 100;
-        let issues = [];
-        let total;
+        const url = `https://${process.env.JIRA_DOMAIN}/rest/api/2/search?jql=${encodeURIComponent(jql)}&maxResults=100`;
 
-        do {
-            const url = `https://${process.env.JIRA_DOMAIN}/rest/api/2/search?jql=${encodeURIComponent(jql)}&startAt=${startAt}&maxResults=${maxResults}`;
-            const response = await axios.get(url, {
-                headers: {
-                    'Authorization': `Basic ${auth}`,
-                    'Accept': 'application/json'
-                }
-            });
+        const response = await axios.get(url, {
+            headers: {
+                'Authorization': `Basic ${auth}`,
+                'Accept': 'application/json'
+            }
+        });
 
-            issues.push(...response.data.issues);
-            total = response.data.total;
-            startAt += maxResults;
-        } while (startAt < total);
+        const issues = response.data.issues;
 
         const contagemPorStatus = {};
 
@@ -178,12 +173,17 @@ router.get('/jira-status', async (req, res) => {
         });
 
         res.json(contagemPorStatus);
+
     } catch (error) {
-        console.error("Erro ao buscar status dos chamados:", error.message);
+        console.error("Erro ao buscar status dos chamados:", error);
+        if (error.response) {
+            console.error("Status:", error.response.status);
+            console.error("Data:", error.response.data);
+        }
+
         res.status(500).json({ error: "Erro ao buscar status dos chamados" });
     }
 });
-
 router.get('/jira-chamados-dia-prioridade', async (req, res) => {
     const { start, end } = req.query;
 
@@ -194,26 +194,16 @@ router.get('/jira-chamados-dia-prioridade', async (req, res) => {
     try {
         const jql = `created >= "${start}" AND created <= "${end}"`;
         const auth = Buffer.from(`${process.env.JIRA_USER}:${process.env.JIRA_API_TOKEN}`).toString('base64');
+        const url = `https://${process.env.JIRA_DOMAIN}/rest/api/2/search?jql=${encodeURIComponent(jql)}&maxResults=100`;
 
-        let startAt = 0;
-        const maxResults = 100;
-        let issues = [];
-        let total;
+        const response = await axios.get(url, {
+            headers: {
+                'Authorization': `Basic ${auth}`,
+                'Accept': 'application/json'
+            }
+        });
 
-        do {
-            const url = `https://${process.env.JIRA_DOMAIN}/rest/api/2/search?jql=${encodeURIComponent(jql)}&startAt=${startAt}&maxResults=${maxResults}`;
-            const response = await axios.get(url, {
-                headers: {
-                    'Authorization': `Basic ${auth}`,
-                    'Accept': 'application/json'
-                }
-            });
-
-            issues.push(...response.data.issues);
-            total = response.data.total;
-            startAt += maxResults;
-        } while (startAt < total);
-
+        const issues = response.data.issues;
         const dadosAgrupados = {};
         const prioridadesSet = new Set();
 

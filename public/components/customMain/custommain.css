@@ -9,3 +9,39 @@
     background-color: #fff;
 }
 
+/* Responsivo para até 998px */
+@media (max-width: 998px) {
+    .customMain {
+        width: 100vw;
+        padding: 20px;
+    }
+    .dashboardLara {
+        width: 95%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Responsivo para até 768px */
+@media (max-width: 768px) {
+    .customMain {
+        padding: 15px;
+        gap: 20px;
+    }
+    .dashboardLara {
+        width: 100%;
+    }
+}
+
+/* Responsivo para até 600px */
+@media (max-width: 600px) {
+    .customMain {
+        padding: 8px;
+        gap: 10px;
+    }
+    .dashboardLara {
+        width: 100%;
+    }
+}
+

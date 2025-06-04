@@ -23,13 +23,13 @@ var options = {
 var chart = new ApexCharts(document.querySelector("#chart"), options);
 chart.render();
 
-//variáveis globais
+
 let tabelaServidores;
 let compMaisAlertas;
-let historicoCPU =[]
-let historicoRAMpercent=[]
+let historicoCPU = []
+let historicoRAMpercent = []
 let chartCPU
-//inicializa e armazena os dados da tabela e kpis
+
 document.addEventListener('DOMContentLoaded', function () {
   tabelaServidores = document.getElementById('tabelaServidores');
   compMaisAlertas = document.getElementById('compMaisAlertas');
@@ -144,11 +144,12 @@ function mostrarGraficoServidor(idServer) {
   if (servidorGraficoAberto && servidorGraficoAberto !== idServer) {
     document.getElementById(`grafico-row-${servidorGraficoAberto}`).style.display = 'none';
     document.getElementById(`graficoServidor-${servidorGraficoAberto}`).innerHTML = '';
+
   }
 
   const graficoRow = document.getElementById(`grafico-row-${idServer}`);
   const chartContainer = document.getElementById(`graficoServidor-${idServer}`);
-
+  const tableServidor = document.getElementById("table_servidores")
   //se estiver aberto para este servidor ele fecha
   if (servidorGraficoAberto === idServer) {
     graficoRow.style.display = 'none';
@@ -345,52 +346,16 @@ async function carregarGraficos() {
   adicionarComLimite(historicoCPU, cpuUsage);
   adicionarComLimite(historicoRAMpercent, ramUsage);
 
-  const containerChartCPU = document.querySelector("#monitorGeralCPURAM"); 
-
-  if (!containerChartCPU) {
-    console.error("Contêiner #monitorGeralCPURAM não encontrado para chartCPU.");
-    return;
-  }
 
   if (!chartCPU) {
-    chartCPU = new ApexCharts(containerChartCPU, {
-      series: [
-        { name: "CPU (%)", data: historicoCPU },
-        { name: "RAM (%)", data: historicoRAMpercent }
-      ],
-      chart: {
-        type: "line",
-        height: 300,
-        animations: {
-          enabled: true,
-          easing: 'linear',
-          dynamicAnimation: {
-            speed: 1000
-          }
-        }
-      },
-      tooltip: {
-        x: {
-          format: 'dd MMM HH:mm:ss' 
-        }
-      },
-      xaxis: {
-      },
-      yaxis: {
-        min: 0,
-        max: 100,
-        title: { text: "Uso" }
-      },
-      stroke: {
-        curve: 'smooth'
-      }
+    chartCPU = new ApexCharts(document.querySelector("#grafico-row-3"), {
+      series: [{ name: "CPU (%)", data: historicoCPU },{ name: "RAM (%)", data: historicoRAMpercent }],
+      chart: { type: "line", height: 300 },
+      yaxis: { min: 0, max: 100, title: { text: "Uso" } }
     });
     chartCPU.render();
   } else {
-    chartCPU.updateSeries([
-      { name: "CPU (%)", data: historicoCPU },
-      { name: "RAM (%)", data: historicoRAMpercent }
-    ]);
+    chartCPU.updateSeries([{ name: "CPU (%)", data: historicoCPU },{ name: "RAM (%)", data: historicoRAMpercent }]);
   }
 }
 

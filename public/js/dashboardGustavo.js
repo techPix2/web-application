@@ -207,13 +207,8 @@ var packageOptions ={
 var packageChart = new ApexCharts(document.getElementById("packageChart"), packageOptions)
 
 var saturationValue = 20;
-var saturationColor = '#ff0000';
 
-if (saturationValue > 90) {
-    saturationColor = '#00ff00';
-} else if (saturationValue > 60) {
-    saturationColor = '#ffff00';
-}
+var saturationColor = '#ff0000';
 
 var saturationOptions = {
     chart: {
@@ -258,22 +253,64 @@ var saturationOptions = {
 
 var saturationChart = new ApexCharts(document.getElementById("saturationChart"), saturationOptions)
 
+saturationChart.render()
+
 diskChart.render()
 
 packageChart.render()
 
-saturationChart.render()
-
 chartComponentes.render();
 
-document.getElementById('selectMaquina').addEventListener('change', function() {
+function getSaturationColor(value) {
+    if (value >= 90) return "#ff4d4d"; // vermelho
+    if (value >= 75) return "#ffa500"; // laranja
+    if (value >= 50) return "#f1c40f"; // amarelo
+    return "#2ecc71"; // verde
+}
+
+document.getElementById('selectMaquina').addEventListener('change', function () {
     const idMaquinaSelecionada = this.value;
+    console.log("🔁 Máquina selecionada:", idMaquinaSelecionada);
+
+    // DEBUG: ver todas as máquinas disponíveis
+    console.log("🔍 Todas as máquinas disponíveis:");
+    dadosPorMaquinaGlobal.forEach(m => console.log(m.maquina));
+
+    // DEBUG: ver conteúdo da máquina selecionada
+    const maquinaData = dadosPorMaquinaGlobal.find(m => m.maquina === idMaquinaSelecionada);
+    console.log("📦 Dados da máquina selecionada:", maquinaData);
+
+    const alertasMaquinaSelecionada = calcularAlertasMaquinaSelecionada(dadosPorMaquinaGlobal, idMaquinaSelecionada);
+    console.log("🚨 Total de alertas:", alertasMaquinaSelecionada);
+
+    // ⚙️ Atualiza gráfico de componentes
     plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada);
+
+    // ⚙️ Calcula e atualiza saturação
+    const saturacao = calcularSaturacaoMaquinaSelecionada(dadosPorMaquinaGlobal, idMaquinaSelecionada);
+    const saturacaoArredondada = parseFloat(saturacao.toFixed(2));
+    const cor = getSaturationColor(saturacaoArredondada);
+    saturationChart.updateOptions({ colors: [cor] });
+    saturationChart.updateSeries([saturacaoArredondada]);
+
+    // Atualiza valor textual da saturação
+    const elementoSelecionada = document.getElementById("saturacaoMaquinaSelecionada");
+    if (elementoSelecionada) {
+        elementoSelecionada.innerText = `${idMaquinaSelecionada}: ${saturacaoArredondada}%`;
+    }
+
+    // Atualiza número de alertas
+    const maquinaSelecionada = document.getElementById("alertasMaquina");
+    if(maquinaSelecionada) {
+        maquinaSelecionada.innerText = `${alertasMaquinaSelecionada}`;
+    }
 });
 
 function popularSelectMaquinas(dadosPorMaquinaGlobal) {
     const select = document.getElementById('selectMaquina');
     const maquinasArray = Object.values(dadosPorMaquinaGlobal);
+
+    select.innerHTML = "";
 
     maquinasArray.forEach(maquina => {
         const option = document.createElement('option');
@@ -282,9 +319,39 @@ function popularSelectMaquinas(dadosPorMaquinaGlobal) {
         select.appendChild(option);
     });
 
-    // Plotar gráfico da primeira máquina ao carregar
     if (maquinasArray.length > 0) {
-        plotarGraficoComponentes(dadosPorMaquinaGlobal, maquinasArray[0].maquina);
+        const primeiraMaquina = maquinasArray[0].maquina;
+        select.value = primeiraMaquina;
+
+        plotarGraficoComponentes(dadosPorMaquinaGlobal, primeiraMaquina);
+
+        // Cálculo de saturação
+        const saturacao = calcularSaturacaoMaquinaSelecionada(dadosPorMaquinaGlobal, primeiraMaquina);
+        const saturacaoArredondada = parseFloat(saturacao.toFixed(2));
+        const cor = getSaturationColor(saturacaoArredondada);
+
+        // Cálculo de alertas
+        const alertasMaquina = calcularAlertasMaquinaSelecionada(dadosPorMaquinaGlobal, primeiraMaquina);
+
+        // Atualiza gráfico radial
+        if (saturationChart) {
+            saturationChart.updateOptions({
+                colors: [cor],
+                series: [saturacaoArredondada]
+            }, true, true);
+        }
+
+        // Atualiza texto de saturação
+        const elementoSelecionada = document.getElementById("saturacaoMaquinaSelecionada");
+        if (elementoSelecionada) {
+            elementoSelecionada.innerText = `${primeiraMaquina}: ${saturacaoArredondada}%`;
+        }
+
+        // Atualiza texto de alertas
+        const alertaSpan = document.getElementById("alertasMaquina");
+        if (alertaSpan) {
+            alertaSpan.innerText = `${alertasMaquina}`;
+        }
     }
 }
 
@@ -348,4 +415,187 @@ function plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada) {
         xaxis: { categories: categorias, max: 5 },
         series: series
     });
+}
+
+function plotarGraficoDiscoComparativo(dadosPorMaquinaGlobal) {
+    const maquinasArray = Object.values(dadosPorMaquinaGlobal);
+
+    const discosSet = new Set();
+
+    maquinasArray.forEach(maquina => {
+        const primeiroRegistro = maquina.content?.[0];
+        if (!primeiroRegistro) return;
+
+        for (const key in primeiroRegistro) {
+            if (key.startsWith('disco_') && key.endsWith('_percent')) {
+                const discoNome = key.split('_')[1].toUpperCase();
+                discosSet.add(discoNome);
+            }
+        }
+    });
+
+    const discos = Array.from(discosSet).sort();
+
+    const series = maquinasArray.map(maquina => {
+        const dados = maquina.content;
+        if (!dados || dados.length === 0) return null;
+
+        const mediasDiscos = discos.map(disco => {
+            let soma = 0;
+            let contador = 0;
+
+            dados.forEach(item => {
+                const valor = item[`disco_${disco}_percent`];
+                if (valor !== undefined) {
+                    soma += parseFloat(valor);
+                    contador++;
+                }
+            });
+
+            return contador > 0 ? parseFloat((soma / contador).toFixed(2)) : null;
+        });
+
+        return {
+            name: maquina.maquina,
+            data: mediasDiscos
+        };
+    }).filter(Boolean);
+
+    diskChart.updateOptions({
+        series: series,
+        xaxis: {
+            categories: discos.map(disco => `Disco ${disco}`)
+        }
+    });
+}
+
+function calcularMaiorSaturacao(dadosPorMaquinaGlobal) {
+    let maiorSaturacao = 0;
+    let maquinaMaisSaturada = "";
+
+    dadosPorMaquinaGlobal.forEach(maquina => {
+        const nomeMaquina = maquina.maquina;
+
+        maquina.content.forEach(item => {
+            const cpu = parseFloat(item.cpu_percent?.replace(",", ".") || 0);
+            const ram = parseFloat(item.ram_percent?.replace(",", ".") || 0);
+
+            const discoPercents = Object.entries(item)
+                .filter(([key, _]) => key.startsWith("disco_") && key.endsWith("_percent"))
+                .map(([_, value]) => parseFloat(value?.replace(",", ".") || 0));
+
+            const discoMax = Math.max(...discoPercents, 0);
+
+            const saturacao = (cpu * 0.4) + (ram * 0.3) + (discoMax * 0.3);
+
+            if (saturacao > maiorSaturacao) {
+                maiorSaturacao = saturacao;
+                maquinaMaisSaturada = nomeMaquina;
+            }
+        });
+    });
+
+    const elemento = document.getElementById("maiorSaturacao");
+    if (elemento) {
+        elemento.innerText = maquinaMaisSaturada || "N/A";
+    }
+}
+
+function calcularSaturacaoMaquinaSelecionada(dados, idMaquina) {
+    const maquina = dados.find(m => m.maquina === idMaquina);
+    if (!maquina || !maquina.content.length) return 0;
+
+    // Pegamos o último registro (mais recente)
+    const ultimo = maquina.content[maquina.content.length - 1];
+
+    const cpu = parseFloat(ultimo.cpu_percent?.replace(",", ".") || 0);
+    const ram = parseFloat(ultimo.ram_percent?.replace(",", ".") || 0);
+
+    const discoPercents = Object.entries(ultimo)
+        .filter(([key]) => key.startsWith("disco_") && key.endsWith("_percent"))
+        .map(([_, value]) => parseFloat(value?.replace(",", ".") || 0));
+
+    const discoMax = Math.max(...discoPercents, 0);
+
+    const saturacao = (cpu * 0.4) + (ram * 0.3) + (discoMax * 0.3);
+
+    return saturacao;
+}
+
+function calcularMaquinaComMaisAlertas(dadosPorMaquinaGlobal) {
+    let maquinaComMaisAlertas = null;
+    let maxAlertas = 0;
+
+    dadosPorMaquinaGlobal.forEach(maquina => {
+        const nomeMaquina = maquina.maquina;
+        let alertasMaquina = 0;
+
+        maquina.content.forEach(item => {
+            const cpu = parseFloat(item.cpu_percent?.replace(",", ".") || 0);
+            const ram = parseFloat(item.ram_percent?.replace(",", ".") || 0);
+
+            const discoPercents = Object.entries(item)
+                .filter(([key]) => key.startsWith("disco_") && key.endsWith("_percent"))
+                .map(([_, value]) => parseFloat(value?.replace(",", ".") || 0));
+
+            const discoAcima = discoPercents.some(p => p > 80);
+            const cpuAcima = cpu > 80;
+            const ramAcima = ram > 80;
+
+            if (cpuAcima || ramAcima || discoAcima) {
+                alertasMaquina += 1;
+            }
+        });
+
+        if (alertasMaquina > maxAlertas) {
+            maxAlertas = alertasMaquina;
+            maquinaComMaisAlertas = nomeMaquina;
+        }
+    });
+
+    // Atualiza os elementos no HTML
+    const spanMaquina = document.getElementById("maiorAlertas");
+    const spanNumero = document.getElementById("numeroAlertas");
+
+    if (spanMaquina) {
+        spanMaquina.innerText = maquinaComMaisAlertas || "N/A";
+    }
+
+    if (spanNumero) {
+        spanNumero.innerText = `(${maxAlertas.toString()}) Alertas`;
+    }
+
+    return {
+        maquina: maquinaComMaisAlertas,
+        totalAlertas: maxAlertas
+    };
+}
+
+function calcularAlertasMaquinaSelecionada(dados, idMaquina) {
+    const idMaquinaNormalizada = idMaquina.toLowerCase();
+
+    // Encontra a máquina com o nome normalizado
+    const maquina = dados.find(m => m.maquina.toLowerCase() === idMaquinaNormalizada);
+    if (!maquina || !maquina.content.length) return 0;
+
+    let totalAlertas = 0;
+
+    maquina.content.forEach(item => {
+        const cpu = parseFloat(item.cpu_percent?.replace(",", ".") || 0);
+        const ram = parseFloat(item.ram_percent?.replace(",", ".") || 0);
+
+        const discoPercents = Object.entries(item)
+            .filter(([key]) => key.startsWith("disco_") && key.endsWith("_percent"))
+            .map(([_, value]) => parseFloat(value?.replace(",", ".") || 0));
+
+        const discoAcima = discoPercents.some(p => p > 80);
+        const cpuAcima = cpu > 80;
+        const ramAcima = ram > 80;
+
+        if (cpuAcima || ramAcima || discoAcima) {
+            totalAlertas += 1;
+        }
+    });
+
+    return totalAlertas;
 }

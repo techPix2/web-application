@@ -64,8 +64,6 @@ function atualizarEmployer(id, nome, email, cargo, senha) {
   return database.executar(instrucaoSql);
 }
 
-
-
 function removerEmployer(idFunc) {
   let instrucaoSql = `UPDATE Employer SET active = '0' WHERE idEmployer = ${idFunc};`
 

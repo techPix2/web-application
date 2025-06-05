@@ -131,17 +131,14 @@ function logar() {
 
                         setTimeout(function () {
                             if (sessionStorage.CARGO_FUNCIONARIO == "Administrador") {
-                                window.location.href = "../root/contaEmpresaRootFuncionarios.html";
+                                window.location.href = "../user/dashboardVinicius.html";
                                 modalLogin.style.display = 'none';
                             }
                             else if (sessionStorage.CARGO_FUNCIONARIO == "Analista") {
-                                window.location.href = "../user/dashboard.html";
+                                window.location.href = "../user/dashboardLara.html";
                             }
                             else if (sessionStorage.CARGO_FUNCIONARIO == "Cientista") {
-                                window.location.href = "../user/dashboardCientista.html";
-                            }
-                            else if (sessionStorage.CARGO_FUNCIONARIO == "CEO") {
-                                window.location.href = "../root/contaTechpix.html"
+                                window.location.href = "../user/dashboardGustavo.html";
                             }
                         }, 2000); 
                     });

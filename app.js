@@ -2,8 +2,6 @@ var ambiente_processo = 'producao';
 // var ambiente_processo = 'desenvolvimento';
 
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
-// Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
-// A sintaxe do operador ternário é: condição ? valor_se_verdadeiro : valor_se_falso
 
 require("dotenv").config({ path: caminho_env });
 
@@ -16,7 +14,6 @@ var HOST_APP = process.env.APP_HOST;
 
 var app = express();
 
-
 var dashMatheusRouter = require("./src/routes/dashmatheus")
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
@@ -28,10 +25,10 @@ var dashAnalistaRouter = require("./src/routes/dashAnalista");
 var gestorRouter = require("./src/routes/gestor")
 var jiraRouter = require("./src/routes/jiraRoute");
 var s3Router = require("./src/routes/s3.route.js");
-var slackRouter = require("./src/routes/slackRoutes");
-var machineRouter = require('./src/routes/machine.route');
-var realtimeRouter = require('./src/routes/realtime.route');
-var bodyParser = require("body-parser");
+var s3RouterFelipe = require("./src/routes/s3.js");
+var machineRouter = require("./src/routes/machine.route.js")
+var realtimeRouter = require("./src/routes/realtime.route.js")
+var processRouter = require("./src/routes/process.route.js")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -52,10 +49,10 @@ app.use("/s3", s3Router);
 app.use("/servidores", servidorRouter)
 app.use("/gestor", gestorRouter)
 app.use("/apiJira", jiraRouter);
-app.use("/apiSlack", slackRouter);
-app.use('/machine', machineRouter);
-app.use('/realtime', realtimeRouter);
-app.use(bodyParser.json());
+app.use("/api/s3", s3RouterFelipe)
+app.use("/realtime", realtimeRouter)
+app.use("/machine", machineRouter)
+app.use("/process", processRouter)
 
 app.listen(PORTA_APP, function () {
     console.log(`

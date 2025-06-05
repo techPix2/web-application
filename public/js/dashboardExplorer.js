@@ -274,5 +274,4 @@ async function enviarArquivosSelecionados() {
     }
 }
 
-
 buscarEListarArquivos('')

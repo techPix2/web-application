@@ -1128,3 +1128,100 @@ height: 800px;
         padding: 10%;
     }
 }
+
+
+.sideBar, .nav-lateral {
+    background-color: var(--azulEscuro, #003f69);
+    width: 250px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 0 24px 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    justify-content: space-between;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.profilePicture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 0;
+    object-fit: cover;
+    background: #fff;
+}
+
+.profileInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+}
+
+.usuario {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.sidebar-separator,
+.sidebar-separator-bottom {
+    width: 80%;
+    border: none;
+    border-top: 3px solid white;
+    margin: 8px auto 24px auto;
+}
+
+.sidebar-separator-bottom {
+    margin: 32px auto 16px auto;
+}
+
+.buttonsNavbar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    align-items: center;
+    margin-bottom: auto;
+}
+
+.buttonNavbar {
+    width: 170px;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    text-align: left;
+    padding-left: 18px;
+}
+
+.buttonNavbar:hover,
+.buttonNavbar.active {
+    background: white;
+    color: var(--azulEscuro, #003f69);
+}
+
+.buttonsBaixo {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+}

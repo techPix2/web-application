@@ -1,9 +1,10 @@
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 import { grupoProcessos } from './grupo_processos.js';
-const apiKey = "AIzaSyBKhlQXtdQdWLoQso9xMZDYMf1TFPi6vFU";
+const apiKey = "AIzaSyCjD2I9S1iRLJkmBny-SzpHrzuieF_UC_k";
 const ai = new GoogleGenerativeAI(apiKey);
 let consumoComponenteChart, frequenciaCPUChart, barraGrupoProcessoChart, barrasProcessoRAMChart;
 let loadingOverlayElement;
+let arquivosParaIA = []
 let mainContentElement;
 const NOME_METRICAS = {
     dia: "dia",
@@ -248,8 +249,8 @@ async function updateAllCharts(periodo) {
     showLoading();
     const acessoMetrica = `ultimos_${periodo}_dias`;
 
-    const metricasDoPeriodo = dados.metricas[acessoMetrica] || [];
-    const processosDoPeriodo = dados.processos[acessoMetrica] || [];
+    const metricasDoPeriodo = dados.metricas[acessoMetrica];
+    const processosDoPeriodo = dados.processos[acessoMetrica];
 
     atualizarKPI(metricasDoPeriodo, periodo);
     console.log("Dados de processos para o período:", processosDoPeriodo);
@@ -258,7 +259,38 @@ async function updateAllCharts(periodo) {
     const consumoPorGrupo = calcularMediaPorGrupo(processosDoPeriodo);
     const topProcessos = top5ProcessosPorRAM(processosDoPeriodo);
 
-    if (periodo > 90) {
+    // --- START: Logic for X-axis labels ---
+    const allMetricDays = [];
+    for (let i = 0; i < metricasDoPeriodo.length; i++) {
+        allMetricDays.push(metricasDoPeriodo[i]['dia']);
+    }
+
+    const displayCategories = [];
+    const periodoInt = parseInt(periodo);   
+    let step = 1;
+
+    if (periodoInt === 90) {
+        step = 9;
+    } else if (periodoInt === 180) {
+        step = 18;
+    } else if (periodoInt === 360) {
+        step = 36;
+    }
+
+    for (let i = 0; i < allMetricDays.length; i++) {
+        if (step === 1) {
+            displayCategories.push(allMetricDays[i]);
+        } else { 
+            if (i % step === 0) {
+                displayCategories.push(allMetricDays[i]);
+            } else {
+                displayCategories.push(''); 
+            }
+        }
+    }
+
+
+    if (periodoInt > 90) { 
         document.getElementById('graficos_dias').style.flexDirection = 'column';
         document.getElementById('graficos_dias').style.alignItems = 'center';
         document.getElementById('consumoComponente').style.width = 95 + '%';
@@ -269,21 +301,24 @@ async function updateAllCharts(periodo) {
         document.getElementById('consumoComponente').style.width = 48 + '%';
         document.getElementById('frequenciaCPU').style.width = 48 + '%'
     }
+
     consumoComponenteChart.updateOptions({
-        xaxis: { categories: metricasDoPeriodo.map(m => m['dia']) },
+        xaxis: { categories: displayCategories }, 
         series: [
             { name: "%CPU", data: metricasDoPeriodo.map(m => parseFloat(m['avg_cpu_percent'])) },
             { name: "%RAM", data: metricasDoPeriodo.map(m => parseFloat(m['avg_ram_percent'])) }
         ],
         title: { text: `Consumo de Hardware - Últimos ${periodo} dias` }
     });
+
     frequenciaCPUChart.updateOptions({
-        xaxis: { categories: metricasDoPeriodo.map(m => m['dia']) },
+        xaxis: { categories: displayCategories }, 
         series: [{
             name: "Frequência CPU (MHz)",
             data: metricasDoPeriodo.map(m => parseFloat(m['avg_cpu_freq']))
         }],
         title: { text: `Frequência CPU - Últimos ${periodo} dias` }
+ 
     });
 
     barraGrupoProcessoChart.updateOptions({
@@ -296,6 +331,7 @@ async function updateAllCharts(periodo) {
         ],
         title: { text: `Consumo CPU por Grupo de Processos - Últimos ${periodo} dias` }
     });
+
     barrasProcessoRAMChart.updateOptions({
         xaxis: { categories: topProcessos.map(p => p.nome) },
         series: [{ name: 'Consumo de RAM (Mb)', data: topProcessos.map(p => p.ram) }],
@@ -304,6 +340,7 @@ async function updateAllCharts(periodo) {
     });
     hideLoading();
 }
+
 function calcularMediaPorGrupo(processos) {
     const mediasPorGrupo = {
         'Sistema': { total: 0, count: 0 },
@@ -353,6 +390,8 @@ async function filtrarJsonsComTodosPeriodos() {
     const arquivos = await listArquivos();
     const metricas = arquivos.files[0].data || [];
     const processos = [arquivos.files[1].data];
+    arquivosParaIA = arquivos.arquivosParaIA;
+    console.log("Arquivos recebidos:", arquivosParaIA);
     const metricasOrdenadas = metricas.sort((a, b) => tratarData(a[NOME_METRICAS.dia]) - tratarData(b[NOME_METRICAS.dia]));
     const filtroDados = {
         ultimos_30_dias: metricasOrdenadas.slice(-30),
@@ -363,22 +402,13 @@ async function filtrarJsonsComTodosPeriodos() {
     const chavesDeData = Object.keys(processos[0])
     function parseDataString(dataStr) {
         const partes = dataStr.split('/');
-        if (partes.length !== 3) {
-            return new Date(NaN);
-        }
         const dia = parseInt(partes[0], 10);
         const mes = parseInt(partes[1], 10) - 1;
         const ano = parseInt(partes[2], 10);
-        if (isNaN(dia) || isNaN(mes) || isNaN(ano)) {
-            return new Date(NaN);
-        }
         const dataObj = new Date(ano, mes, dia);
-        if (isNaN(dataObj.getTime()) || dataObj.getFullYear() !== ano || dataObj.getMonth() !== mes || dataObj.getDate() !== dia) {
-            return new Date(NaN);
-        }
-
         return dataObj;
     }
+
     chavesDeData.sort((dataAStr, dataBStr) => {
         const dataA = parseDataString(dataAStr);
         const dataB = parseDataString(dataBStr);
@@ -401,25 +431,20 @@ async function filtrarJsonsComTodosPeriodos() {
 
 }
 
-async function contatarIa() {
+document.getElementById('botaoIa').addEventListener('click', async function () {
+    showLoading();
     const searchInputElement = document.getElementById('searchInput');
-    const inputValue = searchInputElement.value;
-
-    if (!inputValue.trim()) {
-        console.log("Input da IA está vazio. Nenhuma ação será tomada.");
+    const textoSolicitacaoUsuario = searchInputElement.value;
+    if (!textoSolicitacaoUsuario.trim()) {
+        alert("Por favor, insira uma solicitação para a IA.");
+        hideLoading();
         return;
     }
-
-    try {
-        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const result = await model.generateContent(inputValue);
-        const response = result.response;
-        const text = response.text();
-
-        console.log("Resposta da IA:", text);
-        alert("Resposta da IA (ver console para detalhes):\n" + text.substring(0, 200) + (text.length > 200 ? "..." : ""));
-    } catch (error) {
-        console.error("Erro ao contatar IA:", error);
-        alert("Erro ao contatar a IA. Verifique o console para mais detalhes.");
+    if (arquivosParaIA.length === 0) {
+        alert("Nenhum arquivo enviado. Por favor, envie arquivos CSV ou JSON antes de contatar a IA.");
+        hideLoading();
+        return;
     }
-}
+    await contatarIaComArquivo();
+    hideLoading();
+})

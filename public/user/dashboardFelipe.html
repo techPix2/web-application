@@ -19,9 +19,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.9); 
+            background-color: rgba(255, 255, 255, 0.9);
             z-index: 9999;
-            display: flex; 
+            display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
@@ -35,7 +35,7 @@
             height: 60px;
             animation: spin 1s linear infinite;
         }
-        
+
         #loading-overlay p {
             margin-top: 15px;
             font-size: 18px;
@@ -43,35 +43,39 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         custom-main {
-            opacity: 1; 
+            opacity: 1;
             transition: opacity 0.5s ease-in-out;
         }
 
         custom-main.hidden {
             opacity: 0;
         }
-
     </style>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 
-<body> 
+<body>
     <div id="loading-overlay">
         <div id="loading-spinner"></div>
         <p>Carregando dados...</p>
     </div>
 
     <nav-bar></nav-bar>
-    <custom-main class="hidden" style="width: 100%;"> 
+    <custom-main class="hidden" style="width: 100%;">
         <chart-container>
-            <div class="dashboard-content" style="margin-top: 2em;"> 
+            <div class="dashboard-content" style="margin-top: 2em;">
                 <div
-                    style="display: flex; align-items: center; justify-content: center; padding-bottom: 15px; height: 2em;">
+style="display: flex; align-items: center; justify-content: center; padding-bottom: 15px; height: 2em;">
                     <select name="" id="periodoSelect"
                         style="width: 25%; height: 100%; text-align: center; background-color: rgb(241, 241, 241); border: none; border-radius: 5px; font-size: 16px; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;">
                         <option value="30" selected>30 dias</option>
@@ -104,8 +108,9 @@
 
 
                 <div class="charts-container">
-                    
-                    <div class="chart-row" id="graficos_dias" style="display: flex; flex-direction: row; justify-content:space-around;">
+
+                    <div class="chart-row" id="graficos_dias"
+                        style="display: flex; flex-direction: row; justify-content:space-around;">
                         <div class="chart" id="consumoComponente"
                             style="width: 48%; box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px; border-radius: 13px;">
                         </div>

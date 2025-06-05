@@ -41,7 +41,16 @@ document.addEventListener('DOMContentLoaded', async function () {
         series: [{ name: "%CPU", data: [] }, { name: "%RAM", data: [] }],
         chart: { type: 'line', height: 300 },
         annotations: { yaxis: [{ y: 80, borderColor: 'red', label: { text: 'Limite' } }] },
-        title: { text: 'Consumo de Hardware', align: 'left' },
+        title: {
+            text: 'Consumo de Hardware', align: 'left'
+            , style: {
+                fontSize: '18px',
+                fontWeight: 'bold',
+                fontFamily: undefined,
+                color: '#263238'
+            }
+
+        },
         stroke: { curve: 'smooth' },
         xaxis: { categories: [] }
     };
@@ -51,7 +60,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     const frequenciaCPUOption = {
         series: [{ name: "Frequência CPU (MHz)", data: [] }],
         chart: { type: 'line', height: 300 },
-        title: { text: 'Frequência CPU', align: 'left' },
+        title: {
+            text: 'Frequência CPU', align: 'left',
+            style: {
+                fontSize: '18px',
+                fontWeight: 'bold',
+                fontFamily: undefined,
+                color: '#263238'
+
+            }
+        },
         stroke: { curve: 'smooth' },
         xaxis: { categories: [] }
     };
@@ -64,7 +82,16 @@ document.addEventListener('DOMContentLoaded', async function () {
             { name: 'Desconhecido', data: [] }, { name: 'Banco', data: [] }
         ],
         chart: { type: 'bar', height: 300 },
-        title: { text: 'Consumo CPU por Grupo de Processos', align: 'left' },
+        title: {
+            text: 'Consumo CPU por Grupo de Processos', align: 'left'
+
+            , style: {
+                fontSize: '18px',
+                fontWeight: 'bold',
+                fontFamily: undefined,
+                color: '#263238'
+            }
+        },
         colors: [COLORS_BY_GROUP.Sistema, COLORS_BY_GROUP.Aplicação, COLORS_BY_GROUP.Desconhecido, COLORS_BY_GROUP.Banco],
         plotOptions: { bar: { columnWidth: '50%' } },
         xaxis: { categories: ['Consumo médio CPU (%)'] }
@@ -75,7 +102,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     const barrasProcessoRAMOptions = {
         series: [{ name: 'Consumo de RAM (Mb)', data: [] }],
         chart: { type: 'bar', height: 300 },
-        title: { text: 'Top 5 Processos por RAM', align: 'left' },
+        title: {
+            text: 'Top 5 Processos por RAM', align: 'left'
+            , style: {
+                fontSize: '18px',
+                fontWeight: 'bold',
+                fontFamily: undefined,
+                color: '#263238'
+            }
+        },
         plotOptions: { bar: { horizontal: true, distributed: true } },
         xaxis: { categories: [] },
         legend: { show: false },

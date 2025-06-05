@@ -1,9 +1,10 @@
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 import { grupoProcessos } from './grupo_processos.js';
-const apiKey = "AIzaSyBKhlQXtdQdWLoQso9xMZDYMf1TFPi6vFU";
+const apiKey = "AIzaSyCjD2I9S1iRLJkmBny-SzpHrzuieF_UC_k";
 const ai = new GoogleGenerativeAI(apiKey);
 let consumoComponenteChart, frequenciaCPUChart, barraGrupoProcessoChart, barrasProcessoRAMChart;
 let loadingOverlayElement;
+let arquivosParaIA = []
 let mainContentElement;
 const NOME_METRICAS = {
     dia: "dia",
@@ -248,8 +249,8 @@ async function updateAllCharts(periodo) {
     showLoading();
     const acessoMetrica = `ultimos_${periodo}_dias`;
 
-    const metricasDoPeriodo = dados.metricas[acessoMetrica] || [];
-    const processosDoPeriodo = dados.processos[acessoMetrica] || [];
+    const metricasDoPeriodo = dados.metricas[acessoMetrica];
+    const processosDoPeriodo = dados.processos[acessoMetrica];
 
     atualizarKPI(metricasDoPeriodo, periodo);
     console.log("Dados de processos para o período:", processosDoPeriodo);
@@ -353,6 +354,8 @@ async function filtrarJsonsComTodosPeriodos() {
     const arquivos = await listArquivos();
     const metricas = arquivos.files[0].data || [];
     const processos = [arquivos.files[1].data];
+    arquivosParaIA = arquivos.arquivosParaIA;
+    console.log("Arquivos recebidos:", arquivosParaIA);
     const metricasOrdenadas = metricas.sort((a, b) => tratarData(a[NOME_METRICAS.dia]) - tratarData(b[NOME_METRICAS.dia]));
     const filtroDados = {
         ultimos_30_dias: metricasOrdenadas.slice(-30),
@@ -363,22 +366,13 @@ async function filtrarJsonsComTodosPeriodos() {
     const chavesDeData = Object.keys(processos[0])
     function parseDataString(dataStr) {
         const partes = dataStr.split('/');
-        if (partes.length !== 3) {
-            return new Date(NaN);
-        }
         const dia = parseInt(partes[0], 10);
         const mes = parseInt(partes[1], 10) - 1;
         const ano = parseInt(partes[2], 10);
-        if (isNaN(dia) || isNaN(mes) || isNaN(ano)) {
-            return new Date(NaN);
-        }
         const dataObj = new Date(ano, mes, dia);
-        if (isNaN(dataObj.getTime()) || dataObj.getFullYear() !== ano || dataObj.getMonth() !== mes || dataObj.getDate() !== dia) {
-            return new Date(NaN);
-        }
-
         return dataObj;
     }
+
     chavesDeData.sort((dataAStr, dataBStr) => {
         const dataA = parseDataString(dataAStr);
         const dataB = parseDataString(dataBStr);
@@ -401,18 +395,94 @@ async function filtrarJsonsComTodosPeriodos() {
 
 }
 
-async function contatarIa() {
+document.getElementById('botaoIa').addEventListener('click', async function () {
+    showLoading();
     const searchInputElement = document.getElementById('searchInput');
-    const inputValue = searchInputElement.value;
-
-    if (!inputValue.trim()) {
-        console.log("Input da IA está vazio. Nenhuma ação será tomada.");
+    const textoSolicitacaoUsuario = searchInputElement.value;
+    if (!textoSolicitacaoUsuario.trim()) {
+        alert("Por favor, insira uma solicitação para a IA.");
+        hideLoading();
         return;
+    }
+    if (arquivosParaIA.length === 0) {
+        alert("Nenhum arquivo enviado. Por favor, envie arquivos CSV ou JSON antes de contatar a IA.");
+        hideLoading();
+        return;
+    }
+    await contatarIaComArquivo();
+    hideLoading();
+})
+
+async function contatarIaComArquivo() {
+    const searchInputElement = document.getElementById('searchInput');
+    const textoSolicitacaoUsuario = searchInputElement.value;
+
+    let promptDeTextoParaIA = "Faça uma análise estatística utilizando Python, por exemplo, para atender à seguinte solicitação do usuário";
+    if (textoSolicitacaoUsuario.trim()) {
+        promptDeTextoParaIA += ": " + textoSolicitacaoUsuario;
     }
 
     try {
+        if (typeof ai === 'undefined' || !ai.getGenerativeModel) {
+            alert("A biblioteca da IA não foi carregada corretamente.");
+            return;
+        }
         const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const result = await model.generateContent(inputValue);
+
+        const partsParaApi = [];
+        let conteudoTextualDosArquivosParaPrompt = "";
+        const nomesArquivosReferenciados = [];
+
+        // Acessa a variável 'arquivosParaIA' diretamente, assumindo que está no mesmo escopo
+        // ou é uma variável global acessível (declarada com var ou atribuída a window explicitamente se necessário).
+        // No contexto do script fornecido, 'arquivosParaIA' é declarada com 'let' no escopo do módulo/script.
+        if (!Array.isArray(arquivosParaIA)) {
+            alert("Os dados dos arquivos não foram carregados ou estão em formato incorreto.");
+            return;
+        }
+
+        arquivosParaIA.forEach(arquivo => {
+            if (arquivo && arquivo.mimeType && arquivo.nomeArquivo) {
+                if (arquivo.mimeType === 'text/csv' || arquivo.mimeType === 'application/json') {
+                    if (arquivo.content) {
+                        conteudoTextualDosArquivosParaPrompt += `\n\n--- Conteúdo do arquivo: ${arquivo.nomeArquivo} (${arquivo.mimeType}) ---\n`;
+                        conteudoTextualDosArquivosParaPrompt += arquivo.content;
+                        conteudoTextualDosArquivosParaPrompt += `\n--- Fim do arquivo: ${arquivo.nomeArquivo} ---`;
+                        nomesArquivosReferenciados.push(arquivo.nomeArquivo);
+                    }
+                } else if (['image/png', 'image/jpeg', 'image/webp'].includes(arquivo.mimeType)) {
+                    if (arquivo.base64) {
+                        partsParaApi.push({
+                            inlineData: {
+                                mimeType: arquivo.mimeType,
+                                data: arquivo.base64
+                            }
+                        });
+                        nomesArquivosReferenciados.push(`${arquivo.nomeArquivo} (imagem anexada)`);
+                    }
+                }
+            }
+        });
+
+        if (nomesArquivosReferenciados.length > 0) {
+            promptDeTextoParaIA += `. Utilize os seguintes arquivos enviados para a análise: ${nomesArquivosReferenciados.join(', ')}.`;
+        }
+        if (conteudoTextualDosArquivosParaPrompt) {
+            promptDeTextoParaIA += "\n\nDados dos arquivos para análise:\n" + conteudoTextualDosArquivosParaPrompt;
+        }
+         promptDeTextoParaIA += "\n\n--- Fim dos dados dos arquivos e solicitação ---";
+
+
+        if (promptDeTextoParaIA.trim()) {
+            partsParaApi.unshift({ text: promptDeTextoParaIA.trim() });
+        }
+
+        if (partsParaApi.length === 0 || (partsParaApi.length === 1 && !partsParaApi[0].inlineData && !textoSolicitacaoUsuario.trim() && nomesArquivosReferenciados.length === 0)) {
+            alert("Nenhuma solicitação de usuário ou conteúdo de arquivo válido para enviar à IA.");
+            return;
+        }
+        
+        const result = await model.generateContent(partsParaApi);
         const response = result.response;
         const text = response.text();
 
@@ -423,3 +493,4 @@ async function contatarIa() {
         alert("Erro ao contatar a IA. Verifique o console para mais detalhes.");
     }
 }
+

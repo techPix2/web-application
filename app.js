@@ -25,11 +25,16 @@ var dashAnalistaRouter = require("./src/routes/dashAnalista");
 var gestorRouter = require("./src/routes/gestor")
 var jiraRouter = require("./src/routes/jiraRoute");
 var s3Router = require("./src/routes/s3.route.js");
+<<<<<<< HEAD
+var s3RouterFelipe = require("./src/routes/s3.js");
+var removeProcessRouter = require("./src/routes/removeProcess");
+=======
 var slackRouter = require("./src/routes/slackRoutes");
 var machineRouter = require('./src/routes/machine.route');
 var realtimeRouter = require('./src/routes/realtime.route');
 var processRouter = require("./src/routes/process.route");
 var bodyParser = require("body-parser");
+>>>>>>> origin
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -50,12 +55,17 @@ app.use("/s3", s3Router);
 app.use("/servidores", servidorRouter)
 app.use("/gestor", gestorRouter)
 app.use("/apiJira", jiraRouter);
+<<<<<<< HEAD
+app.use("/api/s3", s3RouterFelipe)
+app.use("/removerProcessos", removeProcessRouter);
+=======
 app.use("/apiSlack", slackRouter);
 app.use('/machine', machineRouter);
 app.use('/realtime', realtimeRouter);
 app.use("/process", processRouter);
 
 app.use(bodyParser.json());
+>>>>>>> origin
 
 app.listen(PORTA_APP, function () {
     console.log(`

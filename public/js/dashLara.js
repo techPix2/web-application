@@ -1,34 +1,30 @@
 //chart status dos servidores
-var options = {
-  series: [55, 13],
+var chartOptions = {
+  series: [0, 0, 0], // Normal, Atenção, Crítico
   chart: {
     width: 380,
     type: 'pie',
   },
-  labels: ['Normal', 'Crítico'],
-  colors: ['#0078d7', '#f50000'],
+  labels: ['Normal', 'Atenção', 'Crítico'],
+  colors: ['#008000', '#ff9900', '#f50000'],
   responsive: [{
     breakpoint: 480,
     options: {
-      chart: {
-        width: 200
-      },
-      legend: {
-        position: 'bottom'
-      }
+      chart: { width: 200 },
+      legend: { position: 'bottom' }
     }
   }]
 };
 
-var chart = new ApexCharts(document.querySelector("#chart"), options);
+var chart = new ApexCharts(document.querySelector("#chart"), chartOptions);
 chart.render();
 
 
-let tabelaServidores;
-let compMaisAlertas;
-let historicoCPU = []
-let historicoRAMpercent = []
-let chartCPU
+
+const historicoCPU = {};
+const historicoRAM = {};
+const historicoDISK = {};
+const charts = {};
 
 document.addEventListener('DOMContentLoaded', function () {
   tabelaServidores = document.getElementById('tabelaServidores');
@@ -101,13 +97,21 @@ async function buscarServidoresComAlerta() {
 
     // Atualiza eventos dos botões
     document.querySelectorAll('.button-eye').forEach(button => {
-      button.removeEventListener('click', button._clickHandler);
+      // Remove event listener antigo, se existir
+      if (button._clickHandler) {
+        button.removeEventListener('click', button._clickHandler);
+      }
+
+      // Cria novo handler e associa ao botão
       button._clickHandler = function () {
         const servidorId = this.getAttribute('data-id');
-        mostrarGraficoServidor(servidorId);
+        mostrarGraficoServidor(servidorId);     // Mostra/oculta o gráfico
+        carregarGraficos(servidorId);           // Inicia o gráfico com os dados atuais
       };
+
       button.addEventListener('click', button._clickHandler);
     });
+
 
   } catch (error) {
     console.error("Erro ao buscar máquinas:", error);
@@ -221,70 +225,126 @@ function atualizarComponenteMaisCritico() {
       .map(([comp]) => comp);
 
   compMaisAlertas.textContent = componentesComMax.join(" | ");
+  atualizarGraficoStatusServidores();
+
+}
+
+function atualizarGraficoStatusServidores() {
+  const linhas = Array.from(tabelaServidores.querySelectorAll('tr[id^="linha-"]'));
+  let contagem = { 'NORMAL': 0, 'ATENÇÃO': 0, 'CRÍTICO': 0 };
+
+  linhas.forEach(linha => {
+    const status = linha.querySelector('td[id^="status-"]')?.textContent?.toUpperCase();
+    if (status in contagem) {
+      contagem[status]++;
+    }
+  });
+
+  // Atualiza os dados do gráfico
+  chart.updateSeries([
+    contagem['NORMAL'],
+    contagem['ATENÇÃO'],
+    contagem['CRÍTICO']
+  ]);
 }
 
 
+const graficosIntervalos = new Map(); // Armazena intervals por máquina
+const graficosRenderizados = new Map(); // Armazena gráficos por máquina
 
+function mostrarGraficoServidor(mobuId) {
+  const graficoContainer = document.getElementById(`graficoServidor-${mobuId}`);
+  const graficoRow = document.getElementById(`grafico-row-${mobuId}`);
 
-let servidorGraficoAberto = null;
-
-function mostrarGraficoServidor(idServer) {
-
-  //fecha o gráfico de antes
-  if (servidorGraficoAberto && servidorGraficoAberto !== idServer) {
-    document.getElementById(`grafico-row-${servidorGraficoAberto}`).style.display = 'none';
-    document.getElementById(`graficoServidor-${servidorGraficoAberto}`).innerHTML = '';
-
-  }
-
-  const graficoRow = document.getElementById(`grafico-row-${idServer}`);
-  const chartContainer = document.getElementById(`graficoServidor-${idServer}`);
-  const tableServidor = document.getElementById("table_servidores")
-  //se estiver aberto para este servidor ele fecha
-  if (servidorGraficoAberto === idServer) {
-    graficoRow.style.display = 'none';
-    chartContainer.innerHTML = '';
-    servidorGraficoAberto = null;
+  if (!graficoContainer || !graficoRow) {
+    console.warn(`Elemento de gráfico não encontrado para ${mobuId}`);
     return;
   }
 
-  servidorGraficoAberto = idServer;
-  graficoRow.style.display = '';
+  // Alternar visibilidade da linha de gráfico
+  const estaVisivel = graficoRow.style.display === "table-row";
+  document.querySelectorAll('.grafico-row').forEach(row => row.style.display = "none");
+  if (estaVisivel) return;
+  graficoRow.style.display = "table-row";
 
-  //busca os dados do servidor
-  fetch(`/servidores/dados/${idServer}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Erro ao buscar dados do servidor: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      const options = {
-        series: data.series,
-        chart: {
-          type: 'line',
-          height: 350
-        },
-        xaxis: {
-          categories: data.categories
-        }
-      };
-      chartContainer.innerHTML = ""; //limpa o gráfico de antes
+  // Limpa intervalo anterior se existir
+  if (graficosIntervalos.has(mobuId)) {
+    clearInterval(graficosIntervalos.get(mobuId));
+  }
 
-      //cria o gráfico com os dados
-      const chart = new ApexCharts(chartContainer, options);
-      chart.render();
-    })
-    .catch(error => {
-      chartContainer.innerHTML = '<span style="color:red;">Erro ao carregar gráfico.</span>';
-      console.error("Erro ao buscar dados do servidor:", error);
-    });
+  // Histórico local de dados
+  const historicoCPU = [];
+  const historicoRAM = [];
+  const historicoDISK = [];
+
+  // Criação inicial do gráfico se não renderizado antes
+  if (!graficosRenderizados.has(mobuId)) {
+    const maquinaOptions = {
+      series: [
+        { name: "CPU (%)", data: historicoCPU },
+        { name: "RAM (%)", data: historicoRAM },
+        { name: "DISCO (%)", data: historicoDISK }
+      ],
+      chart: {
+        type: "line",
+        height: 300
+      },
+      yaxis: {
+        min: 0,
+        max: 100,
+        title: { text: "Uso (%)" }
+      },
+      xaxis: {
+        labels: { show: false }
+      },
+      colors: ["#FF5733", "#33A1FF", "#28a745"]
+    };
+
+    const chart = new ApexCharts(graficoContainer, maquinaOptions);
+    chart.render();
+    graficosRenderizados.set(mobuId, chart);
+  }
+
+  const chart = graficosRenderizados.get(mobuId);
+
+  // Atualiza gráfico com dados da API
+  async function atualizarGrafico() {
+    try {
+      const res = await fetch(`/realtime/${mobuId}`);
+      if (!res.ok) return;
+
+      const dados = await res.json();
+      const ultima = dados.entries[dados.entries.length - 1];
+      if (!ultima || !ultima.data) return;
+
+      const usoCpu = ultima.data.cpu?.["Uso (%)"] ?? 0;
+      const usoRam = ultima.data.ram?.["Uso (%)"] ?? 0;
+      const usoDisk = ultima.data.disk?.["Uso (%)"] ?? 0;
+
+      if (historicoCPU.length >= 10) historicoCPU.shift();
+      if (historicoRAM.length >= 10) historicoRAM.shift();
+      if (historicoDISK.length >= 10) historicoDISK.shift();
+
+      historicoCPU.push(usoCpu);
+      historicoRAM.push(usoRam);
+      historicoDISK.push(usoDisk);
+
+      chart.updateSeries([
+        { name: "CPU (%)", data: [...historicoCPU] },
+        { name: "RAM (%)", data: [...historicoRAM] },
+        { name: "DISCO (%)", data: [...historicoDISK] }
+      ]);
+
+    } catch (err) {
+      console.warn(`Erro ao atualizar gráfico de ${mobuId}:`, err);
+    }
+  }
+
+  // Chamada imediata e agendamento do intervalo
+  atualizarGrafico();
+  const intervalId = setInterval(atualizarGrafico, 2000);
+  graficosIntervalos.set(mobuId, intervalId);
 }
-
-
-
-
 
 
 async function buscarChamadosUltimoDia() {
@@ -329,6 +389,8 @@ async function buscarChamadosStatus() {
     return [];
   }
 }
+
+
 
 async function fetchMessages() {
   try {
@@ -400,63 +462,65 @@ async function enviar() {
 }
 
 
-
-
-
-
-
-
-
-
-async function carregarDados() {
+async function carregarGraficos(mobuId) {
   try {
-    const response = await fetch('/dashMatheus/dadosRecebidos', {
-      method: 'GET',
-    });
-    const resultado = await response.json();
-    const dados = resultado.dadosEnviados
-    console.log(dados)
-    return dados;
-  } catch (error) {
-    console.error("Erro ao carregar dados:", error);
-  }
+    const res = await fetch(`/realtime/${mobuId}`);
+    if (!res.ok) return;
 
-}
+    const dados = await res.json();
+    const ultima = dados.entries[dados.entries.length - 1];
+    if (!ultima || !ultima.data) return;
 
-async function carregarGraficos() {
-  const dados = await carregarDados();
+    const cpuUsage = ultima.data.cpu?.["Uso (%)"] ?? 0;
+    const ramUsage = ultima.data.ram?.["Uso (%)"] ?? 0;
+    const diskUsage = ultima.data.disk?.["Uso (%)"] ?? 0;
 
-  function adicionarComLimite(historico, valor) {
-    if (historico.length >= 10) {
-      historico.shift();
+    // Inicializa históricos se ainda não existem
+    if (!historicoCPU[mobuId]) historicoCPU[mobuId] = [];
+    if (!historicoRAM[mobuId]) historicoRAM[mobuId] = [];
+    if (!historicoDISK[mobuId]) historicoDISK[mobuId] = [];
+
+    function adicionarComLimite(historico, valor) {
+      if (historico.length >= 10) historico.shift();
+      historico.push(valor);
     }
-    historico.push(valor);
-  }
 
-  const cpuUsage = dados && dados.cpu && typeof dados.cpu["Uso (%)"] !== 'undefined' ? dados.cpu["Uso (%)"] : 0;
-  const ramUsage = dados && dados.ram && typeof dados.ram["Uso (%)"] !== 'undefined' ? dados.ram["Uso (%)"] : 0;
+    adicionarComLimite(historicoCPU[mobuId], cpuUsage);
+    adicionarComLimite(historicoRAM[mobuId], ramUsage);
+    adicionarComLimite(historicoDISK[mobuId], diskUsage);
 
-  adicionarComLimite(historicoCPU, cpuUsage);
-  adicionarComLimite(historicoRAMpercent, ramUsage);
+    // Cria ou atualiza o gráfico
+    if (!charts[mobuId]) {
+      charts[mobuId] = new ApexCharts(document.querySelector(`#graficoServidor-${mobuId}`), {
+        series: [
+          { name: "CPU (%)", data: historicoCPU[mobuId] },
+          { name: "RAM (%)", data: historicoRAM[mobuId] },
+          { name: "DISK (%)", data: historicoDISK[mobuId] }
+        ],
+        chart: { type: "line", height: 300 },
+        yaxis: { min: 0, max: 100, title: { text: "Uso (%)" } },
+        xaxis: { labels: { show: false } }
+      });
+      charts[mobuId].render();
+    } else {
+      charts[mobuId].updateSeries([
+        { name: "CPU (%)", data: historicoCPU[mobuId] },
+        { name: "RAM (%)", data: historicoRAM[mobuId] },
+        { name: "DISK (%)", data: historicoDISK[mobuId] }
+      ]);
+    }
 
-
-  if (!chartCPU) {
-    chartCPU = new ApexCharts(document.querySelector("#grafico-row-3"), {
-      series: [{ name: "CPU (%)", data: historicoCPU },{ name: "RAM (%)", data: historicoRAMpercent }],
-      chart: { type: "line", height: 300 },
-      yaxis: { min: 0, max: 100, title: { text: "Uso" } }
-    });
-    chartCPU.render();
-  } else {
-    chartCPU.updateSeries([{ name: "CPU (%)", data: historicoCPU },{ name: "RAM (%)", data: historicoRAMpercent }]);
+  } catch (err) {
+    console.error(`Erro ao carregar gráfico do servidor ${mobuId}:`, err);
   }
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   buscarServidoresComAlerta();
   buscarChamadosStatus();
   buscarChamadosUltimoDia();
   fetchMessages();
-  setInterval(carregarGraficos, 2000)
 });
+
 

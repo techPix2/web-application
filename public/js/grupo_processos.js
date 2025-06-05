@@ -3,8 +3,10 @@ export const grupoProcessos = {
             "sqlite_shell.sys",
 "mongod_3",
 "Slack.exe_7",
+"java",
             "init",
             "launchd.sys",
+            "influxd_1",
             "svchost.exe",
             "kernel_task",
             "logind",
@@ -35,13 +37,16 @@ export const grupoProcessos = {
             "sihost.sys",
             "logind_9",
             "registry_daemon",
-            "SQLAgent_agent"
+            "SQLAgent_agent",
+            "mongod_1",
+            "Outlook.exe_4"
         ],
         "Aplicação": [
             "Steam.app",
             "EXCEL.exe",
             "POWERPNT.exe",
             "java(3)",
+            "Steam.app",
             "Slack.exe",
             "CalculatorApp",
             "OneDrive_agent",
@@ -51,7 +56,8 @@ export const grupoProcessos = {
             "Teams.exe_10",
             "Steam_daemon(2)",
             "firefox.exe(2)",
-            "YourPhone.service",
+            "Zoom.exe",
+            "YourPhone.service",    
             "POWERPNT.exe_4",
             "YourPhone.service",
             "Teams.exe(3)",
@@ -59,7 +65,7 @@ export const grupoProcessos = {
             "notepad++.exe",
             "Spotify.exe_4",
             "chrome.exe",
-            "POWERPNT.exe",
+            "POWERPNT.exe", 
             "Dropbox_worker",
             "OneDrive.app_1",
             "Zoom.service(3)",
@@ -85,12 +91,15 @@ export const grupoProcessos = {
             "cassandra_node_worker",
             "cockroach_worker.sys",
             "oracle.exe_7",
+            "oracle.exe(3)",
+            "sqlite_shell_service_8",
             "oracle_worker",
             "influxd_2",
             "cockroach_worker",
             "mysqld_1",
             "mysqld_3",
             "postgres",
+            "EXCEL.exe",
             "cassandra_node_agent_9",
             "postgres.exe_4",
             "mysqld",
@@ -102,14 +111,16 @@ export const grupoProcessos = {
             "mongod_3_5",
             "mongod_3_2",
             "influxd",
-            "oracle.sys"
+            "OneDrive.app_6",
+            "oracle.sys",
         ],
         "Desconhecido": [
             "CalculatorApp.app(3)",
             "tmp_f3wbq.exe",
             "hiddn_svc_h44.exe",
             "crypt_xwc",
-            "unk_53evbc.dat"
+            "unk_53evbc.dat",
+            "node(1)"
         ]
     }
 

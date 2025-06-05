@@ -86,61 +86,6 @@ async function carregarDados() {
                         <div class="nome-processo">${proc.name || "Processo desconhecido"}</div>
                         <div class="uso-cpu">${proc.cpu_percent ?? "N/A"}%</div>
                     </div>
-<<<<<<< HEAD
-                    <button data-id="${proc.name}" class="botao-encerrar">Encerrar</button>
-                     
-                `;
-                listaProcessos.appendChild(processo);
-                
-document.querySelector(".botao-encerrar").forEach(botao => { 
-    botao.addEventListener("click", function() {
-        const nomeProcesso = botao.getAttribute("data-id");
-        console.log("Tentando encerrar processo:", nomeProcesso);
-
-        fetch('http://localhost:5000/dashMatheus/removerProcesso', { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ processo: nomeProcesso })
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().catch(() => null).then(errorBody => {
-                    const errorMessage = errorBody && errorBody.messages ? errorBody.messages.join('; ') : `Erro HTTP: ${response.status} ${response.statusText}`;
-                    throw new Error(errorMessage);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Resposta do servidor:", data);
-            let feedbackMessage = `Resultado para '${nomeProcesso}':\n`;
-            if (data.messages && data.messages.length > 0) {
-                feedbackMessage += data.messages.join('\n');
-            } else {
-                feedbackMessage += (data.success ? "Operação concluída com sucesso." : "Operação falhou sem mensagens detalhadas.");
-            }
-            alert(feedbackMessage);
-
-            if (data.success) {
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao tentar encerrar processo:', error);
-            alert(`Falha na comunicação ou na operação de encerrar '${nomeProcesso}':\n${error.message}`);
-        });
-    });
-
-    fetch('http://localhost:5000/removerProcessos', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ nomePeocesso: proc.name, dataHoraProcesso: new Date().toISOString(), percentualCpuProcesso: proc.cpu_percent, fkMaquina: 1 }) // Ajuste fkMaquina conforme necessário
-    })
-});
-=======
                     <button class="botao-encerrar">Encerrar</button>
                 `;
                 listaProcessos.appendChild(processo);
@@ -152,7 +97,6 @@ document.querySelector(".botao-encerrar").forEach(botao => {
 
                     enfileirarComandoEncerrar(nomeProcesso, pid, cpuPercent);
                 });
->>>>>>> origin
             });
         } else {
             listaProcessos.innerHTML += '<div class="processo">Nenhum processo em execução</div>';
@@ -304,14 +248,6 @@ function carregarTudo() {
     carregarGraficos();
     });
 }
-<<<<<<< HEAD
-// Loop de atualização a cada 2 segundos
-
-
-setInterval(carregarTudo, 2000);
-
-=======
->>>>>>> origin
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeTimers();

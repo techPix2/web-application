@@ -1,7 +1,7 @@
 .navbar {
     /*border: red 1px solid;*/
     height: 100%;
-    width: 15vw;
+    width: 12.5vw;
     background-color: #003F69;
     color: white;
 }
@@ -56,7 +56,7 @@ hr {
     align-items: center;
     padding-top: 10%;
     gap: 20px;
-    height: 60%;
+    height: 71.5%;
 }
 
 .navButton {
@@ -86,3 +86,5 @@ hr {
     background-color: white;
     color: #003F69;
 }
+
+

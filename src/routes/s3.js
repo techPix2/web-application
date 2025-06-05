@@ -3,7 +3,6 @@ const router = express.Router();
 const { S3Client, ListObjectsV2Command, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { parse } = require('csv-parse/sync');
 
-
 const s3Client = new S3Client({
     region: 'us-east-1',
     credentials: {
@@ -13,32 +12,38 @@ const s3Client = new S3Client({
     }
 });
 
-const bucketName = process.env.AWS_BUCKET_NAME;
+const bucketName = process.env.S3_BUCKET;
+const baseDirectory = 'felipe/'; // Define o diretório base
+
 router.get('/arquivos', async (req, res) => {
     const allFilesData = [];
-    arquivos64 = [];
+
     try {
+        let effectivePrefix = baseDirectory;
+        if (req.query.prefix) {
+            // Remove uma possível barra inicial de req.query.prefix para evitar duplicidade
+            const queryPrefix = req.query.prefix.startsWith('/') ? req.query.prefix.substring(1) : req.query.prefix;
+            effectivePrefix += queryPrefix;
+        }
+
         const listObjectsCommand = new ListObjectsV2Command({
             Bucket: bucketName,
-            Prefix: req.query.prefix || ''
+            Prefix: effectivePrefix // Usa o prefixo modificado
         });
 
         const s3ObjectList = await s3Client.send(listObjectsCommand);
 
         if (!s3ObjectList.Contents || s3ObjectList.Contents.length === 0) {
-            return res.status(200).json({ message: 'Nenhum arquivo encontrado.', files: [] });
+            return res.status(200).json({ message: `'Nenhum arquivo encontrado em' ${effectivePrefix}`, files: [] });
         }
 
         for (const s3Object of s3ObjectList.Contents) {
             const fileKey = s3Object.Key;
 
+            // Pula "pastas" (objetos que terminam com /)
             if (fileKey.endsWith('/')) {
                 continue;
             }
-            let fileType = '';
-            let mimeType = '';
-            let parsedContent = null;
-            let base64Data = '';
 
             const nomeArquivo = fileKey.toLowerCase();
             try {
@@ -50,24 +55,11 @@ router.get('/arquivos', async (req, res) => {
 
                 const arquivoEmString = await arquivo.Body.transformToString('utf-8');
 
-                if (nomeArquivoLowerCase.endsWith('.csv')) {
-                    mimeTypeParaFrontend = 'text/csv';
-                    tipoArquivoParaResposta = 'csv';
-                    arquivosPreparadosParaIA.push({
-                        mimeType: mimeTypeParaFrontend,
-                        content: arquivoEmString,
-                        nomeArquivo: nomeArquivoOriginal
-                    });
-                    conteudoParseadoParaResposta = parse(arquivoEmString, {
-                        columns: true,
-                        skip_empty_lines: true,
-                        trim: true
-                    });
-                } else {
-                    continue;
-                }
+                let arquivoFInal;
+                let fileType = '';
 
                 if (nomeArquivo.endsWith('.csv')) {
+                    fileType = 'csv';
                     arquivoFInal = parse(arquivoEmString, {
                         columns: true,
                         skip_empty_lines: true,
@@ -86,28 +78,27 @@ router.get('/arquivos', async (req, res) => {
                     });
                 }
             } catch (error) {
-                console.error(`Erro ao processar o arquivo ${fileKey}:`, error.message);
+                console.error(`Erro ao processar o arquivo ${ fileKey }:`, error.message);
                 allFilesData.push({
                     fileName: fileKey,
-                    error: `Falha ao processar arquivo: ${error.message}`
-                });
-            }
-        }
-        res.status(200).json({
-            message: 'Arquivos processados com sucesso.',
-            files: allFilesData,
-            arquivos64: arquivos64
-        });
-
-    } catch (erro) {
-        console.error('Erro geral ao listar ou processar arquivos do S3:', erro);
-        if (!res.headersSent) {
-            res.status(500).json({
-                error: 'Falha geral ao processar arquivos do S3.',
-                details: erro.message
-            });
-        }
-    }
+                    error: `Falha ao processar arquivo: ${ error.message }`
+});
+}
+}
+res.status(200).json({
+    message: 'Arquivos processados com sucesso.',
+    files: allFilesData
 });
 
-module.exports = router; 
+} catch (erro) {
+    console.error('Erro geral ao listar ou processar arquivos do S3:', erro);
+    if (!res.headersSent) {
+        res.status(500).json({
+            error: 'Falha geral ao processar arquivos do S3.',
+            details: erro.message
+        });
+    }
+}
+});
+
+module.exports = router;

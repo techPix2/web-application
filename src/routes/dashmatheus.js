@@ -11,9 +11,7 @@ router.get("/dadosRecebidos", (req, res) => {
 
 router.post("/dadosMaquina", function(req, res){
     var body = req.body;
-    console.log("Dados recebidos:", body);
     dadosEnviados = body;
-
     res.status(200).send("sucesso")
 });
 

@@ -228,7 +228,6 @@ async function enviarArquivosSelecionados() {
         const maquinasMap = {};
 
         arquivosRecebidos.forEach(arquivo => {
-
             const partes = arquivo.filePath.split(/[/\\]/);
             const nomeArquivo = partes[partes.length - 1];
             const nomeMaquina = nomeArquivo.split('_')[1] || 'desconhecido';
@@ -251,9 +250,11 @@ async function enviarArquivosSelecionados() {
         window.dadosPorMaquinaGlobal = dadosAgrupados;
         console.log('dadosPorMaquinaGlobal', window.dadosPorMaquinaGlobal);
 
-
-
         popularSelectMaquinas(dadosAgrupados, '#selectMaquina');
+
+        plotarGraficoDiscoComparativo(dadosAgrupados);
+        calcularMaiorSaturacao(dadosAgrupados);
+        calcularMaquinaComMaisAlertas(dadosAgrupados);
 
         document.querySelectorAll('.dash').forEach(el => {
             el.style.display = 'flex';
@@ -263,17 +264,13 @@ async function enviarArquivosSelecionados() {
             el.style.display = 'none';
         });
 
-        setTimeout(() => {
-            const select = document.querySelector('#selectMaquina');
-            const maquinaSelecionada = select?.value;
-            if (maquinaSelecionada && window.dadosPorMaquinaGlobal) {
-                plotarGraficoComponentes(maquinaSelecionada, window.dadosPorMaquinaGlobal);
-            }
-        }, 100); // 100ms geralmente é suficiente
-
     } catch (error) {
-        console.error('Erro no front-end ao buscar arquivos:', error);
-        alert(error.message);
+        console.error('Erro ao enviar arquivos:', error);
+        Swal.fire({
+            icon: "error",
+            title: "Erro ao carregar arquivos",
+            text: error.message || "Algo deu errado ao tentar processar os arquivos."
+        });
     }
 }
 

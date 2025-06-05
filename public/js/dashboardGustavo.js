@@ -195,13 +195,13 @@ var packageOptions ={
     legend: {
         horizontalAlign: 'center'
     },
-    markers: {
-        shape: 'circle',
-        size: 4,
-        fillOpacity: 1,
-        strokeColors: ['#8979FF', '#FF928A'],
-        colors: '#FFF'
-    }
+    // markers: {
+    //     shape: 'circle',
+    //     size: 4,
+    //     fillOpacity: 1,
+    //     strokeColors: ['#8979FF', '#FF928A'],
+    //     colors: '#FFF'
+    // }
 }
 
 var packageChart = new ApexCharts(document.getElementById("packageChart"), packageOptions)
@@ -285,6 +285,7 @@ document.getElementById('selectMaquina').addEventListener('change', function () 
 
     // ⚙️ Atualiza gráfico de componentes
     plotarGraficoComponentes(dadosPorMaquinaGlobal, idMaquinaSelecionada);
+    plotarGraficoPacotes(dadosPorMaquinaGlobal, idMaquinaSelecionada);
 
     // ⚙️ Calcula e atualiza saturação
     const saturacao = calcularSaturacaoMaquinaSelecionada(dadosPorMaquinaGlobal, idMaquinaSelecionada);
@@ -324,6 +325,8 @@ function popularSelectMaquinas(dadosPorMaquinaGlobal) {
         select.value = primeiraMaquina;
 
         plotarGraficoComponentes(dadosPorMaquinaGlobal, primeiraMaquina);
+        plotarGraficoPacotes(dadosPorMaquinaGlobal, primeiraMaquina);
+        atualizarListaDeProcessos(dadosPorMaquinaGlobal)
 
         // Cálculo de saturação
         const saturacao = calcularSaturacaoMaquinaSelecionada(dadosPorMaquinaGlobal, primeiraMaquina);
@@ -598,4 +601,145 @@ function calcularAlertasMaquinaSelecionada(dados, idMaquina) {
     });
 
     return totalAlertas;
+}
+
+function plotarGraficoPacotes(dadosPorMaquinaGlobal, idMaquinaSelecionada) {
+    const maquina = dadosPorMaquinaGlobal.find(m => m.maquina === idMaquinaSelecionada);
+    if (!maquina || !maquina.content || maquina.content.length === 0) {
+        console.warn("📭 Dados de pacotes não encontrados para:", idMaquinaSelecionada);
+        return;
+    }
+
+    const dadosMaquina = maquina.content;
+
+    const labels = dadosMaquina.map(item => item.data_hora);
+    const enviados = dadosMaquina.map(item => parseInt(item.sendPackages || 0));
+    const recebidos = dadosMaquina.map(item => parseInt(item.receivePackages || 0));
+
+    const options = {
+        series: [
+            {
+                name: "Pacotes enviados",
+                data: enviados,
+                color: '#8979FF'
+            },
+            {
+                name: "Pacotes recebidos",
+                data: recebidos,
+                color: '#FF928A'
+            }
+        ],
+        chart: {
+            type: 'area',
+            height: 400,
+            zoom: { enabled: false }
+        },
+        dataLabels: { enabled: false },
+        stroke: { width: 1, curve: 'smooth' },
+        title: {
+            text: 'Análise de pacotes',
+            align: 'center',
+            style: {
+                fontSize: '24px',
+                fontWeight: 'bold',
+                fontFamily: 'inter',
+                color: '#263238'
+            }
+        },
+        subtitle: {
+            text: 'Pacotes enviados e recebidos',
+            align: 'center'
+        },
+        labels: labels,
+        xaxis: { type: 'category' },
+        yaxis: { opposite: false },
+        legend: { horizontalAlign: 'center' },
+        // markers: {
+        //     shape: 'circle',
+        //     size: 4,
+        //     fillOpacity: 1,
+        //     strokeColors: ['#8979FF', '#FF928A'],
+        //     colors: '#FFF'
+        // }
+    };
+
+    const chartElement = document.getElementById("packageChart");
+    if (!chartElement) {
+        console.error("Elemento com ID 'packageChart' não encontrado.");
+        return;
+    }
+
+    // Destroi gráfico antigo se necessário
+    if (window.packageChart) {
+        window.packageChart.destroy();
+    }
+
+    // Cria novo gráfico e salva em uma variável global para uso futuro
+    window.packageChart = new ApexCharts(chartElement, options);
+    window.packageChart.render();
+}
+
+async function atualizarListaDeProcessos(dadosPorMaquinaGlobal) {
+    const container = document.getElementById('processContainer');
+    container.innerHTML = ''; // Limpa processos anteriores
+
+    const mobuIds = dadosPorMaquinaGlobal.map(m => m.maquina); // Pegamos os nomes das máquinas (mobuIds)
+
+    try {
+        const resposta = await fetch('/process/listar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ mobuIds })
+        });
+
+        const dados = await resposta.json();
+
+        if (dados.processes && dados.processes.length > 0) {
+            dados.processes.forEach(processo => {
+                const div = document.createElement('div');
+                div.className = 'process';
+
+                const nome = document.createElement('span');
+                nome.className = 'processText';
+                nome.textContent = processo.nameProcess;
+
+                const maquina = document.createElement('span');
+                maquina.className = 'processText';
+
+                // Truncar mobuId se maior que 10 caracteres
+                const mobuIdTruncado = processo.mobuId.length > 10
+                    ? processo.mobuId.slice(0, 10) + '…'
+                    : processo.mobuId;
+
+                maquina.textContent = mobuIdTruncado;
+
+                const cpu = document.createElement('span');
+                cpu.className = 'processText';
+                cpu.textContent = `${processo.cpu_percent}%`;
+
+                const data = document.createElement('span');
+                data.className = 'processText';
+                data.textContent = new Date(processo.dtTime).toLocaleString('pt-BR');
+
+                div.appendChild(nome);
+                div.appendChild(maquina);
+                div.appendChild(cpu);
+                div.appendChild(data);
+
+                container.appendChild(div);
+            });
+        } else {
+            const div = document.createElement('div');
+            div.textContent = 'Nenhum processo encontrado.';
+            container.appendChild(div);
+        }
+
+    } catch (erro) {
+        console.error('Erro ao buscar processos:', erro);
+        const erroDiv = document.createElement('div');
+        erroDiv.textContent = 'Erro ao carregar processos.';
+        container.appendChild(erroDiv);
+    }
 }

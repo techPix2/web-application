@@ -1,6 +1,6 @@
 // comandoController.js
 const { adicionarComando, obterComandos, limparComandos} = require('../store/process.store');
-const {cadastrarProcesso} = require('../models/process.model')
+const {cadastrarProcesso, getProcessesByMobuIds} = require('../models/process.model')
 
 function enfileirarComando (req, res) {
     const { machineId, comando } = req.body;
@@ -57,9 +57,26 @@ function registerProcess (req, res) {
 
 }
 
+async function getProcessList (req, res) {
+    const { mobuIds } = req.body;
+
+    if (!Array.isArray(mobuIds) || mobuIds.length === 0) {
+        return res.status(400).json({ error: 'mobuIds deve ser um array com pelo menos um valor.' });
+    }
+
+    try {
+        const processes = await getProcessesByMobuIds(mobuIds);
+        res.status(200).json({ processes });
+    } catch (err) {
+        console.error('Erro ao buscar processos:', err);
+        res.status(500).json({ error: 'Erro ao buscar processos.' });
+    }
+}
+
 module.exports = {
     enfileirarComando,
     buscarComandos,
     excluirComandos,
-    registerProcess
+    registerProcess,
+    getProcessList
 }

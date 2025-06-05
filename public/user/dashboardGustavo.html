@@ -35,7 +35,25 @@
                 <kpi-container titulo="Máquina com maior saturação"><span class="kpiValue" id="maiorSaturacao">NBX1024FC</span></kpi-container>
             </div>
             <chart-container id="diskChart"></chart-container>
-            <chart-container id=""></chart-container>
+            <chart-container>
+                <div class="processList">
+                    <span class="processTitle">Processos Encerrados</span>
+                    <div class="processHeader">
+                        <span class="processTextHeader">Processo</span>
+                        <span class="processTextHeader">Máquina</span>
+                        <span class="processTextHeader">Cpu %</span>
+                        <span class="processTextHeader">Data-horário</span>
+                    </div>
+                    <div class="processContainer" id="processContainer">
+                        <div class="process">
+                            <span class="processText" id="processName">Text</span>
+                            <span class="processText" id="processMachine">Text</span>
+                            <span class="processText" id="processCpu">Text</span>
+                            <span class="processText" id="processDate">Text</span>
+                        </div>
+                    </div>
+                </div>
+            </chart-container>
         </div>
         <select class="customselect dash" id="selectMaquina"></select>
         <div class="charts dash">

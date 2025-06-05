@@ -105,3 +105,64 @@ kpiValue2{
     text-align: center;
     font-size: 24px;
 }
+
+.processList{
+    display: flex;
+    flex-direction: column;
+    min-width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 100%;
+    border-radius: 13px;
+    /*border: red 1px solid;*/
+}
+
+.processTitle{
+    font-size: 25px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    /*font-weight: bold;*/
+    text-align: center;
+}
+
+.processHeader{
+    /*border: blue 1px solid;*/
+    width: 100%;
+    display: flex;
+    height: 15%;
+    border-radius: 13px 13px 0 0;
+    box-shadow: rgba(0, 0, 0, 0.10) 0px 4px 4px 0px;
+    border-bottom: rgba(0, 0, 0, 0.37) 1px solid;
+}
+
+.processTextHeader{
+    font-size: 20px;
+    /*border: green 1px solid;*/
+    text-align: center;
+    width: 25%;
+}
+
+.processContainer{
+    /*display: flex;*/
+    overflow: auto;
+    width: 100%;
+    /*flex-direction: column;*/
+    height: 80%;
+    /*border: black solid 1px;*/
+}
+
+.process{
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    border-bottom: #BDB1B1 1px solid;
+}
+
+.processText{
+    font-size: 20px;
+    /*border: green 1px solid;*/
+    text-align: center;
+    width: 25%;
+}
+

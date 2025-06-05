@@ -379,8 +379,8 @@ function editar(nome, email, senha, cargo, id) {
                 <div class="formulario">
                     <span class="descricao-modal">Cargo:<span class="obrigatorio">*</span></span>
                     <select class="input-modal" id="ipt_cargo_editar">
-                        <option value="Analista de Infraestrutura">Analista de Infraestrutura</option>
-                        <option value="Cientista de Dados">Cientista de Dados</option>
+                        <option value="Analista">Analista de Infraestrutura</option>
+                        <option value="Cientista">Cientista de Dados</option>
                     </select>
                 </div>
             </div>

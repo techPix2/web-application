@@ -15,7 +15,7 @@ async function carregarGraficoStatusChamados(startDate, endDate) {
         const corPorStatus = {
             "Work in progress": "#2196f3",
             "Concluído": "#4caf50",
-            "Fechada": "#f44336",     
+            "Fechada": "#f44336",
             "Reaberto": "#fbc02d",
             "Aberto": "#9c27b0",
             "Pending": "#ff9800",        

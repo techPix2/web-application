@@ -259,7 +259,38 @@ async function updateAllCharts(periodo) {
     const consumoPorGrupo = calcularMediaPorGrupo(processosDoPeriodo);
     const topProcessos = top5ProcessosPorRAM(processosDoPeriodo);
 
-    if (periodo > 90) {
+    // --- START: Logic for X-axis labels ---
+    const allMetricDays = [];
+    for (let i = 0; i < metricasDoPeriodo.length; i++) {
+        allMetricDays.push(metricasDoPeriodo[i]['dia']);
+    }
+
+    const displayCategories = [];
+    const periodoInt = parseInt(periodo);   
+    let step = 1;
+
+    if (periodoInt === 90) {
+        step = 9;
+    } else if (periodoInt === 180) {
+        step = 18;
+    } else if (periodoInt === 360) {
+        step = 36;
+    }
+
+    for (let i = 0; i < allMetricDays.length; i++) {
+        if (step === 1) {
+            displayCategories.push(allMetricDays[i]);
+        } else { 
+            if (i % step === 0) {
+                displayCategories.push(allMetricDays[i]);
+            } else {
+                displayCategories.push(''); 
+            }
+        }
+    }
+
+
+    if (periodoInt > 90) { 
         document.getElementById('graficos_dias').style.flexDirection = 'column';
         document.getElementById('graficos_dias').style.alignItems = 'center';
         document.getElementById('consumoComponente').style.width = 95 + '%';
@@ -270,21 +301,24 @@ async function updateAllCharts(periodo) {
         document.getElementById('consumoComponente').style.width = 48 + '%';
         document.getElementById('frequenciaCPU').style.width = 48 + '%'
     }
+
     consumoComponenteChart.updateOptions({
-        xaxis: { categories: metricasDoPeriodo.map(m => m['dia']) },
+        xaxis: { categories: displayCategories }, 
         series: [
             { name: "%CPU", data: metricasDoPeriodo.map(m => parseFloat(m['avg_cpu_percent'])) },
             { name: "%RAM", data: metricasDoPeriodo.map(m => parseFloat(m['avg_ram_percent'])) }
         ],
         title: { text: `Consumo de Hardware - Últimos ${periodo} dias` }
     });
+
     frequenciaCPUChart.updateOptions({
-        xaxis: { categories: metricasDoPeriodo.map(m => m['dia']) },
+        xaxis: { categories: displayCategories }, 
         series: [{
             name: "Frequência CPU (MHz)",
             data: metricasDoPeriodo.map(m => parseFloat(m['avg_cpu_freq']))
         }],
         title: { text: `Frequência CPU - Últimos ${periodo} dias` }
+ 
     });
 
     barraGrupoProcessoChart.updateOptions({
@@ -297,6 +331,7 @@ async function updateAllCharts(periodo) {
         ],
         title: { text: `Consumo CPU por Grupo de Processos - Últimos ${periodo} dias` }
     });
+
     barrasProcessoRAMChart.updateOptions({
         xaxis: { categories: topProcessos.map(p => p.nome) },
         series: [{ name: 'Consumo de RAM (Mb)', data: topProcessos.map(p => p.ram) }],
@@ -305,6 +340,7 @@ async function updateAllCharts(periodo) {
     });
     hideLoading();
 }
+
 function calcularMediaPorGrupo(processos) {
     const mediasPorGrupo = {
         'Sistema': { total: 0, count: 0 },
@@ -412,85 +448,3 @@ document.getElementById('botaoIa').addEventListener('click', async function () {
     await contatarIaComArquivo();
     hideLoading();
 })
-
-async function contatarIaComArquivo() {
-    const searchInputElement = document.getElementById('searchInput');
-    const textoSolicitacaoUsuario = searchInputElement.value;
-
-    let promptDeTextoParaIA = "Faça uma análise estatística utilizando Python, por exemplo, para atender à seguinte solicitação do usuário";
-    if (textoSolicitacaoUsuario.trim()) {
-        promptDeTextoParaIA += ": " + textoSolicitacaoUsuario;
-    }
-
-    try {
-        if (typeof ai === 'undefined' || !ai.getGenerativeModel) {
-            alert("A biblioteca da IA não foi carregada corretamente.");
-            return;
-        }
-        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-        const partsParaApi = [];
-        let conteudoTextualDosArquivosParaPrompt = "";
-        const nomesArquivosReferenciados = [];
-
-        // Acessa a variável 'arquivosParaIA' diretamente, assumindo que está no mesmo escopo
-        // ou é uma variável global acessível (declarada com var ou atribuída a window explicitamente se necessário).
-        // No contexto do script fornecido, 'arquivosParaIA' é declarada com 'let' no escopo do módulo/script.
-        if (!Array.isArray(arquivosParaIA)) {
-            alert("Os dados dos arquivos não foram carregados ou estão em formato incorreto.");
-            return;
-        }
-
-        arquivosParaIA.forEach(arquivo => {
-            if (arquivo && arquivo.mimeType && arquivo.nomeArquivo) {
-                if (arquivo.mimeType === 'text/csv' || arquivo.mimeType === 'application/json') {
-                    if (arquivo.content) {
-                        conteudoTextualDosArquivosParaPrompt += `\n\n--- Conteúdo do arquivo: ${arquivo.nomeArquivo} (${arquivo.mimeType}) ---\n`;
-                        conteudoTextualDosArquivosParaPrompt += arquivo.content;
-                        conteudoTextualDosArquivosParaPrompt += `\n--- Fim do arquivo: ${arquivo.nomeArquivo} ---`;
-                        nomesArquivosReferenciados.push(arquivo.nomeArquivo);
-                    }
-                } else if (['image/png', 'image/jpeg', 'image/webp'].includes(arquivo.mimeType)) {
-                    if (arquivo.base64) {
-                        partsParaApi.push({
-                            inlineData: {
-                                mimeType: arquivo.mimeType,
-                                data: arquivo.base64
-                            }
-                        });
-                        nomesArquivosReferenciados.push(`${arquivo.nomeArquivo} (imagem anexada)`);
-                    }
-                }
-            }
-        });
-
-        if (nomesArquivosReferenciados.length > 0) {
-            promptDeTextoParaIA += `. Utilize os seguintes arquivos enviados para a análise: ${nomesArquivosReferenciados.join(', ')}.`;
-        }
-        if (conteudoTextualDosArquivosParaPrompt) {
-            promptDeTextoParaIA += "\n\nDados dos arquivos para análise:\n" + conteudoTextualDosArquivosParaPrompt;
-        }
-         promptDeTextoParaIA += "\n\n--- Fim dos dados dos arquivos e solicitação ---";
-
-
-        if (promptDeTextoParaIA.trim()) {
-            partsParaApi.unshift({ text: promptDeTextoParaIA.trim() });
-        }
-
-        if (partsParaApi.length === 0 || (partsParaApi.length === 1 && !partsParaApi[0].inlineData && !textoSolicitacaoUsuario.trim() && nomesArquivosReferenciados.length === 0)) {
-            alert("Nenhuma solicitação de usuário ou conteúdo de arquivo válido para enviar à IA.");
-            return;
-        }
-        
-        const result = await model.generateContent(partsParaApi);
-        const response = result.response;
-        const text = response.text();
-
-        console.log("Resposta da IA:", text);
-        alert("Resposta da IA (ver console para detalhes):\n" + text.substring(0, 200) + (text.length > 200 ? "..." : ""));
-    } catch (error) {
-        console.error("Erro ao contatar IA:", error);
-        alert("Erro ao contatar a IA. Verifique o console para mais detalhes.");
-    }
-}
-

@@ -19,12 +19,16 @@ var chartPizzaOptions = {
 var chartPizza = new ApexCharts(document.querySelector("#chart"), chartPizzaOptions);
 chartPizza.render();
 
-
 document.addEventListener('DOMContentLoaded', function () {
   tabelaServidores = document.getElementById('tabelaServidores');
   compMaisAlertas = document.getElementById('compMaisAlertas');
   buscarServidoresComAlerta();
 });
+
+
+function vizualizacaoDetalhada(mobuId){
+  window.location.href = `dashboardMatheus.html?maquina=${mobuId}`;
+}
 
 const intervalosAtualizacao = {};
 async function buscarServidoresComAlerta() {
@@ -77,6 +81,11 @@ async function buscarServidoresComAlerta() {
           <tr class="grafico-row" id="grafico-row-${mobuId}" style="display:none;">
             <td colspan="5">
               <div class="graficoServidor" id="graficoServidor-${mobuId}"></div>
+              <div style="margin-top: 10px; text-align: center;">
+      <button onclick="vizualizacaoDetalhada('${mobuId}')" style="padding: 5px 10px; font-weight: bold;">
+        Visualização Detalhada
+      </button>
+    </div>
             </td>
           </tr>
         `;
@@ -115,7 +124,7 @@ async function buscarServidoresComAlerta() {
 
 setInterval(() => {
   buscarServidoresComAlerta();
-}, 10000); // Atua
+}, 10000);
 
 async function atualizarDadosRealtime(mobuId) {
   try {
@@ -164,6 +173,7 @@ async function atualizarDadosRealtime(mobuId) {
     }
 
     ordenarTabelaPorStatus();
+    atualizarGraficoStatusServidores()
     atualizarComponenteMaisCritico();
 
   } catch (err) {
@@ -260,11 +270,8 @@ function atualizarGraficoStatusServidores() {
   }
 }
 
-
-
-
-const graficosIntervalos = new Map(); // Armazena intervals por máquina
-const graficosRenderizados = new Map(); // Armazena gráficos por máquina
+const graficosIntervalos = new Map();
+const graficosRenderizados = new Map();
 
 function mostrarGraficoServidor(mobuId) {
   const graficoContainer = document.getElementById(`graficoServidor-${mobuId}`);
@@ -360,7 +367,6 @@ function mostrarGraficoServidor(mobuId) {
   graficosIntervalos.set(mobuId, intervalId);
 }
 
-
 async function buscarChamadosUltimoDia() {
   console.log("Buscando dados do Jira...");
   try {
@@ -403,8 +409,6 @@ async function buscarChamadosStatus() {
     return [];
   }
 }
-
-
 
 async function fetchMessages() {
   try {
@@ -474,7 +478,6 @@ async function enviar() {
     }
   }
 }
-
 
 const historicoCPU = {};
 const historicoRAM = {};
@@ -561,7 +564,6 @@ async function carregarGraficos(mobuId) {
     console.error(`Erro ao carregar gráfico do servidor ${mobuId}:`, err);
   }
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   buscarServidoresComAlerta();

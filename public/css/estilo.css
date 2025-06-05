@@ -143,7 +143,6 @@ body::-webkit-scrollbar {
     font-weight: 800;
 }
 
-
 .botao{
     display: flex;
     margin-top: 5vh;
@@ -207,7 +206,6 @@ body::-webkit-scrollbar {
     background-color: #01010D;
 }
 
-
 .principal_impacto .texto{
     background-image: url(../assets/imagens_inicial/direita.png); 
     background-size: cover; 
@@ -270,11 +268,9 @@ body::-webkit-scrollbar {
     color: white;
 }
 
-
 .texto button{
     margin-top: 30px
 }
-
 
 .botoes_impacto{
     cursor: pointer;
@@ -354,7 +350,6 @@ body::-webkit-scrollbar {
     font-size:20px;
     text-align: justify;
 }
-
 
 .footer{
     display: flex;
@@ -550,8 +545,6 @@ body::-webkit-scrollbar {
         background-color: #FFFFFF;
     }
 }
-
-
 
 /* Responvidade até 700px */
 

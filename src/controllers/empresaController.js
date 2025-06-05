@@ -173,7 +173,8 @@ function cadastrarEndereco(req, res) {
         });
   }
 
-    function cadastrarEmpresa(req, res) {
+
+  function cadastrarEmpresa(req, res) {
     empresaModel.cadastrarEmpresa(
         req.body.razaosocial,
         req.body.cnpj,
@@ -195,6 +196,8 @@ function cadastrarEndereco(req, res) {
             });
         });
 }
+
+
 function removerEmployer(req, res) {
   if (!req.body.idEmployerServer) {
     return res.status(400).json({ error: "ID do funcionário é obrigatório" });

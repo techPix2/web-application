@@ -14,15 +14,11 @@ var HOST_APP = process.env.APP_HOST;
 
 var app = express();
 
-var dashMatheusRouter = require("./src/routes/dashmatheus")
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var empresasRouter = require("./src/routes/empresas");
 var techpixRouter = require("./src/routes/techpix")
 var servidorRouter = require("./src/routes/servidores")
-var dashCientistaRouter = require("./src/routes/dashCientista")
-var dashAnalistaRouter = require("./src/routes/dashAnalista");
-var gestorRouter = require("./src/routes/gestor")
 var jiraRouter = require("./src/routes/jiraRoute");
 var s3Router = require("./src/routes/s3.route.js");
 var s3RouterFelipe = require("./src/routes/s3.js");
@@ -36,18 +32,13 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
 
-app.use("/dashMatheus", dashMatheusRouter)
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/empresas", empresasRouter);
 app.use("/techpix", techpixRouter);
-app.use("/dashAnalista", dashAnalistaRouter);
-app.use("/dashCientista", dashCientistaRouter);
 app.use("/servidores", servidorRouter);
-app.use("/gestor", gestorRouter);
 app.use("/s3", s3Router);
 app.use("/servidores", servidorRouter)
-app.use("/gestor", gestorRouter)
 app.use("/apiJira", jiraRouter);
 app.use("/api/s3", s3RouterFelipe)
 app.use("/realtime", realtimeRouter)

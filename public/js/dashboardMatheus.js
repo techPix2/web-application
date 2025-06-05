@@ -249,7 +249,6 @@ function carregarTudo() {
     });
 }
 
-// Inicializa os timers quando a página carrega
 document.addEventListener('DOMContentLoaded', () => {
     initializeTimers();
     carregarTudo();

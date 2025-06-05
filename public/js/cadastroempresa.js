@@ -6,6 +6,7 @@ var bairro;
 var cidade;
 var estado;
 var numero;
+
 function prosseguir(){
 
     if (document.getElementById('iptrazaosocial').value != null &&
@@ -82,6 +83,7 @@ async function cadastrarEmpresa(){
     const respostaJson = await response.json();
     sessionStorage.FK_EMPRESA = respostaJson["data"]["insertId"];
 }
+
 async function cadastrarEndereco(){
     const fk_cidade = sessionStorage.FK_CIDADE;
     const response = await fetch(`/empresas/cadastrarEndereco/${rua}/${numero}/${cep}/${bairro}/${fk_cidade}`, {
@@ -105,6 +107,7 @@ async function cadastrarEndereco(){
     const respostaJson = await response.json();
     sessionStorage.FK_ENDERECO = respostaJson["data"]["insertId"];
 }
+
 async function cadastrarCidade(){
     const response = await fetch(`/empresas/cadastrarCidade/${cidade}`, {
         method: "POST",
@@ -123,7 +126,6 @@ async function cadastrarCidade(){
     const respostaJson = await response.json();
     sessionStorage.FK_CIDADE = respostaJson["data"]["insertId"];
 }
-
 
 async function cadastrarUsuario(){
     const email = document.getElementById("iptemail").value;

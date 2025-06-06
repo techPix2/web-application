@@ -4,12 +4,7 @@ const { S3Client, ListObjectsV2Command, GetObjectCommand } = require('@aws-sdk/c
 const { parse } = require('csv-parse/sync');
 
 const s3Client = new S3Client({
-    region: 'us-east-1',
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-        sessionToken: process.env.AWS_SESSION_TOKEN
-    }
+    region: 'us-east-1'
 });
 
 const bucketName = process.env.S3_BUCKET;

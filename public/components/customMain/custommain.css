@@ -1,5 +1,5 @@
 .customMain {
-    width: calc(100vw - 15vw);
+    width: calc(100vw - 12.5vw);
     height: 100vh;
     display: flex;
     flex-direction: column;

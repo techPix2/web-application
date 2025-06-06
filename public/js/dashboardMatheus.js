@@ -167,7 +167,6 @@ async function carregarGraficos() {
 
     adicionarComLimite(historicoCPU, dados.cpu?.["Uso (%)"] ?? 0);
     adicionarComLimite(historicoRAMpercent, dados.ram?.["Uso (%)"] ?? 0);
-    adicionarComLimite(historicoRAMGB, dados.ram?.["Usado (GB)"] ?? 0);
     adicionarComLimite(historicoREDEenv, dados.network?.["Pacotes Enviados"] ?? 0);
     adicionarComLimite(historicoREDErec, dados.network?.["Pacotes Recebidos"] ?? 0);
 
@@ -179,8 +178,9 @@ async function carregarGraficos() {
         chartCPU = new ApexCharts(document.querySelector("#chartcpu"), {
             series: [{ name: "CPU (%)", data: historicoCPU }],
             chart: { type: "line", height: 300 },
+            annotations: { yaxis: [{ y: 80, borderColor: 'red', label: { text: 'Limite' } }] },
             xaxis: { categorias },
-            yaxis: { min: 0, max: 100, title: { text: "Uso" } }
+            yaxis: { max: 100, title: { text: "Uso" } }
         });
         chartCPU.render();
     } else {
@@ -192,11 +192,11 @@ async function carregarGraficos() {
         chartRAM = new ApexCharts(document.querySelector("#chartram"), {
             series: [
                 { name: "RAM (%)", data: historicoRAMpercent },
-                { name: "RAM (GB)", data: historicoRAMGB }
             ],
+            annotations: { yaxis: [{ y: 80, borderColor: 'red', label: { text: 'Limite' } }] },
             chart: { type: 'line', height: 300, animations: { enabled: false } },
             xaxis: { categorias },
-            yaxis: { title: { text: "Uso" }, min: 0 },
+            yaxis: { title: { text: "Uso" }, max: 100},
             tooltip: { shared: true, intersect: false },
             legend: { position: 'top' }
         });
@@ -212,15 +212,28 @@ async function carregarGraficos() {
     if (!chartDISK) {
         chartDISK = new ApexCharts(document.querySelector("#chartdisco"), {
             series: [discoUsado, discoDisponivel],
-            chart: { type: "pie", height: 300 },
+            chart: {
+                type: "pie",
+                height: 300
+            },
             labels: ["Uso (%)", "Disponível (%)"],
             colors: ["#FF4560", "#00E396"],
-            legend: { position: "bottom" }
+            legend: {
+                position: "bottom"
+            },
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '18px', // Aumente ou ajuste conforme necessário
+                    fontWeight: 'bold'
+                }
+            }
         });
         chartDISK.render();
     } else {
         chartDISK.updateSeries([discoUsado, discoDisponivel]);
     }
+
 
     if (!chartREDE) {
         chartREDE = new ApexCharts(document.querySelector("#chartrede"), {

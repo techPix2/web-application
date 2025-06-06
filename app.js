@@ -22,6 +22,7 @@ var machineRouter = require("./src/routes/machine.route.js")
 var realtimeRouter = require("./src/routes/realtime.route.js")
 var processRouter = require("./src/routes/process.route.js")
 var userRouter = require("./src/routes/user.route.js")
+var companyRouter = require("./src/routes/company.route.js")
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -37,6 +38,7 @@ app.use("/realtime", realtimeRouter)
 app.use("/machine", machineRouter)
 app.use("/process", processRouter)
 app.use("/user", userRouter);
+app.use("/company", companyRouter)
 
 app.listen(PORTA_APP, function () {
     console.log(`

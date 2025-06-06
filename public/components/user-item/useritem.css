@@ -1,0 +1,25 @@
+.userElement{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 10%;
+    border-bottom: #BDB1B1 1px solid;
+}
+
+.userInfo{
+    font-weight: 200;
+    font-size: 20px;
+    text-align: center;
+}
+
+.userElement:hover{
+    border-radius: 13px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 4px 0px;
+    background-color: #0181da;
+    color: white;
+}
+
+:host([selected="yes"]) .userElement {
+    background-color: #003F69;
+    color: white;
+}

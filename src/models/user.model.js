@@ -37,6 +37,31 @@ async function buscarUsuario(email, password) {
     }
 }
 
+async function listarUsuariosPorEmpresa(idEmpresa) {
+    const instrucao = `
+        SELECT 
+            e.name,
+            e.email,
+            e.role,
+            (
+                SELECT MAX(a.datetime)
+                FROM AccessLog a
+                WHERE a.fkEmployer = e.idEmployer
+            ) AS ultimoAcesso
+        FROM Employer e
+        WHERE e.fkCompany = ${idEmpresa} AND e.active = 1;
+    `;
+
+    try {
+        const resultado = await db.executar(instrucao);
+        return resultado;
+    } catch (erro) {
+        console.error("Erro ao listar usuários:", erro);
+        throw erro;
+    }
+}
+
 module.exports = {
-    buscarUsuario
+    buscarUsuario,
+    listarUsuariosPorEmpresa
 };

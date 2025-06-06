@@ -5,9 +5,6 @@ filePathnavbar.pop()
 filePathnavbar.push(cssNamenavbar)
 
 const cssPathnavbar = filePathnavbar.join('/')
-sessionStorage.setItem('NOME_USUARIO', 'gustavo');
-sessionStorage.setItem('NOME_EMPRESA', 'empresaTeste');
-sessionStorage.setItem('CARGO_FUNCIONARIO', 'Administrador');
 class navbar extends HTMLElement {
     constructor() {
         super();

@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', function () {
     esconderLoading(); 
     let graficoStatus;
 
+
 async function carregarGraficoStatusChamados(startDate, endDate) {
     try {
         const url = `http://localhost/apiJira/jira-status?start=${startDate}&end=${endDate}`;
@@ -18,46 +19,49 @@ async function carregarGraficoStatusChamados(startDate, endDate) {
             "Fechada": "#f44336",
             "Reaberto": "#fbc02d",
             "Aberto": "#9c27b0",
-            "Pending": "#ff9800",        
+            "Pending": "#ff9800",
         };
-
         const cores = statusLabels.map(label => corPorStatus[label] || "#9e9e9e");
-        const canvasId = "graficoStatusCanvas";
-        if (!document.getElementById(canvasId)) {
-            const canvas = document.createElement("canvas");
-            canvas.id = canvasId;
-            document.getElementById("graficoStatusChamados").appendChild(canvas);
-        }
+
+        const container = document.getElementById("graficoStatusCanvas");
 
         if (graficoStatus) {
             graficoStatus.destroy();
         }
 
-        graficoStatus = new Chart(document.getElementById(canvasId), {
-            type: "doughnut",
-            data: {
-                labels: statusLabels,
-                datasets: [{
-                    label: "Status",
-                    data: statusValores,
-                    backgroundColor: cores,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'right'
-                    }
-                }
+ graficoStatus = new ApexCharts(container, {
+    chart: {
+        type: 'donut',
+        height: 300
+    },
+    series: statusValores,
+    labels: statusLabels,
+    colors: cores,
+    plotOptions: {
+        pie: {
+            donut: {
+                size: '0%' 
             }
-        });
+        }
+    },
+    dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+            return val.toFixed(1) + "%";
+        }
+    },
+    legend: {
+        position: 'right'
+    }
+});
+
+        graficoStatus.render();
 
     } catch (error) {
         console.error("Erro ao carregar gráfico de status dos chamados:", error);
     }
 }
+
 
 
 async function listarFuncionarios(startDate, endDate) {
@@ -77,12 +81,10 @@ async function listarFuncionarios(startDate, endDate) {
             const div = document.createElement("div");
             div.className = "card-funcionario";
 
-            // Estilo para chamados atrasados
             const estiloAtrasados = func.atrasados > 0 
                 ? 'style="color: red; font-weight: bold;"' 
                 : '';
 
-            // Cálculo de eficiência e estilo de cor
             const eficiencia = func.eficiencia?.toFixed(1) ?? 0;
             let corEficiência = '';
 
@@ -94,7 +96,6 @@ async function listarFuncionarios(startDate, endDate) {
                 corEficiência = 'style="color: green;"';
             }
 
-            // Montagem do card HTML
             div.innerHTML = `
                 <span>${func.nome}</span>
                 <span>${func.recebidos}</span>
@@ -138,6 +139,8 @@ async function buscarKpis(dataInicio, dataFim) {
         }
 }
 
+let graficoChamadosAgrupado;
+
 async function carregarGraficoChamadosPorDia(start, end) {
     if (!start || !end) {
         alert("Por favor, selecione as datas de início e fim.");
@@ -150,64 +153,88 @@ async function carregarGraficoChamadosPorDia(start, end) {
         const dados = await resposta.json();
 
         const corPorPrioridade = {
-            "High": "#ea4335",  
-            "Medium": "#fbbc04",   
-            "Low": "#34a853",   
-            "Highest": "#9c27b0", 
+            "High": "#ea4335",
+            "Medium": "#fbbc04",
+            "Low": "#34a853",
+            "Highest": "#9c27b0",
             "Sem prioridade": "#9e9e9e"
         };
 
+        const container = document.getElementById('graficoChamadosDia');
+        console.log(dados);
 
-        if (window.graficoChamadosAgrupado) {
-            window.graficoChamadosAgrupado.destroy();
+        if (graficoChamadosAgrupado) {
+            graficoChamadosAgrupado.destroy();
         }
 
-        const ctx = document.getElementById('graficoChamadosDia').getContext('2d');
+        const series = dados.datasets.map(dataset => ({
+            name: dataset.label,
+            data: dataset.data
+        }));
 
+        const colors = dados.datasets.map(d => corPorPrioridade[d.label] || "#1a73e8");
 
-window.graficoChamadosAgrupado = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: dados.labels,
-        datasets: dados.datasets.map(dataset => ({
-            ...dataset,
-            backgroundColor: corPorPrioridade[dataset.label] || '#1a73e8'
-        }))
-    },
-    options: {
-        responsive: false,
-        plugins: {
-            tooltip: {
-                mode: 'index',
-                intersect: false
-            }
-        },
-        scales: {
-            x: {
-                stacked: true,
-                title: { display: true, text: 'Data' },
-                ticks: {
-                    autoSkip: true,
-                    maxTicksLimit: 20,
-                    font: {
-                        size: 8
-                    }
+        graficoChamadosAgrupado = new ApexCharts(container, {
+            chart: {
+            type: 'bar',
+            height: 290,
+            stacked: true,
+            toolbar: { show: false },
+            animations: { enabled: false },
+            fontFamily: '"Roboto", sans-serif',
+            zoom: { enabled: false }
+            },
+            series: series,
+            xaxis: {
+                categories: dados.labels,
+                labels: {
+                    rotate: -45,
+                    style: { fontSize: '12px' }
+                },
+                title: { text: 'Data' },
+                tickPlacement: 'on'
+            },
+            yaxis: {
+                title: { text: 'Quantidade' }
+            },
+            colors: colors,
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '12px',
+                    colors: ['#fff']
                 }
             },
-            y: {
-                beginAtZero: true,
-                stacked: true,
-                title: { display: true, text: 'Quantidade' }
-            }
-        }
-    }
-});
+            plotOptions: {
+                bar: {
+                    columnWidth: '50%',
+                    distributed: false
+                }
+            },
+            tooltip: {
+                shared: true,
+                intersect: false
+            },
+            legend: {
+                position: 'top'
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: { height: 300 },
+                    legend: { position: 'bottom' }
+                }
+            }]
+        });
+
+        graficoChamadosAgrupado.render();
 
     } catch (erro) {
         console.error("Erro ao carregar gráfico:", erro);
         alert("Erro ao carregar gráfico de chamados por dia.");
     }
 }
+
 
     
 const btnFiltrar = this.document.getElementById("filterButton");

@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 async function carregarGraficoStatusChamados(startDate, endDate) {
     try {
-        const url = `http://localhost/apiJira/jira-status?start=${startDate}&end=${endDate}`;
+        const url = `/apiJira/jira-status?start=${startDate}&end=${endDate}`;
         const resposta = await fetch(url);
         const statusData = await resposta.json();
 
@@ -62,11 +62,9 @@ async function carregarGraficoStatusChamados(startDate, endDate) {
     }
 }
 
-
-
 async function listarFuncionarios(startDate, endDate) {
     try {
-        let url = "http://localhost/apiJira/jira-funcionarios";
+        let url = "/apiJira/jira-funcionarios";
         if (startDate && endDate) {
             url += `?start=${startDate}&end=${endDate}`;
         }
@@ -113,10 +111,9 @@ async function listarFuncionarios(startDate, endDate) {
     }
 }
 
-
 async function buscarKpis(dataInicio, dataFim) {
     try {
-        let url = "http://localhost/apiJira/jira-kpis";
+        let url = "/apiJira/jira-kpis";
         if (dataInicio && dataFim) {
             url += `?filtro=dia&start=${dataInicio}&end=${dataFim}`;
             } else {
@@ -148,7 +145,7 @@ async function carregarGraficoChamadosPorDia(start, end) {
     }
 
     try {
-        const url = `http://localhost/apiJira/jira-chamados-dia-prioridade?start=${start}&end=${end}`;
+        const url = `/apiJira/jira-chamados-dia-prioridade?start=${start}&end=${end}`;
         const resposta = await fetch(url);
         const dados = await resposta.json();
 
@@ -235,8 +232,6 @@ async function carregarGraficoChamadosPorDia(start, end) {
     }
 }
 
-
-    
 const btnFiltrar = this.document.getElementById("filterButton");
 
   btnFiltrar.addEventListener("click", async () => {

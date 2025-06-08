@@ -38,7 +38,7 @@ function excluirComandos  (req, res) {
 function registerProcess (req, res) {
     const {nameProcess, machineId, cpu_percent } = req.body;
 
-    if(!machineId || !cpu_percent || nameProcess) {
+    if(!machineId || !cpu_percent || !nameProcess) {
         return res.status(400).json({error: "os campos machineId e cpu_percent são obrigatórios"});
     }
 

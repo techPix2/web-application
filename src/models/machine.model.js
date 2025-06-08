@@ -25,7 +25,7 @@ async function buscarUsuario(email, password) {
 
 async function cadastrarMaquina(hostname, macAddress, mobuId, fkCompany) {
     const instrucao = `
-        INSERT INTO server (hostName, macAddress, mobuId, fkCompany, active)
+        INSERT INTO Server (hostName, macAddress, mobuId, fkCompany, active)
         VALUES ('${hostname}', '${macAddress}', '${mobuId}', ${fkCompany}, 1);
     `;
 

@@ -2,7 +2,7 @@ const db = require('../database/config');
 
 async function cadastrarProcesso(nameProcess, fkMachine, cpu_percent){
     const instrucao = `
-            INSERT INTO processLog (nameProcess, cpu_percent, fkMachine)
+            INSERT INTO ProcessLog (nameProcess, cpu_percent, fkMachine)
             VALUES ('${nameProcess}', '${cpu_percent}', ${fkMachine});
     `;
 
@@ -32,7 +32,7 @@ async function getProcessesByMobuIds(mobuIds) {
             pl.cpu_percent,
             s.mobuId
         FROM
-            ProcessLog pl
+            ProcessLog as pl
                 JOIN
             Server s ON pl.fkMachine = s.idServer
         WHERE
@@ -49,8 +49,6 @@ async function getProcessesByMobuIds(mobuIds) {
         throw erro;
     }
 }
-
-
 
 module.exports = {
     cadastrarProcesso,

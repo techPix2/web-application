@@ -126,7 +126,7 @@ async function enfileirarComandoEncerrar(nomeProcesso, pid, cpuPercent) {
     };
 
     try {
-        const response = await fetch('http://localhost:80/process/excluir', {
+        const response = await fetch('/process/excluir', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
